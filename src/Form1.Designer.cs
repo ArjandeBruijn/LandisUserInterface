@@ -42,11 +42,17 @@
             this.ScenarioOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.RunSim = new System.Windows.Forms.ToolStripMenuItem();
             this.Remove = new System.Windows.Forms.ToolStripMenuItem();
+            this.FolderOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ShowFolderLocation = new System.Windows.Forms.ToolStripMenuItem();
+            this.FileOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ShowFileLocation = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.ProjectOptions.SuspendLayout();
             this.ScenarioOptions.SuspendLayout();
+            this.FolderOptions.SuspendLayout();
+            this.FileOptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -134,7 +140,7 @@
             this.RunSim,
             this.Remove});
             this.ScenarioOptions.Name = "contextMenuStrip1";
-            this.ScenarioOptions.Size = new System.Drawing.Size(206, 70);
+            this.ScenarioOptions.Size = new System.Drawing.Size(206, 48);
             // 
             // RunSim
             // 
@@ -150,6 +156,34 @@
             this.Remove.Text = "Remove from workspace";
             this.Remove.Click += new System.EventHandler(this.Remove_Click);
             // 
+            // FolderOptions
+            // 
+            this.FolderOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ShowFolderLocation});
+            this.FolderOptions.Name = "contextMenuStrip1";
+            this.FolderOptions.Size = new System.Drawing.Size(184, 26);
+            // 
+            // ShowFolderLocation
+            // 
+            this.ShowFolderLocation.Name = "ShowFolderLocation";
+            this.ShowFolderLocation.Size = new System.Drawing.Size(183, 22);
+            this.ShowFolderLocation.Text = "Show folder location";
+            this.ShowFolderLocation.Click += new System.EventHandler(this.ShowFolderLocation_Click);
+            // 
+            // FileOptions
+            // 
+            this.FileOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ShowFileLocation});
+            this.FileOptions.Name = "contextMenuStrip1";
+            this.FileOptions.Size = new System.Drawing.Size(169, 48);
+            // 
+            // ShowFileLocation
+            // 
+            this.ShowFileLocation.Name = "ShowFileLocation";
+            this.ShowFileLocation.Size = new System.Drawing.Size(168, 22);
+            this.ShowFileLocation.Text = "Show file location";
+            this.ShowFileLocation.Click += new System.EventHandler(this.ShowFileLocation_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -164,6 +198,8 @@
             this.splitContainer1.ResumeLayout(false);
             this.ProjectOptions.ResumeLayout(false);
             this.ScenarioOptions.ResumeLayout(false);
+            this.FolderOptions.ResumeLayout(false);
+            this.FileOptions.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -182,6 +218,10 @@
         private System.Windows.Forms.ToolStripMenuItem RunSim;
         private System.Windows.Forms.ImageList FileFolderIcons;
         private System.Windows.Forms.ToolStripMenuItem Remove;
+        private System.Windows.Forms.ContextMenuStrip FolderOptions;
+        private System.Windows.Forms.ToolStripMenuItem ShowFolderLocation;
+        private System.Windows.Forms.ContextMenuStrip FileOptions;
+        private System.Windows.Forms.ToolStripMenuItem ShowFileLocation;
 
     }
 }

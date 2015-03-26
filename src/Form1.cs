@@ -142,8 +142,14 @@ namespace LandisUserInterface
                 {
                     ScenarioOptions.Show(this.treeView1, e.Location);
                 }
-
-               
+                else if (System.IO.File.Exists(treeView1.SelectedNode.ToolTipText))
+                {
+                    FileOptions.Show(this.treeView1, e.Location);
+                }
+                else if (System.IO.Directory.Exists(treeView1.SelectedNode.ToolTipText))
+                {
+                    FolderOptions.Show(this.treeView1, e.Location);
+                }
             }
         }
 
@@ -187,12 +193,13 @@ namespace LandisUserInterface
                 return;
             }
 
-            foreach (string file in System.IO.Directory.GetFiles(Folder))
+            foreach (string path in System.IO.Directory.GetFiles(Folder))
             {
-                if (parent.Nodes[System.IO.Path.GetFileName(file)] == null)
+                if (parent.Nodes[System.IO.Path.GetFileName(path)] == null)
                 {
                     TreeNode child = new TreeNode();
-                    child.Name = child.Text = System.IO.Path.GetFileName(file);
+                    child.Name = child.Text = System.IO.Path.GetFileName(path);
+                    child.ToolTipText = path;
                     child.ImageKey = child.SelectedImageKey  = "File";
                     parent.Nodes.Add(child);
 
@@ -323,6 +330,27 @@ namespace LandisUserInterface
         private void Remove_Click(object sender, EventArgs e)
         {
             this.treeView1.Nodes.Remove(treeView1.SelectedNode);
+        }
+
+        private void ShowFolderLocation_Click(object sender, EventArgs e)
+        {
+            string path = treeView1.SelectedNode.ToolTipText;
+
+            if (System.IO.Directory.Exists(path))
+            {
+                System.Diagnostics.Process.Start(path);
+            }
+        }
+
+        private void ShowFileLocation_Click(object sender, EventArgs e)
+        {
+            string path = treeView1.SelectedNode.ToolTipText;
+
+            if (System.IO.File.Exists(path))
+            {
+                System.Diagnostics.Process.Start(System.IO.Path.GetDirectoryName(path));
+            }
+             
         }
     }
 }
