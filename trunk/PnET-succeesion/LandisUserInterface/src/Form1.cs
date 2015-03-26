@@ -25,6 +25,8 @@ namespace LandisUserInterface
             HeaderScenarioFiles = new TreeNode("Scenario Files");
             this.treeView1.Nodes.Add(HeaderScenarioFiles);
             HeaderScenarioFiles.ExpandAll();
+
+            timer1.Start();
         }
         string LastScenarioFileNames
         {
@@ -33,7 +35,7 @@ namespace LandisUserInterface
                 return Properties.Settings.Default.LastScenarioFileNames;
             }
         }
-        string[] LastScenarioFileNamesList
+        string[] LastScenarioPathList
         {
             get
             {
@@ -60,7 +62,7 @@ namespace LandisUserInterface
         }
         private void AddLastScenarioFileName(string path)
         {
-            List<string> lastscenariofilenames = new List<string>(LastScenarioFileNamesList);
+            List<string> lastscenariofilenames = new List<string>(LastScenarioPathList);
 
             lastscenariofilenames.Add(path);
 
@@ -69,7 +71,7 @@ namespace LandisUserInterface
         private void RemoveLastScenarioFileNames(string FileName)
         {
             List<string> lastscenariofilenames = new List<string>();
-            foreach (string path in LastScenarioFileNamesList)
+            foreach (string path in LastScenarioPathList)
             {
                 if (System.IO.Path.GetFileName(path) != FileName)
                 {
@@ -88,7 +90,7 @@ namespace LandisUserInterface
         {
             if (LastScenarioFileNames != null && LastScenarioFileNames.Length > 0)
             {
-                foreach (string FileName in LastScenarioFileNamesList)
+                foreach (string FileName in LastScenarioPathList)
                 {
                     AddScenarioFile(FileName);
                 }
@@ -135,6 +137,61 @@ namespace LandisUserInterface
             string FileName ="";
 
             RemoveLastScenarioFileNames(FileName);
+        }
+       
+        List<string> SubNodeTexts(TreeNodeCollection node_collection)
+        {
+            List<string> SubNodeTexts = new List<string>();
+            foreach (TreeNode node in node_collection)
+            {
+                SubNodeTexts.Add(node.Text);
+            }
+            return SubNodeTexts;
+        } 
+         
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            
+        }
+
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            // List all files that should be in the interface
+            foreach (TreeNode scenario_nodes in HeaderScenarioFiles.Nodes)
+            {
+                string path = scenario_nodes.ToolTipText;
+
+                System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(path));
+
+                foreach (string line in System.IO.File.ReadAllLines(path))
+                {
+                    string _line = line;
+                    if (_line.Contains("<<"))
+                    {
+                        _line = _line.Remove(line.IndexOf("<<"));
+                    }
+
+                    string[] terms = _line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (string term in terms)
+                    {
+
+                        if (System.IO.File.Exists(term) && SubNodeTexts(scenario_nodes.Nodes).Contains(term) == false)
+                        {
+                            scenario_nodes.Nodes.Add(term);
+                        }
+                    }
+
+                }
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (backgroundWorker1.IsBusy == false)
+            {
+                backgroundWorker1.RunWorkerAsync();
+            }
         }
     }
 }
