@@ -37,10 +37,13 @@
             this.RmvScnFl = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.ScenarioFileOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.AddRemoveScenarioFile.SuspendLayout();
+            this.ScenarioFileOptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -79,7 +82,7 @@
             this.dockContainer1.Size = new System.Drawing.Size(211, 258);
             this.dockContainer1.TabIndex = 1;
             // 
-            // contextMenuStrip1
+            // AddRemoveScenarioFile
             // 
             this.AddRemoveScenarioFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.AddScnFl,
@@ -111,6 +114,20 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // ScenarioFileOptions
+            // 
+            this.ScenarioFileOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1});
+            this.ScenarioFileOptions.Name = "contextMenuStrip1";
+            this.ScenarioFileOptions.Size = new System.Drawing.Size(169, 48);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(168, 22);
+            this.toolStripMenuItem1.Text = "Run This Scenario";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -124,6 +141,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             this.AddRemoveScenarioFile.ResumeLayout(false);
+            this.ScenarioFileOptions.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -138,6 +156,8 @@
         private System.Windows.Forms.ToolStripMenuItem RmvScnFl;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ContextMenuStrip ScenarioFileOptions;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
 
     }
 }
