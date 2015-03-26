@@ -12,13 +12,13 @@ C:\Users\adebruij\Desktop\PnET-Succession\LandisUserInterface\obj\x86\Debug\Land
 C:\Users\adebruij\Desktop\PnET-Succession\LandisUserInterface\obj\x86\Debug\LandisUserInterface.FrmMap.resources
 C:\Users\adebruij\Desktop\PnET-Succession\LandisUserInterface\obj\x86\Debug\LandisUserInterface.Form1.resources
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\LandisUserInterface.exe.config
-C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\Interop.MapWinGIS.dll
-C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\AxInterop.MapWinGIS.dll
-C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.csproj.ResolveComReference.cache
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\LandisUserInterface.exe
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\LandisUserInterface.pdb
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\Interop.MapWinGIS.dll
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\AxInterop.MapWinGIS.dll
+C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\Interop.MapWinGIS.dll
+C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\AxInterop.MapWinGIS.dll
+C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.csproj.ResolveComReference.cache
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.Form1.resources
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.FrmMap.resources
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.Properties.Resources.resources

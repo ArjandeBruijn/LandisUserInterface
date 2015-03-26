@@ -23,6 +23,7 @@ namespace LandisUserInterface
             this.treeView1.ShowNodeToolTips = true;
 
             HeaderScenarioFiles = new TreeNode("Scenario Files");
+            HeaderScenarioFiles.SelectedImageKey =  HeaderScenarioFiles.ImageKey = "RightArrow";
             this.treeView1.Nodes.Add(HeaderScenarioFiles);
             HeaderScenarioFiles.ExpandAll();
 
@@ -194,6 +195,7 @@ namespace LandisUserInterface
                 {
                     TreeNode child = new TreeNode();
                     child.Name = child.Text = System.IO.Path.GetFileName(file);
+                    child.ImageKey  = "File";
                     parent.Nodes.Add(child);
 
                 }
@@ -207,6 +209,7 @@ namespace LandisUserInterface
                     TreeNode child = new TreeNode();
                     child.Name = child.Text = subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last();
                     child.ToolTipText = subfolder;
+                    child.ImageKey = "Folder";
                     parent.Nodes.Add(child);
                     
                 }
@@ -256,6 +259,7 @@ namespace LandisUserInterface
                         TreeNode child = new TreeNode();
                         child.Text = child.Name = "output";
                         child.ToolTipText = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(scenario_node.ToolTipText), "output");
+                        child.ImageKey = "Folder";
                         scenario_node.Nodes.Add(child);
                     }
 

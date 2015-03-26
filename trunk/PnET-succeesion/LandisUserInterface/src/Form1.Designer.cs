@@ -29,8 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.FileFolderIcons = new System.Windows.Forms.ImageList(this.components);
             this.dockContainer1 = new Crom.Controls.Docking.DockContainer();
             this.AddRemoveScenarioFile = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.AddScnFl = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,11 +69,22 @@
             // treeView1
             // 
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView1.ImageIndex = 0;
+            this.treeView1.ImageList = this.FileFolderIcons;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
+            this.treeView1.SelectedImageIndex = 0;
             this.treeView1.Size = new System.Drawing.Size(61, 258);
             this.treeView1.TabIndex = 0;
             this.treeView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseClick);
+            // 
+            // FileFolderIcons
+            // 
+            this.FileFolderIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("FileFolderIcons.ImageStream")));
+            this.FileFolderIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.FileFolderIcons.Images.SetKeyName(0, "File");
+            this.FileFolderIcons.Images.SetKeyName(1, "Folder");
+            this.FileFolderIcons.Images.SetKeyName(2, "RightArrow");
             // 
             // dockContainer1
             // 
@@ -119,7 +132,7 @@
             this.ScenarioFileOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1});
             this.ScenarioFileOptions.Name = "contextMenuStrip1";
-            this.ScenarioFileOptions.Size = new System.Drawing.Size(169, 48);
+            this.ScenarioFileOptions.Size = new System.Drawing.Size(169, 26);
             // 
             // toolStripMenuItem1
             // 
@@ -158,6 +171,7 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ContextMenuStrip ScenarioFileOptions;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ImageList FileFolderIcons;
 
     }
 }
