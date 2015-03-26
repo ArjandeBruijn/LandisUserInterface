@@ -51,11 +51,14 @@ namespace LandisUserInterface
         private bool IsScenarioFile(string path)
         {
             // LandisData  Scenario
-            foreach (string line in System.IO.File.ReadAllLines(path))
+            if (path.Length > 0)
             {
-                if (line.Contains("LandisData") && line.Contains("Scenario"))
+                foreach (string line in System.IO.File.ReadAllLines(path))
                 {
-                    return true;
+                    if (line.Contains("LandisData") && line.Contains("Scenario"))
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -116,7 +119,17 @@ namespace LandisUserInterface
         {
             if (e.Button == MouseButtons.Right)
             {
-                contextMenuStrip1.Show(this.treeView1, e.Location);
+                treeView1.SelectedNode = treeView1.GetNodeAt(e.Location);
+
+                if (treeView1.SelectedNode == HeaderScenarioFiles)
+                {
+                    AddRemoveScenarioFile.Show(this.treeView1, e.Location);
+                }
+                else if (IsScenarioFile(treeView1.SelectedNode.ToolTipText))
+                { 
+                
+                }
+
                
             }
         }
