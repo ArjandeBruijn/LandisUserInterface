@@ -83,6 +83,9 @@
             this.treeView1.SelectedImageIndex = 0;
             this.treeView1.Size = new System.Drawing.Size(61, 258);
             this.treeView1.TabIndex = 0;
+            this.treeView1.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeView1_ItemDrag);
+            this.treeView1.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeView1_DragDrop);
+            this.treeView1.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeView1_DragEnter);
             this.treeView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseClick);
             // 
             // FileFolderIcons
@@ -175,7 +178,7 @@
             this.FileOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ShowFileLocation});
             this.FileOptions.Name = "contextMenuStrip1";
-            this.FileOptions.Size = new System.Drawing.Size(169, 48);
+            this.FileOptions.Size = new System.Drawing.Size(169, 26);
             // 
             // ShowFileLocation
             // 
