@@ -17,6 +17,8 @@ namespace LandisUserInterface
             InitializeComponent();
 
             this.WindowState = FormWindowState.Maximized;
+
+            this.treeView1.Width = 500;
         }
 
         private void Form1_Load(object sender, EventArgs e)
