@@ -462,8 +462,12 @@ namespace LandisUserInterface
             if (System.IO.Path.GetExtension(path) == ".img")
             {
                 FrmMap map = new FrmMap();
+                map.Location = new Point(e.X, e.Y);
+
                 dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid());
 
+                map.LoadImageFile(path);
+                
             }
         }
 

@@ -40,7 +40,11 @@
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
             this.treeViewLayers = new System.Windows.Forms.TreeView();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.axMap1 = new AxMapWinGIS.AxMap();
+            this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axMap1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -128,23 +132,48 @@
             // 
             // treeViewLayers
             // 
+            this.treeViewLayers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.treeViewLayers.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.treeViewLayers.CheckBoxes = true;
-            this.treeViewLayers.Dock = System.Windows.Forms.DockStyle.Left;
             this.treeViewLayers.Location = new System.Drawing.Point(0, 28);
             this.treeViewLayers.Name = "treeViewLayers";
             this.treeViewLayers.ShowNodeToolTips = true;
-            this.treeViewLayers.Size = new System.Drawing.Size(166, 405);
+            this.treeViewLayers.Size = new System.Drawing.Size(166, 380);
             this.treeViewLayers.TabIndex = 38;
             // 
             // treeView1
             // 
+            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.treeView1.CheckBoxes = true;
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Right;
             this.treeView1.Location = new System.Drawing.Point(490, 28);
             this.treeView1.Name = "treeView1";
             this.treeView1.ShowNodeToolTips = true;
-            this.treeView1.Size = new System.Drawing.Size(166, 405);
+            this.treeView1.Size = new System.Drawing.Size(166, 380);
             this.treeView1.TabIndex = 39;
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripProgressBar1,
+            this.toolStripStatusLabel1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 411);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(656, 22);
+            this.statusStrip1.TabIndex = 40;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripProgressBar1
+            // 
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
             // 
             // axMap1
             // 
@@ -155,20 +184,25 @@
             this.axMap1.Location = new System.Drawing.Point(172, 28);
             this.axMap1.Name = "axMap1";
             this.axMap1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axMap1.OcxState")));
-            this.axMap1.Size = new System.Drawing.Size(312, 405);
+            this.axMap1.Size = new System.Drawing.Size(312, 380);
             this.axMap1.TabIndex = 0;
             // 
             // FrmMap
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(656, 433);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.treeViewLayers);
             this.Controls.Add(this.toolBar1);
             this.Controls.Add(this.axMap1);
             this.Name = "FrmMap";
             this.Text = "FrmMap";
+            this.Load += new System.EventHandler(this.FrmMap_Load);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axMap1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -188,5 +222,8 @@
         private System.Windows.Forms.ImageList imageList2;
         private System.Windows.Forms.TreeView treeViewLayers;
         private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }
