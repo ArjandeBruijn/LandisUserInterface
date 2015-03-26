@@ -24,3 +24,4 @@ C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\sr
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.FrmMap.resources
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.Properties.Resources.resources
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.csproj.GenerateResource.Cache
+C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\LandisUserInterface.exe.config

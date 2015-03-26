@@ -56,7 +56,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.dockContainer1);
             this.splitContainer1.Size = new System.Drawing.Size(284, 262);
-            this.splitContainer1.SplitterDistance = 94;
+            this.splitContainer1.SplitterDistance = 65;
             this.splitContainer1.TabIndex = 0;
             // 
             // treeView1
@@ -64,7 +64,7 @@
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(90, 258);
+            this.treeView1.Size = new System.Drawing.Size(61, 258);
             this.treeView1.TabIndex = 0;
             this.treeView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseClick);
             // 
@@ -74,9 +74,8 @@
             this.dockContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dockContainer1.Location = new System.Drawing.Point(0, 0);
             this.dockContainer1.Name = "dockContainer1";
-            this.dockContainer1.Size = new System.Drawing.Size(182, 258);
+            this.dockContainer1.Size = new System.Drawing.Size(211, 258);
             this.dockContainer1.TabIndex = 1;
-            this.dockContainer1.Load += new System.EventHandler(this.dockContainer1_Load);
             // 
             // contextMenuStrip1
             // 
@@ -84,7 +83,7 @@
             this.AddScnFl,
             this.RmvScnFl});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(187, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(187, 48);
             // 
             // AddScnFl
             // 
