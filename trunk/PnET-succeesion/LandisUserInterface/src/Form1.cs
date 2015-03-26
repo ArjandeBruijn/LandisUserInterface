@@ -257,7 +257,7 @@ namespace LandisUserInterface
                         TreeNode child = new TreeNode();
                         child.Text = child.Name = "output";
                         child.ToolTipText = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(scenario_node.ToolTipText), "output");
-                        child.ImageKey = "Folder";
+                        child.ImageKey = child.SelectedImageKey = "Folder";
                         scenario_node.Nodes.Add(child);
                     }
 
