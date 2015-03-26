@@ -34,5 +34,17 @@ namespace LandisUserInterface.Properties {
                 this["LastScenarioFileNames"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LandisConsoleExe {
+            get {
+                return ((string)(this["LandisConsoleExe"]));
+            }
+            set {
+                this["LandisConsoleExe"] = value;
+            }
+        }
     }
 }
