@@ -13,9 +13,10 @@ namespace LandisUserInterface
     {
         public Form1()
         {
-            FrmMap map = new FrmMap();
-            map.Show();
+           
             InitializeComponent();
+
+            this.WindowState = FormWindowState.Maximized;
         }
 
         private void Form1_Load(object sender, EventArgs e)
