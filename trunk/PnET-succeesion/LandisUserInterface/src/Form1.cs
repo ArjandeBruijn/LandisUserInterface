@@ -28,6 +28,18 @@ namespace LandisUserInterface
 
             timer1.Start();
         }
+        string LandisConsoleExe
+        {
+            get
+            {
+                return Properties.Settings.Default.LandisConsoleExe;
+            }
+            set
+            {
+                Properties.Settings.Default.LandisConsoleExe = value;
+                Properties.Settings.Default.Save();
+            }
+        }
         string LastScenarioFileNames
         {
             get
@@ -206,10 +218,45 @@ namespace LandisUserInterface
                 backgroundWorker1.RunWorkerAsync();
             }
         }
+        public void RunSimulation(string path)
+        {
+            if (System.IO.File.Exists(path) == false) throw new System.Exception("File " + path + " does not exist");
 
+            System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(path));
+
+            Directory.DeleteDirectory("output");
+
+            if (System.IO.File.Exists(path))
+            {
+                System.Diagnostics.Process simulation = new System.Diagnostics.Process();
+
+                simulation.StartInfo.FileName = @"C:\Program Files\LANDIS-II\v6\bin\Landis.Console-6.0.exe";
+
+                if (System.IO.File.Exists(simulation.StartInfo.FileName) == false)
+                {
+                    OpenFileDialog dlg = new OpenFileDialog();
+                    dlg.Title = "Select your landis console executable";
+                    if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        LandisConsoleExe = dlg.FileName;
+                        RunSimulation(path);
+                    }
+                    else return;
+                }
+
+                simulation.StartInfo.Arguments = "\"" + path + "\"";
+
+                simulation.Start();
+
+                 
+            }
+
+        }
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            string path = treeView1.SelectedNode.ToolTipText;
 
+            RunSimulation(path);
         }
     }
 }
