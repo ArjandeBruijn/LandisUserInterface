@@ -117,8 +117,8 @@ namespace LandisUserInterface
         {
             if (IsScenarioFile(path))
             {
-                TreeNode node = new TreeNode(System.IO.Path.GetFileName(path));
-
+                TreeNode node = new TreeNode();
+                node.Text = node.Name = System.IO.Path.GetFileName(path);
                 node.ToolTipText = path;
 
                 HeaderScenarioFiles.Nodes.Add(node);
@@ -172,21 +172,63 @@ namespace LandisUserInterface
                 SubNodeTexts.Add(node.Text);
             }
             return SubNodeTexts;
-        } 
+        }
          
+
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             
         }
+        void UpdateFolderNode(TreeNode parent)
+        {
+            string Folder = parent.ToolTipText;
 
+            if (System.IO.Directory.Exists(Folder) == false)
+            {
+                return;
+            }
+
+            foreach (string file in System.IO.Directory.GetFiles(Folder))
+            {
+                if (parent.Nodes[System.IO.Path.GetFileName(file)] == null)
+                {
+                    TreeNode child = new TreeNode();
+                    child.Name = child.Text = System.IO.Path.GetFileName(file);
+                    parent.Nodes.Add(child);
+
+                }
+            }
+           
+
+            foreach (string subfolder in System.IO.Directory.GetDirectories(Folder))
+            {
+                if (parent.Nodes[subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last()] == null)
+                {
+                    TreeNode child = new TreeNode();
+                    child.Name = child.Text = subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last();
+                    child.ToolTipText = subfolder;
+                    parent.Nodes.Add(child);
+                    
+                }
+                UpdateFolderNode(parent.Nodes[subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last()]);
+            }
+             
+        }
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // List all files that should be in the interface
-            foreach (TreeNode scenario_nodes in HeaderScenarioFiles.Nodes)
+            foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
             {
-                string path = scenario_nodes.ToolTipText;
+                string path = scenario_node.ToolTipText;
 
-                System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(path));
+                try
+                {
+                    System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(path));
+                }
+                catch
+                {
+                    double t = 0.0;
+                }
 
                 foreach (string line in System.IO.File.ReadAllLines(path))
                 {
@@ -201,14 +243,31 @@ namespace LandisUserInterface
                     foreach (string term in terms)
                     {
 
-                        if (System.IO.File.Exists(term) && SubNodeTexts(scenario_nodes.Nodes).Contains(term) == false)
+                        if (System.IO.File.Exists(term) && SubNodeTexts(scenario_node.Nodes).Contains(term) == false)
                         {
-                            scenario_nodes.Nodes.Add(term);
+                            scenario_node.Nodes.Add(term);
                         }
                     }
-
                 }
+                if (System.IO.Directory.Exists("output"))
+                {
+                    if (scenario_node.Nodes["output"] == null)
+                    {
+                        TreeNode child = new TreeNode();
+                        child.Text = child.Name = "output";
+                        child.ToolTipText = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(scenario_node.ToolTipText), "output");
+                        scenario_node.Nodes.Add(child);
+                    }
+
+                    UpdateFolderNode(scenario_node.Nodes["output"]);
+                
+                }
+                
             }
+
+           
+
+
         }
 
         private void timer1_Tick(object sender, EventArgs e)
