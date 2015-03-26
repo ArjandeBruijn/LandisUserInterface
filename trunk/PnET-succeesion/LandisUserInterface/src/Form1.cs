@@ -243,14 +243,7 @@ namespace LandisUserInterface
             {
                 string path = scenario_node.ToolTipText;
 
-                try
-                {
-                    System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(path));
-                }
-                catch
-                {
-                    double t = 0.0;
-                }
+                System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(path));
 
                 foreach (string line in System.IO.File.ReadAllLines(path))
                 {

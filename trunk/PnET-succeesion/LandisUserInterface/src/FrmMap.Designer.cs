@@ -185,7 +185,7 @@
             this.axMap1.Name = "axMap1";
             this.axMap1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axMap1.OcxState")));
             this.axMap1.Size = new System.Drawing.Size(312, 380);
-            this.axMap1.TabIndex = 0;
+            this.axMap1.TabIndex = 41;
             // 
             // FrmMap
             // 
@@ -193,11 +193,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(656, 433);
+            this.Controls.Add(this.axMap1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.treeViewLayers);
             this.Controls.Add(this.toolBar1);
-            this.Controls.Add(this.axMap1);
             this.Name = "FrmMap";
             this.Text = "FrmMap";
             this.Load += new System.EventHandler(this.FrmMap_Load);
@@ -211,7 +211,6 @@
 
         #endregion
 
-        private AxMapWinGIS.AxMap axMap1;
         private System.Windows.Forms.ToolBar toolBar1;
         private System.Windows.Forms.ToolBarButton tbZoomIn;
         private System.Windows.Forms.ToolBarButton tbZoomOut;
@@ -225,5 +224,6 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private AxMapWinGIS.AxMap axMap1;
     }
 }
