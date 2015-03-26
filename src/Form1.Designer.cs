@@ -100,12 +100,15 @@
             // 
             // dockContainer1
             // 
+            this.dockContainer1.AllowDrop = true;
             this.dockContainer1.BackColor = System.Drawing.Color.White;
             this.dockContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dockContainer1.Location = new System.Drawing.Point(0, 0);
             this.dockContainer1.Name = "dockContainer1";
             this.dockContainer1.Size = new System.Drawing.Size(211, 258);
             this.dockContainer1.TabIndex = 1;
+            this.dockContainer1.DragDrop += new System.Windows.Forms.DragEventHandler(this.dockContainer1_DragDrop);
+            this.dockContainer1.DragEnter += new System.Windows.Forms.DragEventHandler(this.dockContainer1_DragEnter);
             // 
             // ProjectOptions
             // 

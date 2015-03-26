@@ -387,9 +387,7 @@ namespace LandisUserInterface
         }
         private void treeView1_DragLeave(object sender, EventArgs e)
         {
-            string path = this.treeView1.SelectedNode.ToolTipText;
-
-            System.Diagnostics.Process.Start(System.IO.Path.GetDirectoryName(path));
+           
         }
         // Select the node under the mouse pointer to indicate the  
         // expected drop location. 
@@ -453,6 +451,16 @@ namespace LandisUserInterface
             // call the ContainsNode method recursively using the parent of  
             // the second node. 
             return ContainsNode(node1, node2.Parent);
+        }
+
+        private void dockContainer1_DragDrop(object sender, DragEventArgs e)
+        {
+            double t = 0.0;
+        }
+
+        private void dockContainer1_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = e.AllowedEffect;
         }
 
         
