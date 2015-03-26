@@ -72,7 +72,7 @@ namespace LandisUserInterface
 
                 i += BinWidth;
             }
-            //gridScheme.ApplyColoringType(MapWinGIS.ColoringType.Gradient);
+            gridScheme.ApplyColoringType(MapWinGIS.ColoringType.Gradient);
 
             return gridScheme;
         }
@@ -101,10 +101,8 @@ namespace LandisUserInterface
             MapWinGIS.Image map_image = new MapWinGIS.UtilsClass().GridToImage(grid, GridColorscheme, this);
 
             toolStripStatusLabel1.Text = "Ready";
-
-             
-             
-            //map_image.CustomColorScheme = GridColorscheme;
+ 
+            map_image.CustomColorScheme = GridColorscheme;
 
             grid.Close();
 
