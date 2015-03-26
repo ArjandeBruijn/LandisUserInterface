@@ -455,7 +455,16 @@ namespace LandisUserInterface
 
         private void dockContainer1_DragDrop(object sender, DragEventArgs e)
         {
-            double t = 0.0;
+            string path = treeView1.SelectedNode.ToolTipText;
+
+            if (System.IO.File.Exists(path) == false) return;
+
+            if (System.IO.Path.GetExtension(path) == ".img")
+            {
+                FrmMap map = new FrmMap();
+                dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid());
+
+            }
         }
 
         private void dockContainer1_DragEnter(object sender, DragEventArgs e)
