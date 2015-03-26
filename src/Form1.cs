@@ -188,43 +188,53 @@ namespace LandisUserInterface
         {
             
         }
-        void UpdateFolderNode(TreeNode parent)
+        bool UpdateFolderNode(TreeNode parent)
         {
-            string Folder = parent.ToolTipText;
+            string path = parent.ToolTipText;
 
-            if (System.IO.Directory.Exists(Folder) == false)
+            if (System.IO.Directory.Exists(path))
             {
-                return;
-            }
-
-            foreach (string path in System.IO.Directory.GetFiles(Folder))
-            {
-                if (parent.Nodes[System.IO.Path.GetFileName(path)] == null)
+                foreach (string file_path in System.IO.Directory.GetFiles(path))
                 {
-                    TreeNode child = new TreeNode();
-                    child.Name = child.Text = System.IO.Path.GetFileName(path);
-                    child.ToolTipText = path;
-                    child.ImageKey = child.SelectedImageKey  = "File";
-                    parent.Nodes.Add(child);
+                    if (parent.Nodes[System.IO.Path.GetFileName(file_path)] == null)
+                    {
+                        TreeNode child = new TreeNode();
+                        child.Name = child.Text = System.IO.Path.GetFileName(file_path);
+                        child.ToolTipText = file_path;
+                        child.ImageKey = child.SelectedImageKey = "File";
+                        parent.Nodes.Add(child);
+
+                    }
+                }
+
+
+                foreach (string subfolder in System.IO.Directory.GetDirectories(path))
+                {
+                    if (parent.Nodes[subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last()] == null)
+                    {
+                        TreeNode child = new TreeNode();
+                        child.Name = child.Text = subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last();
+                        child.ToolTipText = subfolder;
+                        child.ImageKey = child.SelectedImageKey = "Folder";
+                        parent.Nodes.Add(child);
+
+                    }
 
                 }
+                
             }
-           
-
-            foreach (string subfolder in System.IO.Directory.GetDirectories(Folder))
+            else if (System.IO.File.Exists(path) == false)
             {
-                if (parent.Nodes[subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last()] == null)
-                {
-                    TreeNode child = new TreeNode();
-                    child.Name = child.Text = subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last();
-                    child.ToolTipText = subfolder;
-                    child.ImageKey = child.SelectedImageKey = "Folder";
-                    parent.Nodes.Add(child);
-                    
-                }
-                UpdateFolderNode(parent.Nodes[subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last()]);
+                return false;
             }
-             
+            foreach (TreeNode node in parent.Nodes)
+            {
+                if (UpdateFolderNode(node) == false)
+                {
+                    parent.Nodes.Remove(node);
+                }
+            }
+            return true;
         }
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -279,9 +289,11 @@ namespace LandisUserInterface
                         child.ImageKey = child.SelectedImageKey = "Folder";
                         scenario_node.Nodes.Add(child);
                     }
-
                     UpdateFolderNode(scenario_node.Nodes["output"]);
-                
+                }
+                else if (scenario_node.Nodes["output"] != null)
+                {
+                    scenario_node.Nodes.Remove(scenario_node.Nodes["output"]);
                 }
                 
             }
@@ -455,6 +467,8 @@ namespace LandisUserInterface
 
         private void dockContainer1_DragDrop(object sender, DragEventArgs e)
         {
+            if (treeView1.SelectedNode == null) return;
+
             string path = treeView1.SelectedNode.ToolTipText;
 
             if (System.IO.File.Exists(path) == false) return;
