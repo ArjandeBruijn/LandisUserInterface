@@ -126,8 +126,8 @@ namespace LandisUserInterface
                     AddRemoveScenarioFile.Show(this.treeView1, e.Location);
                 }
                 else if (IsScenarioFile(treeView1.SelectedNode.ToolTipText))
-                { 
-                
+                {
+                    ScenarioFileOptions.Show(this.treeView1, e.Location);
                 }
 
                
@@ -205,6 +205,11 @@ namespace LandisUserInterface
             {
                 backgroundWorker1.RunWorkerAsync();
             }
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
