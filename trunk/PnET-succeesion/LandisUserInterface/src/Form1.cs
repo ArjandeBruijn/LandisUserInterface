@@ -18,7 +18,10 @@ namespace LandisUserInterface
 
             this.WindowState = FormWindowState.Maximized;
 
-            this.treeView1.Width = 500;
+
+            this.treeView1.Font = new Font("Times New Roman", 20);
+            this.treeView1.Nodes.Add("bfsdjkfnsdodfjslfmsdlm");
+           
         }
 
         private void Form1_Load(object sender, EventArgs e)
