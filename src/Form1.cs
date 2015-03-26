@@ -64,7 +64,7 @@ namespace LandisUserInterface
         private bool IsScenarioFile(string path)
         {
             // LandisData  Scenario
-            if (path.Length > 0)
+            if (path.Length > 0 && System.IO.File.Exists(path))
             {
                 foreach (string line in System.IO.File.ReadAllLines(path))
                 {
@@ -136,11 +136,11 @@ namespace LandisUserInterface
 
                 if (treeView1.SelectedNode == HeaderScenarioFiles)
                 {
-                    AddRemoveScenarioFile.Show(this.treeView1, e.Location);
+                    ProjectOptions.Show(this.treeView1, e.Location);
                 }
                 else if (IsScenarioFile(treeView1.SelectedNode.ToolTipText))
                 {
-                    ScenarioFileOptions.Show(this.treeView1, e.Location);
+                    ScenarioOptions.Show(this.treeView1, e.Location);
                 }
 
                
@@ -160,9 +160,7 @@ namespace LandisUserInterface
 
         private void RmvScnFl_Click(object sender, EventArgs e)
         {
-            string FileName ="";
-
-            RemoveLastScenarioFileNames(FileName);
+            this.HeaderScenarioFiles.Nodes.Clear();
         }
        
         List<string> SubNodeTexts(TreeNodeCollection node_collection)
@@ -195,7 +193,7 @@ namespace LandisUserInterface
                 {
                     TreeNode child = new TreeNode();
                     child.Name = child.Text = System.IO.Path.GetFileName(file);
-                    child.ImageKey  = "File";
+                    child.ImageKey = child.SelectedImageKey  = "File";
                     parent.Nodes.Add(child);
 
                 }
@@ -209,7 +207,7 @@ namespace LandisUserInterface
                     TreeNode child = new TreeNode();
                     child.Name = child.Text = subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last();
                     child.ToolTipText = subfolder;
-                    child.ImageKey = "Folder";
+                    child.ImageKey = child.SelectedImageKey = "Folder";
                     parent.Nodes.Add(child);
                     
                 }
@@ -320,6 +318,11 @@ namespace LandisUserInterface
             string path = treeView1.SelectedNode.ToolTipText;
 
             RunSimulation(path);
+        }
+
+        private void Remove_Click(object sender, EventArgs e)
+        {
+            this.treeView1.Nodes.Remove(treeView1.SelectedNode);
         }
     }
 }
