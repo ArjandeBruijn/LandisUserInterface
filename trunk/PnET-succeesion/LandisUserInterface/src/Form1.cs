@@ -24,10 +24,7 @@ namespace LandisUserInterface
             this.treeView1.Font = new Font("Times New Roman", 14);
             this.treeView1.ShowNodeToolTips = true;
 
-            treeView1.ItemDrag += new ItemDragEventHandler(treeView1_ItemDrag);
-            treeView1.DragEnter += new DragEventHandler(treeView1_DragEnter);
-            treeView1.DragOver += new DragEventHandler(treeView1_DragOver);
-            treeView1.DragDrop += new DragEventHandler(treeView1_DragDrop);
+           
 
             HeaderScenarioFiles = new TreeNode("Scenario Files");
             HeaderScenarioFiles.SelectedImageKey =  HeaderScenarioFiles.ImageKey = "RightArrow";
@@ -444,8 +441,8 @@ namespace LandisUserInterface
             // the second node. 
             return ContainsNode(node1, node2.Parent);
         }
-       
 
+         
         
     }
 }
