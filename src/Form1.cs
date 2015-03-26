@@ -257,7 +257,15 @@ namespace LandisUserInterface
 
                         if (System.IO.File.Exists(term) && SubNodeTexts(scenario_node.Nodes).Contains(term) == false)
                         {
-                            scenario_node.Nodes.Add(term);
+                            TreeNode node = new TreeNode();
+                            node.ToolTipText =  node.Text = node.Name = term;
+
+                            if (term.Contains(System.IO.Directory.GetCurrentDirectory()) == false)
+                            {
+                                node.ToolTipText = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), term);
+                            }
+
+                            scenario_node.Nodes.Add(node);
                         }
                     }
                 }
@@ -375,9 +383,14 @@ namespace LandisUserInterface
         // specified in the ItemDrag event handler. 
         private void treeView1_DragEnter(object sender, DragEventArgs e)
         {
-            e.Effect = e.AllowedEffect;
+            //e.Effect = e.AllowedEffect;
         }
+        private void treeView1_DragLeave(object sender, EventArgs e)
+        {
+            string path = this.treeView1.SelectedNode.ToolTipText;
 
+            System.Diagnostics.Process.Start(System.IO.Path.GetDirectoryName(path));
+        }
         // Select the node under the mouse pointer to indicate the  
         // expected drop location. 
         private void treeView1_DragOver(object sender, DragEventArgs e)
@@ -441,6 +454,8 @@ namespace LandisUserInterface
             // the second node. 
             return ContainsNode(node1, node2.Parent);
         }
+
+        
 
          
         
