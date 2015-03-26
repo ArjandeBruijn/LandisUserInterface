@@ -32,7 +32,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.dockContainer1 = new Crom.Controls.Docking.DockContainer();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.AddRemoveScenarioFile = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.AddScnFl = new System.Windows.Forms.ToolStripMenuItem();
             this.RmvScnFl = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
@@ -40,7 +40,7 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
+            this.AddRemoveScenarioFile.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -81,11 +81,11 @@
             // 
             // contextMenuStrip1
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.AddRemoveScenarioFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.AddScnFl,
             this.RmvScnFl});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(187, 48);
+            this.AddRemoveScenarioFile.Name = "contextMenuStrip1";
+            this.AddRemoveScenarioFile.Size = new System.Drawing.Size(187, 48);
             // 
             // AddScnFl
             // 
@@ -123,7 +123,7 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.AddRemoveScenarioFile.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -133,7 +133,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TreeView treeView1;
         private Crom.Controls.Docking.DockContainer dockContainer1;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ContextMenuStrip AddRemoveScenarioFile;
         private System.Windows.Forms.ToolStripMenuItem AddScnFl;
         private System.Windows.Forms.ToolStripMenuItem RmvScnFl;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
