@@ -65,6 +65,7 @@
             this.toolBar1.ShowToolTips = true;
             this.toolBar1.Size = new System.Drawing.Size(656, 28);
             this.toolBar1.TabIndex = 33;
+            this.toolBar1.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.toolBar1_ButtonClick);
             // 
             // tbZoomIn
             // 

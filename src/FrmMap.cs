@@ -136,5 +136,50 @@ namespace LandisUserInterface
         {
 
         }
+        public void PlayAnimation(object sender, EventArgs e)
+        {
+            foreach (TreeNode tree_node in this.treeViewLayers.Nodes)
+            {
+                //SelectLayer(new TreeViewEventArgs(tree_node, TreeViewAction.ByMouse));
+                //SelectLayerNode(new TreeViewEventArgs(tree_node, TreeViewAction.ByMouse));
+
+                axMap1.Invalidate();
+                axMap1.Refresh();
+
+                treeViewLayers.Invalidate();
+                treeViewLayers.Refresh();
+
+                System.Threading.Thread.Sleep(2000);
+            }
+        }
+        
+        private void toolBar1_ButtonClick(object sender, ToolBarButtonClickEventArgs e)
+        {
+            string tag = (string)e.Button.Tag;
+            switch (tag)
+            {
+                case "ZoomIn":
+                    axMap1.CursorMode = MapWinGIS.tkCursorMode.cmZoomIn;
+                    break;
+                case "ZoomOut":
+                    axMap1.CursorMode = MapWinGIS.tkCursorMode.cmZoomOut;
+                    break;
+                case "Pan":
+                    axMap1.CursorMode = MapWinGIS.tkCursorMode.cmPan;
+                    break;
+                case "FullExtents":
+                    axMap1.ZoomToMaxExtents();
+                    break;
+                case "Animation":
+                    PlayAnimation(this, new EventArgs());
+                    break;
+                case "Info":
+                    axMap1.CursorMode = MapWinGIS.tkCursorMode.cmSelection;
+                    break;
+
+
+            }
+        }
+         
     }
 }
