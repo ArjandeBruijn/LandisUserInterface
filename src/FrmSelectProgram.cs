@@ -28,14 +28,13 @@ namespace LandisUserInterface
             Zgraph,
             NotePad
         }
-        private int desiredStartLocationX;
-        private int desiredStartLocationY;
+        private System.Drawing.Point DesiredStartLocation;
+       
 
-        public FrmSelectProgram(int x, int y)
+        public FrmSelectProgram(System.Drawing.Point p)
         {
             // here store the value for x & y into instance variables
-            this.desiredStartLocationX = x;
-            this.desiredStartLocationY = y;
+            DesiredStartLocation = p;
 
             InitializeComponent();
 
@@ -43,7 +42,7 @@ namespace LandisUserInterface
         }
         private void FrmSelectProgram_Load(object sender, EventArgs e)
         {
-            this.SetDesktopLocation(desiredStartLocationX, desiredStartLocationY);
+            this.SetDesktopLocation(DesiredStartLocation.X, DesiredStartLocation.Y);
         }
         private void button1_Click(object sender, EventArgs e)
         {

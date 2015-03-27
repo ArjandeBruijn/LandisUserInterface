@@ -16,8 +16,14 @@ namespace LandisUserInterface
 
         UpdateGraph update_graph;
 
-        public FrmRelableGraph(ZedGraph.CurveList curve_list, UpdateGraph update_graph)
+        System.Drawing.Point DesiredStartLocation;
+        
+        public FrmRelableGraph(System.Drawing.Point p, ZedGraph.CurveList curve_list, UpdateGraph update_graph)
         {
+            this.DesiredStartLocation = p;
+
+           
+
             InitializeComponent();
 
              
@@ -56,6 +62,11 @@ namespace LandisUserInterface
                 update_graph();
 
             }
+        }
+
+        private void FrmRelableGraph_Load(object sender, EventArgs e)
+        {
+             this.SetDesktopLocation(DesiredStartLocation.X, DesiredStartLocation.Y);
         }
 
          

@@ -46,9 +46,10 @@ namespace LandisUserInterface
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(12, 12);
+            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.richTextBox1.Location = new System.Drawing.Point(0, 0);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(251, 189);
+            this.richTextBox1.Size = new System.Drawing.Size(275, 201);
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = "";
             this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
@@ -63,6 +64,7 @@ namespace LandisUserInterface
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FrmRelableGraph";
             this.ShowInTaskbar = false;
+            this.Load += new System.EventHandler(this.FrmRelableGraph_Load);
             this.ResumeLayout(false);
 
         }

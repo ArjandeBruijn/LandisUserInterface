@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ZedGraph;
+using System.Windows.Forms;
 
 namespace LandisUserInterface
 {
@@ -150,9 +151,9 @@ namespace LandisUserInterface
 
             if (rect.Contains(e.X, e.Y))
             {
-                FrmRelableGraph frg = new FrmRelableGraph(Graph1.GraphPane.CurveList, () => this.Graph1.Refresh());
+                FrmRelableGraph frg = new FrmRelableGraph(Cursor.Position, Graph1.GraphPane.CurveList, () => this.Graph1.Refresh());
 
-                frg.Location = this.Graph1.PointToClient(System.Windows.Forms.Cursor.Position);
+                frg.Location = this.Graph1.Location;
 
                 frg.ShowDialog();
                 
