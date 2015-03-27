@@ -493,6 +493,16 @@ namespace LandisUserInterface
 
                    dockContainer1.Add(grid, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid());
                }
+               if (fsp.Selection == FrmSelectProgram.Options.Zgraph)
+               {
+                   FrmGraph graph = new FrmGraph(path);
+
+                   graph.Location = this.dockContainer1.PointToClient(Cursor.Position);
+
+                   dockContainer1.Add(graph, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid());
+
+                    
+               }
                
             }
         }
