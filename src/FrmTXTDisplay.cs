@@ -10,7 +10,8 @@ using System.Windows.Forms;
 namespace LandisUserInterface
 {
     public partial class FrmTXTDisplay : Form
-    { 
+    {
+        bool TextChangedFlag = false;
         string FileName;
         public FrmTXTDisplay(string FileName)
         {
@@ -43,6 +44,8 @@ namespace LandisUserInterface
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (TextChangedFlag == false) return;
+
             string temp_file = System.IO.Path.ChangeExtension(FileName, "~temp.txt");
 
             try
@@ -52,11 +55,19 @@ namespace LandisUserInterface
                 System.IO.File.WriteAllLines(FileName, new string[] { richTextBox1.Text });
 
                 System.IO.File.Delete(temp_file);
+
+                TextChangedFlag = false;
             }
             catch
             {
                 System.IO.File.Move(temp_file, FileName);
             }
+        }
+        
+
+        private void FrmTXTDisplay_TextChanged(object sender, EventArgs e)
+        {
+            TextChangedFlag = true;
         }
 
          

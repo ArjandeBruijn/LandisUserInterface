@@ -54,6 +54,7 @@
             this.Controls.Add(this.richTextBox1);
             this.Name = "FrmTXTDisplay";
             this.Text = "TXTDisplay";
+            this.TextChanged += new System.EventHandler(this.FrmTXTDisplay_TextChanged);
             this.ResumeLayout(false);
 
         }
