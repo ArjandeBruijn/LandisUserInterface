@@ -421,16 +421,40 @@ namespace LandisUserInterface
         {
            
         }
-        
+        void AddMapsInFolder(string path, ref FrmMap map)
+        {
+            foreach (string file in System.IO.Directory.GetFiles(path).Where(o => System.IO.Path.GetExtension(o) == ".img" || System.IO.Path.GetExtension(o) == ".gis"))
+            {
+                if (map == null)
+                {
+                    map = new FrmMap(DragDropOnMap);
+
+                    map.Location = this.dockContainer1.PointToClient(Cursor.Position);
+
+                    dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid());
+
+                }
+                map.LoadImageFile(file);
+            }
+            foreach (string subfolder in System.IO.Directory.GetDirectories(path))
+            {
+                AddMapsInFolder(subfolder, ref map);
+            }
+        }
         private void dockContainer1_DragDrop(object sender, DragEventArgs e)
         {
             if (treeView1.SelectedNode == null) return;
 
             string path = treeView1.SelectedNode.ToolTipText;
 
+            if (System.IO.Directory.Exists(path))
+            {
+                FrmMap map = null;
+                AddMapsInFolder(path, ref map);
+            }
             if (System.IO.File.Exists(path) == false) return;
 
-            if (System.IO.Path.GetExtension(path) == ".img")
+            if (System.IO.Path.GetExtension(path) == ".img" || System.IO.Path.GetExtension(path) == ".gis")
             {
                 FrmMap map = new FrmMap(DragDropOnMap);
                 
