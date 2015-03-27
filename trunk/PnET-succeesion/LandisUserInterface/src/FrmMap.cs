@@ -19,6 +19,9 @@ namespace LandisUserInterface
         public FrmMap()
         {
             InitializeComponent();
+
+            TreeViewLegend.ImageList = new ImageList();
+
         }
         public void Progress(string s1, int p, string s2)
         {
@@ -76,6 +79,25 @@ namespace LandisUserInterface
 
             return gridScheme;
         }
+
+        Bitmap NodeRect(Font MyFont, System.Drawing.Color myColor, string RefString = "----")
+        {
+            SizeF stringSize = new SizeF();
+            stringSize = this.CreateGraphics().MeasureString(RefString, MyFont);
+
+            Bitmap flag = new Bitmap((int)stringSize.Width, (int)stringSize.Height);
+
+            float margin = 0.2F;
+
+            Rectangle rect = new Rectangle((int)(margin * flag.Size.Width), (int)(margin * flag.Size.Height), (int)((1F - margin) * flag.Size.Width), (int)((1F - margin) * flag.Size.Height));
+
+
+            System.Drawing.Graphics.FromImage(flag).FillRectangle(new System.Drawing.SolidBrush(myColor), rect);
+
+            System.Drawing.Graphics.FromImage(flag).DrawRectangle(new Pen(System.Drawing.Color.Black, 2), rect);
+
+            return flag;
+        }
         public void LoadImageFile(string FileName)
         {
             MapWinGIS.Grid grid = new MapWinGIS.Grid();
@@ -108,17 +130,69 @@ namespace LandisUserInterface
 
             int LayerHandle = axMap1.AddLayer(map_image, true);
 
-            //Image node_image = null;
-            //AddNode(new OutputFileMap(FileName).Year, RankedLegendNodes, this.treeViewLayers, LayerName, FileName, LayerName, node_image);
+            TreeNode node = new TreeNode();
+            node.Name = FileName;
+            node.Text = System.IO.Path.GetFileName(FileName);
+            node.ToolTipText = FileName;
+            node.Tag = new OutputFileMap(FileName).Year;
 
-            //Set_LayerName(LayerHandle, LayerName);
+            for (int index = 0; index < treeViewLayers.Nodes.Count; index++)
+            {
+                if (int.Parse(treeViewLayers.Nodes[index].Tag.ToString()) > int.Parse(node.Tag.ToString()))
+                {
+                    treeViewLayers.Nodes.Insert(index, node);
+                    break;
+                }
+                
+            }
+            if (treeViewLayers.Nodes.ContainsKey(node.Name) == false)
+            {
+                treeViewLayers.Nodes.Add(node);
+            }
+            axMap1.set_LayerName(LayerHandle, node.Name);
 
             axMap1.SetImageLayerColorScheme(LayerHandle, GridColorscheme);
 
             axMap1.ZoomToMaxExtents();
 
-            //ApplyColorSchemeToLegend(GridColorscheme);
+            TreeViewLegend.Nodes.Clear();
 
+            for (int i = 0; i < GridColorscheme.NumBreaks; i++)
+            {
+                MapWinGIS.GridColorBreak colorbreak = GridColorscheme.get_Break(i);
+
+                string Label = null;
+                if (colorbreak.HighValue - colorbreak.LowValue <= 1)
+                {
+                    Label = colorbreak.HighValue.ToString();
+                }
+                else
+                {
+                    Label = colorbreak.LowValue.ToString() + "-" + colorbreak.HighValue.ToString();
+                }
+
+                //AddNode((int)colorbreak.LowValue, RankedNodes, this.treeViewLegend, Label, null, colorbreak.HighValue.ToString(), NodeRect(treeViewLegend.Font, Color.UIntToColor(colorbreak.HighColor)));
+         
+                TreeNode legend_node = new TreeNode();
+                
+                legend_node.Text = colorbreak.LowValue.ToString() + "-"+ colorbreak.HighValue.ToString();
+
+                legend_node.ToolTipText = "";
+
+                string ImageKey = colorbreak.LowValue.ToString() + "-" + colorbreak.HighValue.ToString();
+                if (TreeViewLegend.ImageList.Images.ContainsKey(ImageKey) == false)
+                {
+                    TreeViewLegend.ImageList.Images.Add(ImageKey, NodeRect(this.TreeViewLegend.Font, Color.UIntToColor(colorbreak.HighColor)));
+                }
+                legend_node.Tag = legend_node.SelectedImageKey = legend_node.ImageKey = ImageKey;
+               
+                this.TreeViewLegend.Nodes.Add(legend_node);
+
+                 
+
+             }
+
+            
             string NodeText = System.IO.Path.GetFileNameWithoutExtension(FileName);
             string TipToolText = FileName;
 
