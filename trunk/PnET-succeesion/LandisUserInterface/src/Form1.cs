@@ -408,17 +408,7 @@ namespace LandisUserInterface
         {
            
         }
-        // Select the node under the mouse pointer to indicate the  
-        // expected drop location. 
-        private void treeView1_DragOver(object sender, DragEventArgs e)
-        {
-            // Retrieve the client coordinates of the mouse position.
-            Point targetPoint = treeView1.PointToClient(new Point(e.X, e.Y));
-
-            // Select the node at the mouse position.
-            treeView1.SelectedNode = treeView1.GetNodeAt(targetPoint);
-        }
- 
+        
         private void dockContainer1_DragDrop(object sender, DragEventArgs e)
         {
             if (treeView1.SelectedNode == null) return;
@@ -441,15 +431,24 @@ namespace LandisUserInterface
         }
         void DragDropOnMap(object sender, DragEventArgs e)
         {
-            string path = treeView1.SelectedNode.ToolTipText;
-            ((FrmMap)sender).LoadImageFile(path);
+            if (treeView1.SelectedNode != null)
+            {
+                string path = treeView1.SelectedNode.ToolTipText;
+                ((FrmMap)sender).LoadImageFile(path);
+            }
         }
         private void dockContainer1_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = e.AllowedEffect;
         }
 
-        
+        private void treeView1_NodeMouseHover(object sender, TreeNodeMouseHoverEventArgs e)
+        {
+            if (e.Node != null)
+            {
+                treeView1.SelectedNode = e.Node;
+            }
+        }
 
         
 
