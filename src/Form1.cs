@@ -417,7 +417,7 @@ namespace LandisUserInterface
             {
                 FrmMap map = new FrmMap();
 
-                map.Location = this.dockContainer1.PointToClient(Cursor.Position);// new Point(Cursor.Position.X, Cursor.Position.Y);
+                map.Location = this.dockContainer1.PointToClient(Cursor.Position);
                 
                 dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid());
 
