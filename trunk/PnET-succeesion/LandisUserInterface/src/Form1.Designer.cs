@@ -45,8 +45,9 @@
             this.ShowFolderLocation = new System.Windows.Forms.ToolStripMenuItem();
             this.FileOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ShowFileLocation = new System.Windows.Forms.ToolStripMenuItem();
-            this.updateoutputbackgroundworker = new LandisUserInterface.UpdateBackgroundWorker();
-            this.updateInputBackGroundWorker = new LandisUserInterface.UpdateBackgroundWorker();
+            this.updateoutputbackgroundworker = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Add);
+            this.updateInputBackGroundWorker = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Add);
+            this.updateBackgourndWorkerRemove = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Remove);
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -86,7 +87,6 @@
             this.treeView1.TabIndex = 0;
             this.treeView1.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeView1_ItemDrag);
             this.treeView1.NodeMouseHover += new System.Windows.Forms.TreeNodeMouseHoverEventHandler(this.treeView1_NodeMouseHover);
-           
             this.treeView1.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeView1_DragEnter);
             this.treeView1.DragLeave += new System.EventHandler(this.treeView1_DragLeave);
             this.treeView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseClick);
@@ -196,6 +196,10 @@
             // 
             this.updateInputBackGroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateInputBackGroundWorker_DoWork);
             // 
+            // updateBackgourndWorkerRemove
+            // 
+            this.updateBackgourndWorkerRemove.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateBackgourndWorkerRemove_DoWork);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -235,6 +239,7 @@
         private System.Windows.Forms.ToolStripMenuItem ShowFolderLocation;
         private System.Windows.Forms.ContextMenuStrip FileOptions;
         private System.Windows.Forms.ToolStripMenuItem ShowFileLocation;
+        private UpdateBackgroundWorker updateBackgourndWorkerRemove;
         
 
     }
