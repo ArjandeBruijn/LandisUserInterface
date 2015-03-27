@@ -199,7 +199,7 @@ namespace LandisUserInterface
                         child.Name = child.Text = System.IO.Path.GetFileName(file_path);
                         child.ToolTipText = file_path;
                         child.ImageKey = child.SelectedImageKey = "File";
-                        this.backgroundWorker1.ScheduleNodeAddition(new TreeNode[] { parent, child });
+                        this.backgroundWorker1.Schedule(new TreeNode[] { parent, child }, BackgroundWorker.AddOrRemove.Add);
                         return true;
                     }
                 }
@@ -213,7 +213,7 @@ namespace LandisUserInterface
                         child.Name = child.Text = subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last();
                         child.ToolTipText = subfolder;
                         child.ImageKey = child.SelectedImageKey = "Folder";
-                        backgroundWorker1.ScheduleNodeAddition(new TreeNode[] { parent, child });
+                        backgroundWorker1.Schedule(new TreeNode[] { parent, child }, BackgroundWorker.AddOrRemove.Add);
                         return true;
                     }
 
@@ -228,11 +228,10 @@ namespace LandisUserInterface
             {
                 if (UpdateFolderNode(node) == false)
                 {
-                    backgroundWorker1.ScheduleNodeRemoval (new TreeNode[] { parent, node });
+                    backgroundWorker1.Schedule(new TreeNode[] { parent, node }, BackgroundWorker.AddOrRemove.Add);
                     parent.Nodes.Remove(node);
                 }
-                if (backgroundWorker1.NodeToAdd != null) return true;
-                if (backgroundWorker1.NodeToRemove != null) return true;
+                if (backgroundWorker1.HasScheduledWork) return true;
             }
             return true;
         }
@@ -270,7 +269,7 @@ namespace LandisUserInterface
                             {
                                 node.ToolTipText = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), term);
                             }
-                            backgroundWorker1.ScheduleNodeAddition(new TreeNode[] { scenario_node, node });
+                            backgroundWorker1.Schedule(new TreeNode[] { scenario_node, node }, BackgroundWorker.AddOrRemove.Add);
                             return;
                         }
                     }
@@ -284,14 +283,14 @@ namespace LandisUserInterface
                         child.ToolTipText = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(scenario_node.ToolTipText), "output");
                         child.ImageKey = child.SelectedImageKey = "Folder";
 
-                        backgroundWorker1.ScheduleNodeAddition(new TreeNode[] { scenario_node, child });
+                        backgroundWorker1.Schedule(new TreeNode[] { scenario_node, child }, BackgroundWorker.AddOrRemove.Add);
                         return; 
                     }
                     UpdateFolderNode(scenario_node.Nodes["output"]);
                 }
                 else if (scenario_node.Nodes["output"] != null)
                 {
-                    backgroundWorker1.ScheduleNodeRemoval(new TreeNode[] { scenario_node, scenario_node.Nodes["output"] });
+                    backgroundWorker1.Schedule(new TreeNode[] { scenario_node, scenario_node.Nodes["output"] }, BackgroundWorker.AddOrRemove.Remove);
                     return;
                 }
 
