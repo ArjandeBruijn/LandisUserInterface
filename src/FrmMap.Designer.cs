@@ -39,7 +39,7 @@
             this.tbAnimation = new System.Windows.Forms.ToolBarButton();
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
             this.treeViewLayers = new System.Windows.Forms.TreeView();
-            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.TreeViewLegend = new System.Windows.Forms.TreeView();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -143,17 +143,16 @@
             this.treeViewLayers.Size = new System.Drawing.Size(166, 380);
             this.treeViewLayers.TabIndex = 38;
             // 
-            // treeView1
+            // TreeViewLegend
             // 
-            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.TreeViewLegend.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.treeView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.treeView1.CheckBoxes = true;
-            this.treeView1.Location = new System.Drawing.Point(490, 28);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.ShowNodeToolTips = true;
-            this.treeView1.Size = new System.Drawing.Size(166, 380);
-            this.treeView1.TabIndex = 39;
+            this.TreeViewLegend.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.TreeViewLegend.Location = new System.Drawing.Point(490, 28);
+            this.TreeViewLegend.Name = "TreeViewLegend";
+            this.TreeViewLegend.ShowNodeToolTips = true;
+            this.TreeViewLegend.Size = new System.Drawing.Size(166, 380);
+            this.TreeViewLegend.TabIndex = 39;
             // 
             // statusStrip1
             // 
@@ -196,7 +195,7 @@
             this.ClientSize = new System.Drawing.Size(656, 433);
             this.Controls.Add(this.axMap1);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.treeView1);
+            this.Controls.Add(this.TreeViewLegend);
             this.Controls.Add(this.treeViewLayers);
             this.Controls.Add(this.toolBar1);
             this.Name = "FrmMap";
@@ -221,7 +220,7 @@
         private System.Windows.Forms.ToolBarButton tbAnimation;
         private System.Windows.Forms.ImageList imageList2;
         private System.Windows.Forms.TreeView treeViewLayers;
-        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TreeView TreeViewLegend;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
