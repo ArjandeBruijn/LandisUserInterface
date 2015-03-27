@@ -199,7 +199,7 @@ namespace LandisUserInterface
                         child.Name = child.Text = System.IO.Path.GetFileName(file_path);
                         child.ToolTipText = file_path;
                         child.ImageKey = child.SelectedImageKey = "File";
-                        this.backgroundWorker1.Schedule(new TreeNode[] { parent, child }, BackgroundWorker.AddOrRemove.Add);
+                        this.updateoutputbackgroundworker.Schedule(new TreeNode[] { parent, child }, UpdateBackgroundWorker.AddOrRemove.Add);
                         return true;
                     }
                 }
@@ -213,7 +213,7 @@ namespace LandisUserInterface
                         child.Name = child.Text = subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last();
                         child.ToolTipText = subfolder;
                         child.ImageKey = child.SelectedImageKey = "Folder";
-                        backgroundWorker1.Schedule(new TreeNode[] { parent, child }, BackgroundWorker.AddOrRemove.Add);
+                        updateoutputbackgroundworker.Schedule(new TreeNode[] { parent, child }, UpdateBackgroundWorker.AddOrRemove.Add);
                         return true;
                     }
 
@@ -228,26 +228,20 @@ namespace LandisUserInterface
             {
                 if (UpdateFolderNode(node) == false)
                 {
-                    backgroundWorker1.Schedule(new TreeNode[] { parent, node }, BackgroundWorker.AddOrRemove.Add);
+                    updateoutputbackgroundworker.Schedule(new TreeNode[] { parent, node }, UpdateBackgroundWorker.AddOrRemove.Add);
                     parent.Nodes.Remove(node);
                 }
-                if (backgroundWorker1.HasScheduledWork) return true;
+                if (updateoutputbackgroundworker.HasScheduledWork) return true;
             }
             return true;
         }
-       
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        private void updateInputBackGroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            backgroundWorker1.Reset();
-
-            // List all files that should be in the interface
             foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
             {
-                string path = scenario_node.ToolTipText;
+                string path_scenario_file = scenario_node.ToolTipText;
 
-                System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(path));
-
-                foreach (string line in System.IO.File.ReadAllLines(path))
+                foreach (string line in System.IO.File.ReadAllLines(path_scenario_file))
                 {
                     string _line = line;
                     if (_line.Contains("<<"))
@@ -256,10 +250,9 @@ namespace LandisUserInterface
                     }
 
                     string[] terms = _line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
+                     
                     foreach (string term in terms)
                     {
-
                         if (System.IO.File.Exists(term) && SubNodeTexts(scenario_node.Nodes).Contains(term) == false)
                         {
                             TreeNode node = new TreeNode();
@@ -269,11 +262,26 @@ namespace LandisUserInterface
                             {
                                 node.ToolTipText = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), term);
                             }
-                            backgroundWorker1.Schedule(new TreeNode[] { scenario_node, node }, BackgroundWorker.AddOrRemove.Add);
-                            return;
+                            if (scenario_node.Nodes[node.Name] == null)
+                            {
+                                updateInputBackGroundWorker.Schedule(new TreeNode[] { scenario_node, node }, UpdateBackgroundWorker.AddOrRemove.Add);
+                                return;
+                            }
                         }
                     }
                 }
+            }
+        }
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            // List all files that should be in the interface
+            foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
+            {
+                string path_scenario_file = scenario_node.ToolTipText;
+
+                System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(path_scenario_file));
+
+                
                 if (System.IO.Directory.Exists("output"))
                 {
                     if (scenario_node.Nodes["output"] == null)
@@ -283,14 +291,14 @@ namespace LandisUserInterface
                         child.ToolTipText = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(scenario_node.ToolTipText), "output");
                         child.ImageKey = child.SelectedImageKey = "Folder";
 
-                        backgroundWorker1.Schedule(new TreeNode[] { scenario_node, child }, BackgroundWorker.AddOrRemove.Add);
+                        updateoutputbackgroundworker.Schedule(new TreeNode[] { scenario_node, child }, UpdateBackgroundWorker.AddOrRemove.Add);
                         return; 
                     }
                     UpdateFolderNode(scenario_node.Nodes["output"]);
                 }
                 else if (scenario_node.Nodes["output"] != null)
                 {
-                    backgroundWorker1.Schedule(new TreeNode[] { scenario_node, scenario_node.Nodes["output"] }, BackgroundWorker.AddOrRemove.Remove);
+                    updateoutputbackgroundworker.Schedule(new TreeNode[] { scenario_node, scenario_node.Nodes["output"] }, UpdateBackgroundWorker.AddOrRemove.Remove);
                     return;
                 }
 
@@ -299,9 +307,14 @@ namespace LandisUserInterface
          
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (backgroundWorker1.IsBusy == false)
+            if (updateoutputbackgroundworker.IsBusy == false)
             {
-                backgroundWorker1.RunWorkerAsync();
+                updateoutputbackgroundworker.RunWorkerAsync();
+            }
+
+            if (updateInputBackGroundWorker.IsBusy == false)
+            {
+                updateInputBackGroundWorker.RunWorkerAsync();
             }
         }
         public void RunSimulation(string path)
@@ -435,6 +448,8 @@ namespace LandisUserInterface
         {
             e.Effect = e.AllowedEffect;
         }
+
+        
 
         
 

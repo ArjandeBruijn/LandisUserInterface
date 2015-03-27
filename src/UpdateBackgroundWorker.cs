@@ -3,9 +3,9 @@
 
 namespace LandisUserInterface
 {
-    class BackgroundWorker : System.ComponentModel.BackgroundWorker
+    class UpdateBackgroundWorker : System.ComponentModel.BackgroundWorker
     {
-        TreeNode[] node;
+        TreeNode[] node =null;
         AddOrRemove add_or_remove;
 
         public enum AddOrRemove
@@ -14,7 +14,7 @@ namespace LandisUserInterface
             Remove
         }
 
-        public BackgroundWorker()
+        public UpdateBackgroundWorker()
         {
             RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
         }
@@ -23,10 +23,10 @@ namespace LandisUserInterface
         {
             if (node != null)
             {
-                node[0].Nodes.Add(node[1]);
-                node[0].Nodes.Remove(node[1]);
+                if (add_or_remove == AddOrRemove.Add) node[0].Nodes.Add(node[1]);
+                else node[0].Nodes.Remove(node[1]);
             }
-            
+            Reset();
         }
         public bool HasScheduledWork
         {
@@ -43,7 +43,7 @@ namespace LandisUserInterface
         }
         
 
-        public void Reset()
+        void Reset()
         {
             node = null;
         }
