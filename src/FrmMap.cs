@@ -196,9 +196,6 @@ namespace LandisUserInterface
             string NodeText = System.IO.Path.GetFileNameWithoutExtension(FileName);
             string TipToolText = FileName;
 
-            //SelectLayer(new TreeViewEventArgs(this.treeViewLayers.Nodes[treeViewLayers.Nodes.Count - 1], TreeViewAction.ByMouse));
-            //SelectLayerNode(new TreeViewEventArgs(treeViewLayers.Nodes[treeViewLayers.Nodes.Count - 1], TreeViewAction.ByMouse));
-            
             this.axMap1.Invalidate();
             this.axMap1.Update();
             this.axMap1.Refresh();

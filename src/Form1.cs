@@ -127,7 +127,7 @@ namespace LandisUserInterface
                 node.ToolTipText = path;
 
                 HeaderScenarioFiles.Nodes.Add(node);
-                //HeaderScenarioFiles.ExpandAll();
+                HeaderScenarioFiles.Expand();
                 AddLastScenarioFileName(path);
             }
         }
