@@ -49,8 +49,17 @@
     <Reference Include="unvell.ReoGrid">
       <HintPath>..\ReoGrid-0.8.5-Demo\unvell.ReoGrid.dll</HintPath>
     </Reference>
+    <Reference Include="ZedGraph">
+      <HintPath>..\..\trunk\SiteVeg\bin\Debug\ZedGraph.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FrmGraph.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmGraph.Designer.cs">
+      <DependentUpon>FrmGraph.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmGrid.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -68,6 +77,9 @@
     </Compile>
     <Compile Include="FrmTXTDisplay.Designer.cs">
       <DependentUpon>FrmTXTDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TabPageWithGraph.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="UpdateBackgroundWorker.cs">
       <SubType>Component</SubType>
@@ -95,6 +107,9 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FrmGraph.resx">
+      <DependentUpon>FrmGraph.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmGrid.resx">
       <DependentUpon>FrmGrid.cs</DependentUpon>
     </EmbeddedResource>
@@ -117,6 +132,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="TabPageWithGraph.resx">
+      <DependentUpon>TabPageWithGraph.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
