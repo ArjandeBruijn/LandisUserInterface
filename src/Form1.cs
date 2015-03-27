@@ -184,10 +184,7 @@ namespace LandisUserInterface
         }
          
 
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
-        {
-            
-        }
+       
         bool UpdateFolderNode(TreeNode parent)
         {
             string path = parent.ToolTipText;
@@ -202,8 +199,8 @@ namespace LandisUserInterface
                         child.Name = child.Text = System.IO.Path.GetFileName(file_path);
                         child.ToolTipText = file_path;
                         child.ImageKey = child.SelectedImageKey = "File";
-                        parent.Nodes.Add(child);
-
+                        NodeToAdd = new TreeNode[] { parent, child };
+                        return true;
                     }
                 }
 
@@ -216,8 +213,8 @@ namespace LandisUserInterface
                         child.Name = child.Text = subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last();
                         child.ToolTipText = subfolder;
                         child.ImageKey = child.SelectedImageKey = "Folder";
-                        parent.Nodes.Add(child);
-
+                        NodeToAdd = new TreeNode[] { parent, child };
+                        return true;
                     }
 
                 }
@@ -231,13 +228,21 @@ namespace LandisUserInterface
             {
                 if (UpdateFolderNode(node) == false)
                 {
+                    NodeToRemove = new TreeNode[] { parent, node };
                     parent.Nodes.Remove(node);
                 }
+                if (NodeToAdd != null) return true;
+                if (NodeToRemove != null) return true;
             }
             return true;
         }
-        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        TreeNode[] NodeToAdd;
+        TreeNode[] NodeToRemove;
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
+            NodeToAdd = null;
+            NodeToRemove = null;
+
             // List all files that should be in the interface
             foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
             {
@@ -261,14 +266,14 @@ namespace LandisUserInterface
                         if (System.IO.File.Exists(term) && SubNodeTexts(scenario_node.Nodes).Contains(term) == false)
                         {
                             TreeNode node = new TreeNode();
-                            node.ToolTipText =  node.Text = node.Name = term;
+                            node.ToolTipText = node.Text = node.Name = term;
 
                             if (term.Contains(System.IO.Directory.GetCurrentDirectory()) == false)
                             {
                                 node.ToolTipText = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), term);
                             }
-
-                            scenario_node.Nodes.Add(node);
+                            NodeToAdd = new TreeNode[] { scenario_node, node };
+                            return;
                         }
                     }
                 }
@@ -280,20 +285,30 @@ namespace LandisUserInterface
                         child.Text = child.Name = "output";
                         child.ToolTipText = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(scenario_node.ToolTipText), "output");
                         child.ImageKey = child.SelectedImageKey = "Folder";
-                        scenario_node.Nodes.Add(child);
+
+                        NodeToAdd = new TreeNode[] { scenario_node, child };
+                        return; 
                     }
                     UpdateFolderNode(scenario_node.Nodes["output"]);
                 }
                 else if (scenario_node.Nodes["output"] != null)
                 {
-                    scenario_node.Nodes.Remove(scenario_node.Nodes["output"]);
+                    NodeToRemove = new TreeNode[] { scenario_node, scenario_node.Nodes["output"] };
+                    return;
                 }
-                
+
             }
-
-           
-
-
+        }
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (NodeToAdd != null)
+            {
+                NodeToAdd[0].Nodes.Add(NodeToAdd[1]);
+            }
+            if (NodeToRemove != null)
+            {
+                NodeToRemove[0].Nodes.Add(NodeToRemove[1]);
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
