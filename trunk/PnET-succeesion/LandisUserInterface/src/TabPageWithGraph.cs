@@ -148,7 +148,18 @@ namespace LandisUserInterface
         {
             System.Drawing.RectangleF rect =  this.Graph1.GraphPane.Legend.Rect;
 
-            double t = 0.0;
+            if (rect.Contains(e.X, e.Y))
+            {
+                FrmRelableGraph frg = new FrmRelableGraph(Graph1.GraphPane.CurveList, () => this.Graph1.Refresh());
+
+                frg.Location = this.Graph1.PointToClient(System.Windows.Forms.Cursor.Position);
+
+                frg.ShowDialog();
+                
+
+            }
+
+             
         }
 
          
