@@ -48,7 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackgroundWorker.cs">
+    <Compile Include="UpdateBackgroundWorker.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Color.cs" />

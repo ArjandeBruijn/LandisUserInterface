@@ -37,7 +37,6 @@
             this.ProjectOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.AddScnFl = new System.Windows.Forms.ToolStripMenuItem();
             this.RmvScnFl = new System.Windows.Forms.ToolStripMenuItem();
-            this.backgroundWorker1 = new  BackgroundWorker();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.ScenarioOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.RunSim = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,6 +45,8 @@
             this.ShowFolderLocation = new System.Windows.Forms.ToolStripMenuItem();
             this.FileOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ShowFileLocation = new System.Windows.Forms.ToolStripMenuItem();
+            this.updateoutputbackgroundworker = new LandisUserInterface.UpdateBackgroundWorker();
+            this.updateInputBackGroundWorker = new LandisUserInterface.UpdateBackgroundWorker();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -131,10 +132,6 @@
             this.RmvScnFl.Text = "Clear";
             this.RmvScnFl.Click += new System.EventHandler(this.RmvScnFl_Click);
             // 
-            // backgroundWorker1
-            // 
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
-            // 
             // timer1
             // 
             this.timer1.Interval = 10;
@@ -190,6 +187,14 @@
             this.ShowFileLocation.Text = "Show file location";
             this.ShowFileLocation.Click += new System.EventHandler(this.ShowFileLocation_Click);
             // 
+            // updateoutputbackgroundworker
+            // 
+            this.updateoutputbackgroundworker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            // 
+            // updateInputBackGroundWorker
+            // 
+            this.updateInputBackGroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateInputBackGroundWorker_DoWork);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -218,7 +223,8 @@
         private System.Windows.Forms.ContextMenuStrip ProjectOptions;
         private System.Windows.Forms.ToolStripMenuItem AddScnFl;
         private System.Windows.Forms.ToolStripMenuItem RmvScnFl;
-        private BackgroundWorker backgroundWorker1;
+        private UpdateBackgroundWorker updateoutputbackgroundworker;
+        private UpdateBackgroundWorker updateInputBackGroundWorker;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ContextMenuStrip ScenarioOptions;
         private System.Windows.Forms.ToolStripMenuItem RunSim;
@@ -228,6 +234,7 @@
         private System.Windows.Forms.ToolStripMenuItem ShowFolderLocation;
         private System.Windows.Forms.ContextMenuStrip FileOptions;
         private System.Windows.Forms.ToolStripMenuItem ShowFileLocation;
+        
 
     }
 }
