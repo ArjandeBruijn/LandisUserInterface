@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
@@ -42,11 +41,6 @@
             this.richTextBox1.Size = new System.Drawing.Size(586, 131);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
-             
-            // 
-            // backgroundWorker1
-            // 
-            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
             // timer1
             // 
@@ -67,7 +61,6 @@
         #endregion
 
         private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Timer timer1;
 
     }
