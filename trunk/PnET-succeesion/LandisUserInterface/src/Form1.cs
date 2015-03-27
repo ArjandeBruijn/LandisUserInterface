@@ -485,6 +485,14 @@ namespace LandisUserInterface
 
                    dockContainer1.Add(txt, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid());
                }
+               if (fsp.Selection == FrmSelectProgram.Options.Excel)
+               {
+                   FrmGrid grid = new FrmGrid(path);
+
+                   grid.Location = this.dockContainer1.PointToClient(Cursor.Position);
+
+                   dockContainer1.Add(grid, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid());
+               }
                
             }
         }

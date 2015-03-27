@@ -46,8 +46,17 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="unvell.ReoGrid">
+      <HintPath>..\ReoGrid-0.8.5-Demo\unvell.ReoGrid.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FrmGrid.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmGrid.Designer.cs">
+      <DependentUpon>FrmGrid.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmSelectProgram.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,6 +94,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmGrid.resx">
+      <DependentUpon>FrmGrid.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMap.resx">
       <DependentUpon>FrmMap.cs</DependentUpon>
@@ -138,6 +150,15 @@
       <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
       <VersionMajor>2</VersionMajor>
       <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
       <Lcid>0</Lcid>
       <WrapperTool>primary</WrapperTool>
       <Isolated>False</Isolated>
