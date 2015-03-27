@@ -465,6 +465,17 @@ namespace LandisUserInterface
                 map.LoadImageFile(path);
                 
             }
+            if (System.IO.Path.GetExtension(path) == ".txt" || System.IO.Path.GetExtension(path) == ".csv")
+            {
+                FrmTXTDisplay txt = new FrmTXTDisplay();
+
+                txt.Location = this.dockContainer1.PointToClient(Cursor.Position);
+
+                dockContainer1.Add(txt, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid());
+
+
+                txt.AppendText(System.IO.File.ReadAllLines(path));
+            }
         }
         void DragDropOnMap(object sender, DragEventArgs e)
         {
