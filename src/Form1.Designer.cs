@@ -190,7 +190,7 @@
             // 
             // updateoutputbackgroundworker
             // 
-            this.updateoutputbackgroundworker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            this.updateoutputbackgroundworker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateoutputbackgroundworker_DoWork);
             // 
             // updateInputBackGroundWorker
             // 

@@ -270,7 +270,7 @@ namespace LandisUserInterface
                 }
             }
         }
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        private void updateoutputbackgroundworker_DoWork(object sender, DoWorkEventArgs e)
         {
             // List all files that should be in the interface
             foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
