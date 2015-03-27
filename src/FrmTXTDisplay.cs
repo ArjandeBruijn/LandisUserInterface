@@ -12,18 +12,14 @@ namespace LandisUserInterface
     public partial class FrmTXTDisplay : Form
     { 
         string FileName;
-        public FrmTXTDisplay()
+        public FrmTXTDisplay(string FileName)
         {
             InitializeComponent();
-            this.Text = FileName;
+            this.FileName = this.Text = FileName;
             timer1.Interval = 500;
             timer1.Start();
         }
-        public void SetFile(string FileName)
-        {
-            this.FileName = FileName;
-        }
-
+         
         public void AppendText(string[] text)
         {
             foreach (string line in text)
@@ -47,7 +43,20 @@ namespace LandisUserInterface
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            
+            string temp_file = System.IO.Path.ChangeExtension(FileName, "~temp.txt");
+
+            try
+            {
+                System.IO.File.Move(FileName, temp_file);
+
+                System.IO.File.WriteAllLines(FileName, new string[] { richTextBox1.Text });
+
+                System.IO.File.Delete(temp_file);
+            }
+            catch
+            {
+                System.IO.File.Move(temp_file, FileName);
+            }
         }
 
          
