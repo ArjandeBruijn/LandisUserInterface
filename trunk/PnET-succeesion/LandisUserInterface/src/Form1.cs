@@ -468,7 +468,9 @@ namespace LandisUserInterface
             }
             if (System.IO.Path.GetExtension(path) == ".txt" || System.IO.Path.GetExtension(path) == ".csv")
             {
-               FrmSelectProgram fsp = new FrmSelectProgram(Cursor.Position.X, Cursor.Position.Y);
+                
+
+               FrmSelectProgram fsp = new FrmSelectProgram(Cursor.Position);
 
                fsp.ShowInTaskbar = false;
 
