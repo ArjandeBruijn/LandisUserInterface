@@ -11,58 +11,72 @@ namespace LandisUserInterface
 {
     public partial class FrmGraph : Form
     {
-        public FrmGraph(string FileName)
+        static int label_counter = 0;
+        public FrmGraph()
         {
-            
-            this.Text = FileName;
-
             InitializeComponent();
-
-            LoadFile(FileName);
+            this.AllowDrop = true;
+            this.Text = "";// FileName.Replace(System.IO.Directory.GetCurrentDirectory(), "");
         }
-
+        
         public void LoadFile(string FileName)
         {
-            string[] FileContent = System.IO.File.ReadAllLines(FileName);
-
-            string[] headers = FileContent[0].Split(new char[] { ',', ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-            Dictionary<string, ZedGraph.LineItem> CurveCollection = new Dictionary<string,ZedGraph.LineItem>();
-
-            foreach (string hdr in headers)
+            try
             {
-                CurveCollection.Add(hdr,new ZedGraph.LineItem("test", null, System.Drawing.Color.Black, ZedGraph.SymbolType.None));
-            }
-             
-            for (int row = 1; row < FileContent.Count(); row++)
-            {
-                string[] terms = FileContent[row].Split(new char[] { ',', ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-                double X;
+                string label = (label_counter++).ToString();
 
-                if (double.TryParse(terms[0], out X) == false) continue;
+                string[] FileContent = System.IO.File.ReadAllLines(FileName);
 
+                string[] headers = FileContent[0].Split(new char[] { ',', ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                Dictionary<string, ZedGraph.LineItem> CurveCollection = new Dictionary<string, ZedGraph.LineItem>();
 
-                for (int col = 0; col < terms.Count(); col++)
+                foreach (string hdr in headers)
                 {
-                    double Y;
+                    CurveCollection.Add(hdr, new ZedGraph.LineItem(label, null, System.Drawing.Color.Black, ZedGraph.SymbolType.None));
+                }
 
-                    if (double.TryParse(terms[col], out Y) == true)
+                for (int row = 1; row < FileContent.Count(); row++)
+                {
+                    string[] terms = FileContent[row].Split(new char[] { ',', ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                    double X;
+
+                    if (double.TryParse(terms[0], out X) == false) continue;
+
+
+                    for (int col = 0; col < terms.Count(); col++)
                     {
-                        CurveCollection[headers[col]].AddPoint(X, Y);
-                    }
-                    
+                        double Y;
 
-                   
+                        if (double.TryParse(terms[col], out Y) == true)
+                        {
+                            CurveCollection[headers[col]].AddPoint(X, Y);
+                        }
+
+
+
+                    }
+                }
+                foreach (KeyValuePair<string, ZedGraph.LineItem> curve in CurveCollection)
+                {
+                    if (tabControl1.TabPages[curve.Key] == null)
+                    {
+                        tabControl1.TabPages.Add(new TabPageWithGraph(curve.Key));
+                    }
+                    ((TabPageWithGraph)tabControl1.TabPages[curve.Key]).AddCurve(curve.Value);
+
                 }
             }
-            foreach (KeyValuePair<string, ZedGraph.LineItem> curve in CurveCollection)
+            catch
             {
-                if (tabControl1.TabPages[curve.Key] == null)
-                {
-                    tabControl1.TabPages.Add(new TabPageWithGraph(curve.Key));
-                }
-                ((TabPageWithGraph)tabControl1.TabPages[curve.Key]).AddCurve(curve.Value);
-            
+                return;
             }
         }
+        
+        private void FrmGraph_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = e.AllowedEffect;
+        }
+
+        
     }
 }
