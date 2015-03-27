@@ -42,13 +42,12 @@
             // 
             // FrmGraph
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(535, 446);
             this.Controls.Add(this.tabControl1);
             this.Name = "FrmGraph";
-            this.Text = "FrmGraphcs";
-            
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.FrmGraph_DragEnter);
             this.ResumeLayout(false);
 

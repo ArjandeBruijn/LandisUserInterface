@@ -12,11 +12,16 @@ namespace LandisUserInterface
     public partial class FrmGraph : Form
     {
         static int label_counter = 0;
+        ColorScheme colorscheme = new ColorScheme(ColorScheme.DefaultColorValues);
+
+        public FrmGraph(ColorScheme colorscheme)
+        {
+            InitializeComponent();
+            this.colorscheme = colorscheme;
+        }
         public FrmGraph()
         {
             InitializeComponent();
-            this.AllowDrop = true;
-            this.Text = "";// FileName.Replace(System.IO.Directory.GetCurrentDirectory(), "");
         }
         
         public void LoadFile(string FileName)
@@ -32,7 +37,7 @@ namespace LandisUserInterface
 
                 foreach (string hdr in headers)
                 {
-                    CurveCollection.Add(hdr, new ZedGraph.LineItem(label, null, System.Drawing.Color.Black, ZedGraph.SymbolType.None));
+                    CurveCollection.Add(hdr, new ZedGraph.LineItem(label, null, colorscheme.NextColor, ZedGraph.SymbolType.None));
                 }
 
                 for (int row = 1; row < FileContent.Count(); row++)
@@ -71,11 +76,13 @@ namespace LandisUserInterface
                 return;
             }
         }
-        
+
         private void FrmGraph_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = e.AllowedEffect;
         }
+        
+        
 
         
     }
