@@ -47,30 +47,9 @@ namespace LandisUserInterface
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (backgroundWorker1.IsBusy==false)
-            {
-                this.backgroundWorker1.RunWorkerAsync();
-            }
-        }
-
-        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (FileName == null) return;
-            try
-            {
-                string[] content = System.IO.File.ReadAllLines(FileName);
-
-                foreach (string line in content)
-                {
-                    AppendText(line);
-                }
-                timer1.Stop();
-
-            }
-            catch
-            { 
             
-            }
         }
+
+         
     }
 }
