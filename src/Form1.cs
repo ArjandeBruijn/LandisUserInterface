@@ -415,8 +415,8 @@ namespace LandisUserInterface
 
             if (System.IO.Path.GetExtension(path) == ".img")
             {
-                FrmMap map = new FrmMap();
-
+                FrmMap map = new FrmMap(DragDropOnMap);
+                
                 map.Location = this.dockContainer1.PointToClient(Cursor.Position);
                 
                 dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid());
@@ -425,7 +425,11 @@ namespace LandisUserInterface
                 
             }
         }
-
+        void DragDropOnMap(object sender, DragEventArgs e)
+        {
+            string path = treeView1.SelectedNode.ToolTipText;
+            ((FrmMap)sender).LoadImageFile(path);
+        }
         private void dockContainer1_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = e.AllowedEffect;
