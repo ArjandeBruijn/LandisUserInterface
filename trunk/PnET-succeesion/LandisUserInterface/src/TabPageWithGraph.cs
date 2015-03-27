@@ -134,14 +134,21 @@ namespace LandisUserInterface
             this.Graph1.ScrollMinY2 = 0D;
             this.Graph1.Size = new System.Drawing.Size(200, 100);
             this.Graph1.TabIndex = 0;
+            this.Graph1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.Graph1_MouseDoubleClick);
             // 
             // TabPageWithGraph
             // 
             this.Controls.Add(this.Graph1);
             this.Dock = System.Windows.Forms.DockStyle.Fill;
-          
             this.ResumeLayout(false);
 
+        }
+
+        private void Graph1_MouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            System.Drawing.RectangleF rect =  this.Graph1.GraphPane.Legend.Rect;
+
+            double t = 0.0;
         }
 
          
