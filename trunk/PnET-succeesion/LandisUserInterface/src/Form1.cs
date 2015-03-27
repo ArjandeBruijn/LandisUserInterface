@@ -199,7 +199,7 @@ namespace LandisUserInterface
                         child.Name = child.Text = System.IO.Path.GetFileName(file_path);
                         child.ToolTipText = file_path;
                         child.ImageKey = child.SelectedImageKey = "File";
-                        NodeToAdd = new TreeNode[] { parent, child };
+                        this.backgroundWorker1.ScheduleNodeAddition(new TreeNode[] { parent, child });
                         return true;
                     }
                 }
@@ -213,7 +213,7 @@ namespace LandisUserInterface
                         child.Name = child.Text = subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last();
                         child.ToolTipText = subfolder;
                         child.ImageKey = child.SelectedImageKey = "Folder";
-                        NodeToAdd = new TreeNode[] { parent, child };
+                        backgroundWorker1.ScheduleNodeAddition(new TreeNode[] { parent, child });
                         return true;
                     }
 
@@ -228,20 +228,18 @@ namespace LandisUserInterface
             {
                 if (UpdateFolderNode(node) == false)
                 {
-                    NodeToRemove = new TreeNode[] { parent, node };
+                    backgroundWorker1.ScheduleNodeRemoval (new TreeNode[] { parent, node });
                     parent.Nodes.Remove(node);
                 }
-                if (NodeToAdd != null) return true;
-                if (NodeToRemove != null) return true;
+                if (backgroundWorker1.NodeToAdd != null) return true;
+                if (backgroundWorker1.NodeToRemove != null) return true;
             }
             return true;
         }
-        TreeNode[] NodeToAdd;
-        TreeNode[] NodeToRemove;
+       
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            NodeToAdd = null;
-            NodeToRemove = null;
+            backgroundWorker1.Reset();
 
             // List all files that should be in the interface
             foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
@@ -272,7 +270,7 @@ namespace LandisUserInterface
                             {
                                 node.ToolTipText = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), term);
                             }
-                            NodeToAdd = new TreeNode[] { scenario_node, node };
+                            backgroundWorker1.ScheduleNodeAddition(new TreeNode[] { scenario_node, node });
                             return;
                         }
                     }
@@ -286,31 +284,20 @@ namespace LandisUserInterface
                         child.ToolTipText = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(scenario_node.ToolTipText), "output");
                         child.ImageKey = child.SelectedImageKey = "Folder";
 
-                        NodeToAdd = new TreeNode[] { scenario_node, child };
+                        backgroundWorker1.ScheduleNodeAddition(new TreeNode[] { scenario_node, child });
                         return; 
                     }
                     UpdateFolderNode(scenario_node.Nodes["output"]);
                 }
                 else if (scenario_node.Nodes["output"] != null)
                 {
-                    NodeToRemove = new TreeNode[] { scenario_node, scenario_node.Nodes["output"] };
+                    backgroundWorker1.ScheduleNodeRemoval(new TreeNode[] { scenario_node, scenario_node.Nodes["output"] });
                     return;
                 }
 
             }
         }
-        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (NodeToAdd != null)
-            {
-                NodeToAdd[0].Nodes.Add(NodeToAdd[1]);
-            }
-            if (NodeToRemove != null)
-            {
-                NodeToRemove[0].Nodes.Add(NodeToRemove[1]);
-            }
-        }
-
+         
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (backgroundWorker1.IsBusy == false)

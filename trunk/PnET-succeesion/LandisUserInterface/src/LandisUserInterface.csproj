@@ -48,6 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackgroundWorker.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Color.cs" />
     <Compile Include="ColorScheme.cs" />
     <Compile Include="ColorSchemeClassified.cs" />
