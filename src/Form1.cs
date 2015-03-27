@@ -404,60 +404,7 @@ namespace LandisUserInterface
             // Select the node at the mouse position.
             treeView1.SelectedNode = treeView1.GetNodeAt(targetPoint);
         }
-
-        private void treeView1_DragDrop(object sender, DragEventArgs e)
-        {
-            // Retrieve the client coordinates of the drop location.
-            Point targetPoint = treeView1.PointToClient(new Point(e.X, e.Y));
-
-            // Retrieve the node at the drop location.
-            TreeNode targetNode = treeView1.GetNodeAt(targetPoint);
-
-            if (targetNode == null) return; // do not allow
-
-            // Retrieve the node that was dragged.
-            TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
-
-            // Confirm that the node at the drop location is not  
-            // the dragged node or a descendant of the dragged node. 
-
-            if (!draggedNode.Equals(targetNode) && !ContainsNode(draggedNode, targetNode))
-            {
-                // If it is a move operation, remove the node from its current  
-                // location and add it to the node at the drop location. 
-                if (e.Effect == DragDropEffects.Move)
-                {
-                    draggedNode.Remove();
-                    targetNode.Nodes.Add(draggedNode);
-                }
-
-                // If it is a copy operation, clone the dragged node  
-                // and add it to the node at the drop location. 
-                else if (e.Effect == DragDropEffects.Copy)
-                {
-                    targetNode.Nodes.Add((TreeNode)draggedNode.Clone());
-                }
-
-                // Expand the node at the location  
-                // to show the dropped node.
-                targetNode.Expand();
-            }
-        }
-
-        // Determine whether one node is a parent  
-        // or ancestor of a second node. 
-        private bool ContainsNode(TreeNode node1, TreeNode node2)
-        {
-            // Check the parent node of the second node. 
-            if (node2.Parent == null) return false;
-            if (node2.Parent.Equals(node1)) return true;
-
-            // If the parent node is not null or equal to the first node,  
-            // call the ContainsNode method recursively using the parent of  
-            // the second node. 
-            return ContainsNode(node1, node2.Parent);
-        }
-
+ 
         private void dockContainer1_DragDrop(object sender, DragEventArgs e)
         {
             if (treeView1.SelectedNode == null) return;
@@ -469,8 +416,9 @@ namespace LandisUserInterface
             if (System.IO.Path.GetExtension(path) == ".img")
             {
                 FrmMap map = new FrmMap();
-                map.Location = new Point(e.X, e.Y);
 
+                map.Location = this.dockContainer1.PointToClient(Cursor.Position);// new Point(Cursor.Position.X, Cursor.Position.Y);
+                
                 dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid());
 
                 map.LoadImageFile(path);
