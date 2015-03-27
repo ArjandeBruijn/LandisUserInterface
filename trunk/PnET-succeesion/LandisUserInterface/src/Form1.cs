@@ -468,16 +468,24 @@ namespace LandisUserInterface
             }
             if (System.IO.Path.GetExtension(path) == ".txt" || System.IO.Path.GetExtension(path) == ".csv")
             {
+               FrmSelectProgram fsp = new FrmSelectProgram(Cursor.Position.X, Cursor.Position.Y);
 
+               fsp.ShowInTaskbar = false;
+
+               fsp.ShowDialog();
+
+               if (fsp.Selection == FrmSelectProgram.Options.NotePad)
+               {
+
+                   FrmTXTDisplay txt = new FrmTXTDisplay(path);
+
+                   txt.Location = this.dockContainer1.PointToClient(Cursor.Position);
+
+                   txt.AppendText(System.IO.File.ReadAllLines(path));
+
+                   dockContainer1.Add(txt, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid());
+               }
                
-
-               FrmTXTDisplay txt = new FrmTXTDisplay(path);
-
-               txt.Location = this.dockContainer1.PointToClient(Cursor.Position);
-
-               dockContainer1.Add(txt, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid());
-
-               txt.AppendText(System.IO.File.ReadAllLines(path));
             }
         }
         void DragDropOnMap(object sender, DragEventArgs e)
