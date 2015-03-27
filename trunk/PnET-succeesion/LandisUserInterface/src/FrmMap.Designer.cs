@@ -142,6 +142,7 @@
             this.treeViewLayers.ShowNodeToolTips = true;
             this.treeViewLayers.Size = new System.Drawing.Size(166, 380);
             this.treeViewLayers.TabIndex = 38;
+            this.treeViewLayers.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewLayers_AfterCheck);
             // 
             // TreeViewLegend
             // 
@@ -189,6 +190,7 @@
             // 
             // FrmMap
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
@@ -201,6 +203,7 @@
             this.Name = "FrmMap";
             this.Text = "FrmMap";
             this.Load += new System.EventHandler(this.FrmMap_Load);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.FrmMap_DragEnter);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axMap1)).EndInit();

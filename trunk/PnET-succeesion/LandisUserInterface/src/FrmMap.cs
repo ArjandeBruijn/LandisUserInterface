@@ -16,10 +16,11 @@ namespace LandisUserInterface
         private int MapMin = int.MaxValue;
         private int MapMax = int.MinValue;
 
-        public FrmMap()
+        public FrmMap(DragEventHandler DragDrop)
         {
             InitializeComponent();
 
+            this.DragDrop += DragDrop;
             TreeViewLegend.ImageList = new ImageList();
 
         }
@@ -134,11 +135,11 @@ namespace LandisUserInterface
             node.Name = FileName;
             node.Text = System.IO.Path.GetFileName(FileName);
             node.ToolTipText = FileName;
-            node.Tag = new OutputFileMap(FileName).Year;
+            node.Tag = new string[]{new OutputFileMap(FileName).Year.ToString(), LayerHandle.ToString()};
 
             for (int index = 0; index < treeViewLayers.Nodes.Count; index++)
             {
-                if (int.Parse(treeViewLayers.Nodes[index].Tag.ToString()) > int.Parse(node.Tag.ToString()))
+                if (int.Parse(((string[])treeViewLayers.Nodes[index].Tag)[0].ToString()) > int.Parse(((string[])node.Tag)[0].ToString()))
                 {
                     treeViewLayers.Nodes.Insert(index, node);
                     break;
@@ -186,12 +187,22 @@ namespace LandisUserInterface
                
                 this.TreeViewLegend.Nodes.Add(legend_node);
 
-                 
+            }
+            SetLayerSelection(FileName);
+            
 
-             }
+            this.axMap1.Invalidate();
+            this.axMap1.Update();
+            this.axMap1.Refresh();
+
+            this.toolStripProgressBar1.Value = 0;
+        }
+        void SetLayerSelection(string FileName)
+        {
+            int LayerHandle = int.Parse(((string[])treeViewLayers.Nodes[FileName].Tag)[1]);
             
             axMap1.set_LayerVisible(LayerHandle, true);
-            
+
             for (int layer = 0; layer < axMap1.NumLayers; layer++)
             {
                 int handle = axMap1.get_LayerHandle(layer);
@@ -200,21 +211,15 @@ namespace LandisUserInterface
                 {
                     axMap1.set_LayerVisible(handle, false);
                 }
-                
+
             }
             foreach (TreeNode _node in treeViewLayers.Nodes)
             {
-                if (_node.Name == node.Name) node.Checked = true;
-                else node.Checked = false;
+                if (_node.Name == FileName) _node.Checked = true;
+                else _node.Checked = false;
             }
-
-            this.axMap1.Invalidate();
-            this.axMap1.Update();
-            this.axMap1.Refresh();
-
-            this.toolStripProgressBar1.Value = 0;
+        
         }
-
         private void FrmMap_Load(object sender, EventArgs e)
         {
 
@@ -262,6 +267,21 @@ namespace LandisUserInterface
                     break;
 
 
+            }
+        }
+
+        
+
+        private void FrmMap_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = e.AllowedEffect;
+        }
+
+        private void treeViewLayers_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+            if (e.Action != TreeViewAction.Unknown)
+            {
+                SetLayerSelection(e.Node.Name);
             }
         }
          
