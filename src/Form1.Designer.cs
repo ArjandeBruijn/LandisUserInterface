@@ -113,9 +113,7 @@
             // 
             // ProjectOptions
             // 
-            this.ProjectOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.AddScnFl,
-            this.RmvScnFl});
+            this.ProjectOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this.AddScnFl,  this.RmvScnFl});
             this.ProjectOptions.Name = "contextMenuStrip1";
             this.ProjectOptions.Size = new System.Drawing.Size(166, 48);
             // 
@@ -137,14 +135,7 @@
             // 
             this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // ScenarioOptions
-            // 
-            this.ScenarioOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.RunSim,
-            this.Remove});
-            this.ScenarioOptions.Name = "contextMenuStrip1";
-            this.ScenarioOptions.Size = new System.Drawing.Size(206, 48);
+            
             // 
             // RunSim
             // 
@@ -176,8 +167,7 @@
             // 
             // FileOptions
             // 
-            this.FileOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ShowFileLocation});
+            this.FileOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {this.ShowFileLocation});
             this.FileOptions.Name = "contextMenuStrip1";
             this.FileOptions.Size = new System.Drawing.Size(169, 26);
             // 
@@ -187,6 +177,14 @@
             this.ShowFileLocation.Size = new System.Drawing.Size(168, 22);
             this.ShowFileLocation.Text = "Show file location";
             this.ShowFileLocation.Click += new System.EventHandler(this.ShowFileLocation_Click);
+
+            // 
+            // ScenarioOptions
+            // 
+            this.ScenarioOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this.RunSim, this.Remove, this.ShowFileLocation});
+            this.ScenarioOptions.Name = "contextMenuStrip1";
+            this.ScenarioOptions.Size = new System.Drawing.Size(206, 48);
+           
             // 
             // updateoutputbackgroundworker
             // 
@@ -218,6 +216,7 @@
             this.FileOptions.ResumeLayout(false);
             this.ResumeLayout(false);
 
+            
         }
 
         #endregion
@@ -230,17 +229,21 @@
         private System.Windows.Forms.ToolStripMenuItem RmvScnFl;
         private UpdateBackgroundWorker updateoutputbackgroundworker;
         private UpdateBackgroundWorker updateInputBackGroundWorker;
-        private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.ContextMenuStrip ScenarioOptions;
-        private System.Windows.Forms.ToolStripMenuItem RunSim;
-        private System.Windows.Forms.ImageList FileFolderIcons;
-        private System.Windows.Forms.ToolStripMenuItem Remove;
-        private System.Windows.Forms.ContextMenuStrip FolderOptions;
-        private System.Windows.Forms.ToolStripMenuItem ShowFolderLocation;
-        private System.Windows.Forms.ContextMenuStrip FileOptions;
-        private System.Windows.Forms.ToolStripMenuItem ShowFileLocation;
         private UpdateBackgroundWorker updateBackgourndWorkerRemove;
+
+        private System.Windows.Forms.Timer timer1;
+
+         
+        private System.Windows.Forms.ImageList FileFolderIcons;
         
+        private System.Windows.Forms.ToolStripMenuItem RunSim;
+        private System.Windows.Forms.ToolStripMenuItem Remove;
+        private System.Windows.Forms.ToolStripMenuItem ShowFolderLocation;
+        private System.Windows.Forms.ToolStripMenuItem ShowFileLocation;
+        
+        private System.Windows.Forms.ContextMenuStrip FileOptions;
+        private System.Windows.Forms.ContextMenuStrip FolderOptions;
+        private System.Windows.Forms.ContextMenuStrip ScenarioOptions;
 
     }
 }

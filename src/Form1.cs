@@ -17,6 +17,8 @@ namespace LandisUserInterface
         {
              
             InitializeComponent();
+            
+
 
             this.WindowState = FormWindowState.Maximized;
 
@@ -32,6 +34,8 @@ namespace LandisUserInterface
             HeaderScenarioFiles.ExpandAll();
 
             timer1.Start();
+
+           
         }
         string LandisConsoleExe
         {
@@ -144,6 +148,7 @@ namespace LandisUserInterface
                 }
                 else if (IsScenarioFile(treeView1.SelectedNode.ToolTipText))
                 {
+                    
                     ScenarioOptions.Show(this.treeView1, e.Location);
                 }
                 else if (System.IO.File.Exists(treeView1.SelectedNode.ToolTipText))
