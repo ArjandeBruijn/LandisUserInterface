@@ -495,7 +495,11 @@ namespace LandisUserInterface
                }
                if (fsp.Selection == FrmSelectProgram.Options.Zgraph)
                {
-                   FrmGraph graph = new FrmGraph(path);
+                   FrmGraph graph = new FrmGraph();
+
+                   graph.DragDrop += new System.Windows.Forms.DragEventHandler(FrmGraph_DragDrop);
+
+                   graph.LoadFile(path);
 
                    graph.Location = this.dockContainer1.PointToClient(Cursor.Position);
 
@@ -504,6 +508,14 @@ namespace LandisUserInterface
                     
                }
                
+            }
+        }
+        void FrmGraph_DragDrop(object sender, DragEventArgs e)
+        {
+            if (treeView1.SelectedNode != null)
+            {
+                string path = treeView1.SelectedNode.ToolTipText;
+                ((FrmGraph)sender).LoadFile(path);
             }
         }
         void DragDropOnMap(object sender, DragEventArgs e)

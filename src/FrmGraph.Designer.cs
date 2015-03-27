@@ -28,15 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabControl1.SuspendLayout();
             this.SuspendLayout();
-            
             // 
             // tabControl1
             // 
-           
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -52,7 +48,8 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "FrmGraph";
             this.Text = "FrmGraphcs";
-            this.tabControl1.ResumeLayout(false);
+            
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.FrmGraph_DragEnter);
             this.ResumeLayout(false);
 
         }

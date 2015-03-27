@@ -36,39 +36,8 @@ namespace LandisUserInterface
             }
             return nrofpoints;
         }
-        public string[] Get_FileContent()
-        {
-            List<string> FileContent = new List<string>();
-
-            string Hdr = "Time\t";
-
-            foreach (string hdr in Get_Labels())
-            {
-                Hdr += hdr + "\t";
-            }
-
-            FileContent.Add(Hdr);
-
-            for (int p = 0; p < NrOfPoints(); p++)
-            {
-                string line = String.Empty;
-                foreach (string hdr in Get_Labels())
-                {
-                    if (p <= GetCurve(hdr).Points.Count)
-                    {
-                        if (line.Length == 0)
-                        {
-                            line += GetCurve(hdr).Points[p].X + "\t";
-                        }
-                        line += GetCurve(hdr).Points[p].Y + "\t";
-                    }
-                    else line += "\t";
-                }
-                FileContent.Add(line);
-            }
-
-            return FileContent.ToArray();
-        }
+         
+       
         public CurveList Get_CurveList()
         {
             return Graph1.GraphPane.CurveList;
@@ -142,18 +111,18 @@ namespace LandisUserInterface
 
             InitializeComponent();
             this.Name = Name;
-
+            
         }
 
         private void InitializeComponent()
         {
-            this.Dock = System.Windows.Forms.DockStyle.Fill;
             this.components = new System.ComponentModel.Container();
             this.Graph1 = new ZedGraph.ZedGraphControl();
             this.SuspendLayout();
             // 
             // Graph1
             // 
+            this.Graph1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Graph1.Location = new System.Drawing.Point(0, 0);
             this.Graph1.Name = "Graph1";
             this.Graph1.ScrollGrace = 0D;
@@ -163,23 +132,22 @@ namespace LandisUserInterface
             this.Graph1.ScrollMinX = 0D;
             this.Graph1.ScrollMinY = 0D;
             this.Graph1.ScrollMinY2 = 0D;
-            this.Graph1.Size = new System.Drawing.Size(150, 150);
+            this.Graph1.Size = new System.Drawing.Size(200, 100);
             this.Graph1.TabIndex = 0;
-
-            
-            Graph1.GraphPane.Title.Text = null;
-            Graph1.GraphPane.XAxis.Title.Text = null;
-            Graph1.GraphPane.YAxis.Title.Text = "";
-
-           
-            Graph1.Dock = System.Windows.Forms.DockStyle.Fill;
-            //
-            Controls.Add(Graph1);
-
-
+            // 
+            // TabPageWithGraph
+            // 
+            this.Controls.Add(this.Graph1);
+            this.Dock = System.Windows.Forms.DockStyle.Fill;
+          
             this.ResumeLayout(false);
 
         }
+
+         
+
+       
+      
     }
      
 }
