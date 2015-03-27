@@ -171,8 +171,6 @@ namespace LandisUserInterface
                     Label = colorbreak.LowValue.ToString() + "-" + colorbreak.HighValue.ToString();
                 }
 
-                //AddNode((int)colorbreak.LowValue, RankedNodes, this.treeViewLegend, Label, null, colorbreak.HighValue.ToString(), NodeRect(treeViewLegend.Font, Color.UIntToColor(colorbreak.HighColor)));
-         
                 TreeNode legend_node = new TreeNode();
                 
                 legend_node.Text = colorbreak.LowValue.ToString() + "-"+ colorbreak.HighValue.ToString();
@@ -191,10 +189,24 @@ namespace LandisUserInterface
                  
 
              }
-
             
-            string NodeText = System.IO.Path.GetFileNameWithoutExtension(FileName);
-            string TipToolText = FileName;
+            axMap1.set_LayerVisible(LayerHandle, true);
+            
+            for (int layer = 0; layer < axMap1.NumLayers; layer++)
+            {
+                int handle = axMap1.get_LayerHandle(layer);
+
+                if (handle != LayerHandle)
+                {
+                    axMap1.set_LayerVisible(handle, false);
+                }
+                
+            }
+            foreach (TreeNode _node in treeViewLayers.Nodes)
+            {
+                if (_node.Name == node.Name) node.Checked = true;
+                else node.Checked = false;
+            }
 
             this.axMap1.Invalidate();
             this.axMap1.Update();
@@ -207,6 +219,7 @@ namespace LandisUserInterface
         {
 
         }
+        
         public void PlayAnimation(object sender, EventArgs e)
         {
             foreach (TreeNode tree_node in this.treeViewLayers.Nodes)
