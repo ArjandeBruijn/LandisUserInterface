@@ -5,60 +5,47 @@ namespace LandisUserInterface
 {
     class BackgroundWorker : System.ComponentModel.BackgroundWorker
     {
-        TreeNode[] nodetoadd;
-        TreeNode[] nodetoremove;
+        TreeNode[] node;
+        AddOrRemove add_or_remove;
+
+        public enum AddOrRemove
+        { 
+            Add,
+            Remove
+        }
 
         public BackgroundWorker()
         {
             RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
         }
         
-
-        public TreeNode[] NodeToAdd
-        {
-            get
-            {
-                return nodetoadd;
-            }
-        }
-        public TreeNode[] NodeToRemove
-        {
-            get
-            {
-                return nodetoremove;
-            }
-        }
         private void backgroundWorker1_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            if (NodeToAdd != null)
+            if (node != null)
             {
-                NodeToAdd[0].Nodes.Add(NodeToAdd[1]);
+                node[0].Nodes.Add(node[1]);
+                node[0].Nodes.Remove(node[1]);
             }
-            if (NodeToRemove != null)
-            {
-                NodeToRemove[0].Nodes.Remove(NodeToRemove[1]);
-            }
+            
         }
         public bool HasScheduledWork
         {
             get
             {
-                return nodetoadd != null || nodetoremove != null;
+                return node != null;
             }
         }
 
-        public void ScheduleNodeAddition(TreeNode[] NodeToAdd)
+        public void Schedule(TreeNode[] NodeToAdd, AddOrRemove add_or_remove)
         {
-            this.nodetoadd = NodeToAdd;
+            this.node = NodeToAdd;
+            this.add_or_remove = add_or_remove;
         }
-        public void ScheduleNodeRemoval(TreeNode[] NodeToRemove)
-        {
-            this.nodetoremove = NodeToRemove;
-        }
+        
 
         public void Reset()
         {
-            nodetoadd = nodetoremove = null;
+            node = null;
         }
     }
 }
