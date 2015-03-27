@@ -46,11 +46,13 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="unvell.ReoGrid">
-      <HintPath>..\ReoGrid-0.8.5-Demo\unvell.ReoGrid.dll</HintPath>
+    <Reference Include="unvell.ReoGrid, Version=0.8.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\unvell.ReoGrid.dll</HintPath>
     </Reference>
-    <Reference Include="ZedGraph">
-      <HintPath>..\..\trunk\SiteVeg\bin\Debug\ZedGraph.dll</HintPath>
+    <Reference Include="ZedGraph, Version=5.1.5.28844, Culture=neutral, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\ZedGraph.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

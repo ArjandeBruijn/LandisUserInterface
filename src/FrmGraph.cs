@@ -30,7 +30,7 @@ namespace LandisUserInterface
 
             foreach (string hdr in headers)
             {
-                CurveCollection.Add(hdr,new ZedGraph.LineItem(""));
+                CurveCollection.Add(hdr,new ZedGraph.LineItem("test", null, System.Drawing.Color.Black, ZedGraph.SymbolType.None));
             }
              
             for (int row = 1; row < FileContent.Count(); row++)
