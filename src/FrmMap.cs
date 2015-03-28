@@ -140,8 +140,8 @@ namespace LandisUserInterface
         {
             foreach (TreeNode tree_node in this.treeViewLayers.Nodes)
             {
-                //SelectLayer(new TreeViewEventArgs(tree_node, TreeViewAction.ByMouse));
-                //SelectLayerNode(new TreeViewEventArgs(tree_node, TreeViewAction.ByMouse));
+                SetLayerSelection(tree_node.ToolTipText);
+                
 
                 axMap1.Invalidate();
                 axMap1.Refresh();
@@ -336,7 +336,7 @@ namespace LandisUserInterface
         private void TreeViewLegend_MouseDoubleClick(object sender, MouseEventArgs e)
         {
 
-            FrmRelable f = new FrmRelable(Cursor.Position, LegendLabels);
+            FrmRelable f = new FrmRelable(Cursor.Position, LegendLabels, true);
 
             f.ShowDialog();
 

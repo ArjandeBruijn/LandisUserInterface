@@ -23,11 +23,13 @@ namespace LandisUserInterface
             }
         }
         
-        public FrmRelable(System.Drawing.Point p, string[] OldTerms)
+        public FrmRelable(System.Drawing.Point p, string[] OldTerms, bool HideReplaceInAll)
         {
             this.DesiredStartLocation = p;
 
             InitializeComponent();
+
+            if (HideReplaceInAll) this.checkBox1.Visible = false;
 
             this.OldLabels = OldTerms;
             this.NewLabels = OldTerms;

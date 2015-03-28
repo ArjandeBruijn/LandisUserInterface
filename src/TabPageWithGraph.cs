@@ -190,7 +190,7 @@ namespace LandisUserInterface
                     LabelsFromTo.Add(new string[] { curve.Label.Text, String.Empty });
                 }
 
-                FrmRelable frg = new FrmRelable(Cursor.Position, Graph1.GraphPane.CurveList.Select(o=> o.Label.Text).ToArray());
+                FrmRelable frg = new FrmRelable(Cursor.Position, Graph1.GraphPane.CurveList.Select(o=> o.Label.Text).ToArray(), false);
 
                 UpdateLabels(frg.NewLabels);
                  
