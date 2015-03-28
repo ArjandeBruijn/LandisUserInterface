@@ -31,6 +31,7 @@ namespace LandisUserInterface
         {
             this.button1 = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // button1
@@ -54,11 +55,23 @@ namespace LandisUserInterface
             this.richTextBox1.Text = "";
             this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.checkBox1.Location = new System.Drawing.Point(69, 175);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(194, 17);
+            this.checkBox1.TabIndex = 3;
+            this.checkBox1.Text = "Replace in all graphs in this window";
+            this.checkBox1.UseVisualStyleBackColor = false;
+            // 
             // FrmRelableGraph
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(275, 230);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.button1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -66,6 +79,7 @@ namespace LandisUserInterface
             this.ShowInTaskbar = false;
             this.Load += new System.EventHandler(this.FrmRelableGraph_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -73,6 +87,7 @@ namespace LandisUserInterface
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.CheckBox checkBox1;
 
     }
 }

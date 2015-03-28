@@ -195,7 +195,10 @@ namespace LandisUserInterface
                 }
 
 
-                update_curvelabels(new List<string[]>(LabelsFromTo.Where(o => o[0]!= o[1])));
+                if (frg.ImplementForAllGraphs)
+                {
+                    update_curvelabels(new List<string[]>(LabelsFromTo.Where(o => o[0] != o[1])));
+                }
 
               
 

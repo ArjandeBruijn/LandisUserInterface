@@ -11,7 +11,7 @@ namespace LandisUserInterface
 {
     public partial class FrmGraph : Form
     {
-        static int label_counter = 0;
+        int label_counter = 0;
          
         public FrmGraph()
         {
