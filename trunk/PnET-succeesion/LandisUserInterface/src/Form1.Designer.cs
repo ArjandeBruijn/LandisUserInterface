@@ -162,9 +162,9 @@
             this.ContextMenuOpenLocation.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ShowFileOrFolderLocation});
             this.ContextMenuOpenLocation.Name = "contextMenuStrip1";
-            this.ContextMenuOpenLocation.Size = new System.Drawing.Size(184, 48);
+            this.ContextMenuOpenLocation.Size = new System.Drawing.Size(184, 26);
             // 
-            // ShowFolderLocation
+            // ShowFileOrFolderLocation
             // 
             this.ShowFileOrFolderLocation.Name = "ShowFileOrFolderLocation";
             this.ShowFileOrFolderLocation.Size = new System.Drawing.Size(183, 22);
@@ -190,6 +190,7 @@
             this.ClientSize = new System.Drawing.Size(284, 262);
             this.Controls.Add(this.splitContainer1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);

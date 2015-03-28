@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmGrid));
             this.reoGridControl1 = new unvell.ReoGrid.ReoGridControl();
             this.SuspendLayout();
             // 
@@ -53,6 +54,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(538, 392);
             this.Controls.Add(this.reoGridControl1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmGrid";
             this.ResumeLayout(false);
 
