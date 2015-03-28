@@ -10,5 +10,8 @@ namespace LandisUserInterface
         int ColorCount { get; }
 
         System.Drawing.Color NextColor { get; }
+
+        
+
     }
 }

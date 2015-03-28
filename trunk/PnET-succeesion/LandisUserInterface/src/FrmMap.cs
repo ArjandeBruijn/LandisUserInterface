@@ -15,7 +15,7 @@ namespace LandisUserInterface
 
         private int MapMin = int.MaxValue;
         private int MapMax = int.MinValue;
-
+        IColorScheme Colorscheme;
         public FrmMap(DragEventHandler DragDrop)
         {
             InitializeComponent();
@@ -43,17 +43,17 @@ namespace LandisUserInterface
             }
             else if (BinWidth == 1)
             {
-                return new ColorScheme(ColorScheme.DefaultColorValues);
+                return new ColorScheme();
             }
             else
             {
                 return new ColorSchemeClassified(new byte[] { 0, 255 }, new byte[] { 0, 255 }, new byte[] { 255, 255 }, 10);
             }
         }
-        public static int GetBinWidth(int MapMin, int MapMax, byte colorcount)
+        public int GetBinWidth(int MapMin, int MapMax, byte colorcount)
         {
             int Range = MapMax - MapMin;
-            if (Range > ColorScheme.DefaultColorValues.Count()) return (int)(Range / colorcount);
+            if (Range > Colorscheme.ColorCount) return (int)(Range / colorcount);
             else return 1;
         }
         public MapWinGIS.GridColorScheme GetGridScheme(int MapMin, int MapMax, int BinWidth, IColorScheme color_scheme)
@@ -112,7 +112,7 @@ namespace LandisUserInterface
             MapMin = Math.Min(0, Math.Min(MapMin, int.Parse(grid.Minimum.ToString())));
             MapMax = Math.Max(MapMax, int.Parse(grid.Maximum.ToString()));
 
-            IColorScheme Colorscheme = GetColorScheme(MapMin, MapMax);
+            Colorscheme = GetColorScheme(MapMin, MapMax);
 
             int BinWidth = GetBinWidth(MapMin, MapMax, (byte)Colorscheme.ColorCount);
 

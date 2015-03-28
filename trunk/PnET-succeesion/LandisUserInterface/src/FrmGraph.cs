@@ -12,18 +12,13 @@ namespace LandisUserInterface
     public partial class FrmGraph : Form
     {
         static int label_counter = 0;
-        ColorScheme colorscheme = new ColorScheme(ColorScheme.DefaultColorValues);
-
-        public FrmGraph(ColorScheme colorscheme)
-        {
-            InitializeComponent();
-            this.colorscheme = colorscheme;
-        }
+         
         public FrmGraph()
         {
             InitializeComponent();
-        }
         
+        }
+         
         public void LoadFile(string FileName)
         {
             try
@@ -37,7 +32,7 @@ namespace LandisUserInterface
 
                 foreach (string hdr in headers)
                 {
-                    CurveCollection.Add(hdr, new ZedGraph.LineItem(label, null, colorscheme.NextColor, ZedGraph.SymbolType.None));
+                    CurveCollection.Add(hdr, new ZedGraph.LineItem(label, null, System.Drawing.Color.Black, ZedGraph.SymbolType.None));
                 }
 
                 for (int row = 1; row < FileContent.Count(); row++)
@@ -76,11 +71,11 @@ namespace LandisUserInterface
                 return;
             }
         }
-        void UpdateCurveLabels(ZedGraph.CurveList CurveList)
+        void UpdateCurveLabels(List<string[]> LabelsFromTo)
         {
             for (int i = 0; i < tabControl1.TabPages.Count;i++ )
             {
-                ((TabPageWithGraph)tabControl1.TabPages[i]).UpdateLegend(new List<string>(CurveList.Select(o => o.Label.Text)));
+                ((TabPageWithGraph)tabControl1.TabPages[i]).UpdateLegend(LabelsFromTo);
             }
         }
           
