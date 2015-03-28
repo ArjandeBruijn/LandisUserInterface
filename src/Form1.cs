@@ -148,16 +148,19 @@ namespace LandisUserInterface
                 }
                 else if (IsScenarioFile(treeView1.SelectedNode.ToolTipText))
                 {
-                    
                     ScenarioOptions.Show(this.treeView1, e.Location);
                 }
                 else if (System.IO.File.Exists(treeView1.SelectedNode.ToolTipText))
                 {
-                    FileOptions.Show(this.treeView1, e.Location);
+                    ContextMenuOpenLocation.Items["ShowFileOrFolderLocation"].Text = "Show File Location";
+                    
+                    ContextMenuOpenLocation.Show(this.treeView1, e.Location);
                 }
                 else if (System.IO.Directory.Exists(treeView1.SelectedNode.ToolTipText))
                 {
-                    FolderOptions.Show(this.treeView1, e.Location);
+                    ContextMenuOpenLocation.Items["ShowFileOrFolderLocation"].Text = "Show Folder Location";
+
+                    ContextMenuOpenLocation.Show(this.treeView1, e.Location);
                 }
             }
         }
@@ -541,6 +544,7 @@ namespace LandisUserInterface
             }
         }
 
+       
         
 
         
