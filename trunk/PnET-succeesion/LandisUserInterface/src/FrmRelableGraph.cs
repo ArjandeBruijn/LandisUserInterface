@@ -17,7 +17,15 @@ namespace LandisUserInterface
         UpdateGraph update_graph;
 
         System.Drawing.Point DesiredStartLocation;
-        
+
+        public bool ImplementForAllGraphs
+        {
+            get
+            {
+                return this.checkBox1.Checked;
+            }
+        }
+
         public FrmRelableGraph(System.Drawing.Point p, ZedGraph.CurveList curve_list, UpdateGraph update_graph)
         {
             this.DesiredStartLocation = p;
