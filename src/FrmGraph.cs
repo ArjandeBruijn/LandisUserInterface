@@ -65,7 +65,7 @@ namespace LandisUserInterface
                 {
                     if (tabControl1.TabPages[curve.Key] == null)
                     {
-                        tabControl1.TabPages.Add(new TabPageWithGraph(curve.Key));
+                        tabControl1.TabPages.Add(new TabPageWithGraph(curve.Key, UpdateCurveLabels));
                     }
                     ((TabPageWithGraph)tabControl1.TabPages[curve.Key]).AddCurve(curve.Value);
 
@@ -76,7 +76,14 @@ namespace LandisUserInterface
                 return;
             }
         }
-
+        void UpdateCurveLabels(ZedGraph.CurveList CurveList)
+        {
+            for (int i = 0; i < tabControl1.TabPages.Count;i++ )
+            {
+                ((TabPageWithGraph)tabControl1.TabPages[i]).UpdateLegend(new List<string>(CurveList.Select(o => o.Label.Text)));
+            }
+        }
+          
         private void FrmGraph_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = e.AllowedEffect;
