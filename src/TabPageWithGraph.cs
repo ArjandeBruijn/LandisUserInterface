@@ -12,9 +12,9 @@ namespace LandisUserInterface
         private ZedGraphControl Graph1;
         private System.ComponentModel.IContainer components;
 
-        public ColorScheme Colorscheme = new ColorScheme(ColorScheme.DefaultColorValues);
+        public ColorScheme Colorscheme = new ColorScheme();
 
-        public delegate void UpdateCurvelabels(ZedGraph.CurveList CurveList);
+        public delegate void UpdateCurvelabels(List<string[]> LabelsFromTo);
 
         UpdateCurvelabels update_curvelabels;
 
@@ -73,19 +73,31 @@ namespace LandisUserInterface
         {
             return min_value - 0.01F * Range;
         }
-        public void UpdateLegend(List<string> Labels)
+        public void UpdateLegend(List<string[]> LabelsFromTo)
         {
-            for (int label = 0; label < Labels.Count; label++)
+            foreach (CurveItem curve in Graph1.GraphPane.CurveList)
             {
-                Graph1.GraphPane.CurveList[label].Label.Text = Labels[label];
+                for (int label = 0; label < LabelsFromTo.Count; label++)
+                {
+                    if (curve.Label.Text == LabelsFromTo[label][0])
+                    {
+                        Graph1.GraphPane.CurveList[label].Label.Text = LabelsFromTo[label][1];
+                    }
+                }
             }
+
+            
         }
         public void AddCurve(ZedGraph.LineItem curve)
         {
             Graph1.TabIndex = 6;
 
+            curve.Color = Colorscheme.NextColor;
+
             GraphPane myPane = Graph1.GraphPane;
 
+            myPane.Title.Text = String.Empty;
+            myPane.YAxis.Title.Text = String.Empty;
             myPane.XAxis.Title.Text = "Year";
 
             myPane.CurveList.Add(curve);
@@ -164,13 +176,27 @@ namespace LandisUserInterface
 
             if (rect.Contains(e.X, e.Y))
             {
+                List<string[]> LabelsFromTo = new List<string[]>();
+
+                foreach (CurveItem curve in Graph1.GraphPane.CurveList)
+                {
+                    LabelsFromTo.Add(new string[] { curve.Label.Text, String.Empty });
+                }
+
                 FrmRelableGraph frg = new FrmRelableGraph(Cursor.Position, Graph1.GraphPane.CurveList, () => this.Graph1.Refresh());
 
                 frg.Location = this.Graph1.Location;
 
                 frg.ShowDialog();
 
-                update_curvelabels(Graph1.GraphPane.CurveList);
+                for (int curve =0; curve < Graph1.GraphPane.CurveList.Count; curve++)
+                {
+                    LabelsFromTo[curve][1] = Graph1.GraphPane.CurveList[curve].Label.Text;
+                }
+
+
+                update_curvelabels(new List<string[]>(LabelsFromTo.Where(o => o[0]!= o[1])));
+
               
 
             }
