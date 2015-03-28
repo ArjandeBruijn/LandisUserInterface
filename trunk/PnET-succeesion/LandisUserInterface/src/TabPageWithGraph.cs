@@ -13,7 +13,20 @@ namespace LandisUserInterface
         private System.ComponentModel.IContainer components;
 
         public ColorScheme Colorscheme = new ColorScheme(ColorScheme.DefaultColorValues);
-         
+
+        public delegate void UpdateCurvelabels(ZedGraph.CurveList CurveList);
+
+        UpdateCurvelabels update_curvelabels;
+
+        public TabPageWithGraph(string Name, UpdateCurvelabels update_curvelabels)
+            : base(Name)
+        {
+            this.update_curvelabels = update_curvelabels;
+
+            InitializeComponent();
+            this.Name = Name;
+
+        }
 
         public string[] Get_Labels()
         {
@@ -59,6 +72,13 @@ namespace LandisUserInterface
         double Min_Axis(double Range, double min_value)
         {
             return min_value - 0.01F * Range;
+        }
+        public void UpdateLegend(List<string> Labels)
+        {
+            for (int label = 0; label < Labels.Count; label++)
+            {
+                Graph1.GraphPane.CurveList[label].Label.Text = Labels[label];
+            }
         }
         public void AddCurve(ZedGraph.LineItem curve)
         {
@@ -106,14 +126,7 @@ namespace LandisUserInterface
         }
         
  
-        public TabPageWithGraph(string Name)
-            : base(Name)
-        {
-
-            InitializeComponent();
-            this.Name = Name;
-            
-        }
+        
 
         private void InitializeComponent()
         {
@@ -156,7 +169,9 @@ namespace LandisUserInterface
                 frg.Location = this.Graph1.Location;
 
                 frg.ShowDialog();
-                
+
+                update_curvelabels(Graph1.GraphPane.CurveList);
+              
 
             }
 

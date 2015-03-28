@@ -54,10 +54,15 @@ namespace LandisUserInterface
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
-            string[] content = this.richTextBox1.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] content = this.richTextBox1.Text.Split(new char[] { ' ', '\t', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             for (int term = 0; term < content.Length; term++)
             {
+                if (term >= curve_list.Count)
+                {
+                    this.richTextBox1.Text = this.richTextBox1.Text.Replace(content[term], "");
+                    return;
+                }
                 curve_list[term].Label.Text = content[term];
                 update_graph();
 
