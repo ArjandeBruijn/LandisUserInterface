@@ -20,6 +20,9 @@ namespace LandisUserInterface
         {
             InitializeComponent();
 
+            this.timer1.Interval = 100;
+            this.timer1.Start();
+
             this.DragDrop += DragDrop;
             TreeViewLegend.ImageList = new ImageList();
 
@@ -33,7 +36,16 @@ namespace LandisUserInterface
             toolStripStatusLabel1.Text = s1;
 
         }
-        public static IColorScheme GetColorScheme(int Min, int Max)
+        private List<string> ImageFilesToLoad = new List<string>();
+
+        public void LoadImageFile(string FileName)
+        {
+            ImageFilesToLoad.Add(FileName);
+
+
+
+        }
+        private static IColorScheme GetColorScheme(int Min, int Max)
         {
             int BinWidth = Max - Min;
 
@@ -50,13 +62,13 @@ namespace LandisUserInterface
                 return new ColorSchemeClassified(new byte[] { 0, 255 }, new byte[] { 0, 255 }, new byte[] { 255, 255 }, 10);
             }
         }
-        public int GetBinWidth(int MapMin, int MapMax, byte colorcount)
+        private int GetBinWidth(int MapMin, int MapMax, byte colorcount)
         {
             int Range = MapMax - MapMin;
             if (Range > Colorscheme.ColorCount) return (int)(Range / colorcount);
             else return 1;
         }
-        public MapWinGIS.GridColorScheme GetGridScheme(int MapMin, int MapMax, int BinWidth, IColorScheme color_scheme)
+        private MapWinGIS.GridColorScheme GetGridScheme(int MapMin, int MapMax, int BinWidth, IColorScheme color_scheme)
         {
             MapWinGIS.GridColorScheme gridScheme = new MapWinGIS.GridColorScheme();
 
@@ -99,105 +111,8 @@ namespace LandisUserInterface
 
             return flag;
         }
-        public void LoadImageFile(string FileName)
-        {
-            MapWinGIS.Grid grid = new MapWinGIS.Grid();
-
-             
-            statusStrip1.Refresh();
-
-            grid.Open(FileName, MapWinGIS.GridDataType.LongDataType, true, MapWinGIS.GridFileType.UseExtension, this);
-
-            
-            MapMin = Math.Min(0, Math.Min(MapMin, int.Parse(grid.Minimum.ToString())));
-            MapMax = Math.Max(MapMax, int.Parse(grid.Maximum.ToString()));
-
-            Colorscheme = GetColorScheme(MapMin, MapMax);
-
-            int BinWidth = GetBinWidth(MapMin, MapMax, (byte)Colorscheme.ColorCount);
-
-            GridColorscheme = GetGridScheme(MapMin - 1, MapMax - 1, BinWidth, Colorscheme);
-
-            toolStripStatusLabel1.Text = "Creating image " + System.IO.Path.GetFileName(FileName);
-            statusStrip1.Refresh();
-
-            MapWinGIS.Image map_image = new MapWinGIS.UtilsClass().GridToImage(grid, GridColorscheme, this);
-
-            toolStripStatusLabel1.Text = "Ready";
- 
-            map_image.CustomColorScheme = GridColorscheme;
-
-            grid.Close();
-
-            int LayerHandle = axMap1.AddLayer(map_image, true);
-
-            TreeNode node = new TreeNode();
-            node.Name = FileName;
-            node.Text = System.IO.Path.GetFileName(FileName);
-            node.ToolTipText = FileName;
-            node.Tag = new string[]{new OutputFileMap(FileName).Year.ToString(), LayerHandle.ToString()};
-
-            for (int index = 0; index < treeViewLayers.Nodes.Count; index++)
-            {
-                if (int.Parse(((string[])treeViewLayers.Nodes[index].Tag)[0].ToString()) > int.Parse(((string[])node.Tag)[0].ToString()))
-                {
-                    treeViewLayers.Nodes.Insert(index, node);
-                    break;
-                }
-                
-            }
-            if (treeViewLayers.Nodes.ContainsKey(node.Name) == false)
-            {
-                treeViewLayers.Nodes.Add(node);
-            }
-            axMap1.set_LayerName(LayerHandle, node.Name);
-
-            axMap1.SetImageLayerColorScheme(LayerHandle, GridColorscheme);
-
-            axMap1.ZoomToMaxExtents();
-
-            TreeViewLegend.Nodes.Clear();
-
-            for (int i = 0; i < GridColorscheme.NumBreaks; i++)
-            {
-                MapWinGIS.GridColorBreak colorbreak = GridColorscheme.get_Break(i);
-
-                string Label = null;
-                if (colorbreak.HighValue - colorbreak.LowValue <= 1)
-                {
-                    Label = colorbreak.HighValue.ToString();
-                }
-                else
-                {
-                    Label = colorbreak.LowValue.ToString() + "-" + colorbreak.HighValue.ToString();
-                }
-
-                TreeNode legend_node = new TreeNode();
-                
-                legend_node.Text = colorbreak.LowValue.ToString() + "-"+ colorbreak.HighValue.ToString();
-
-                legend_node.ToolTipText = "";
-
-                string ImageKey = colorbreak.LowValue.ToString() + "-" + colorbreak.HighValue.ToString();
-                if (TreeViewLegend.ImageList.Images.ContainsKey(ImageKey) == false)
-                {
-                    TreeViewLegend.ImageList.Images.Add(ImageKey, NodeRect(this.TreeViewLegend.Font, Color.UIntToColor(colorbreak.HighColor)));
-                }
-                legend_node.Tag = legend_node.SelectedImageKey = legend_node.ImageKey = ImageKey;
-               
-                this.TreeViewLegend.Nodes.Add(legend_node);
-
-            }
-            SetLayerSelection(FileName);
-            
-
-            this.axMap1.Invalidate();
-            this.axMap1.Update();
-            this.axMap1.Refresh();
-
-            this.toolStripProgressBar1.Value = 0;
-        }
-        void SetLayerSelection(string FileName)
+        
+        private void SetLayerSelection(string FileName)
         {
             int LayerHandle = int.Parse(((string[])treeViewLayers.Nodes[FileName].Tag)[1]);
             
@@ -220,12 +135,8 @@ namespace LandisUserInterface
             }
         
         }
-        private void FrmMap_Load(object sender, EventArgs e)
-        {
-
-        }
-        
-        public void PlayAnimation(object sender, EventArgs e)
+       
+        private void PlayAnimation(object sender, EventArgs e)
         {
             foreach (TreeNode tree_node in this.treeViewLayers.Nodes)
             {
@@ -284,6 +195,119 @@ namespace LandisUserInterface
                 SetLayerSelection(e.Node.Name);
             }
         }
-         
+
+        private void ImageFileLoaderBackGroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            while (ImageFilesToLoad.Count() > 0)
+            {
+                string FileName = ImageFilesToLoad[0];
+
+                ImageFilesToLoad.RemoveAt(0);
+
+                MapWinGIS.Grid grid = new MapWinGIS.Grid();
+
+
+                statusStrip1.Refresh();
+
+                grid.Open(FileName, MapWinGIS.GridDataType.LongDataType, true, MapWinGIS.GridFileType.UseExtension, this);
+
+
+                MapMin = Math.Min(0, Math.Min(MapMin, int.Parse(grid.Minimum.ToString())));
+                MapMax = Math.Max(MapMax, int.Parse(grid.Maximum.ToString()));
+
+                Colorscheme = GetColorScheme(MapMin, MapMax);
+
+                int BinWidth = GetBinWidth(MapMin, MapMax, (byte)Colorscheme.ColorCount);
+
+                GridColorscheme = GetGridScheme(MapMin - 1, MapMax - 1, BinWidth, Colorscheme);
+
+                toolStripStatusLabel1.Text = "Creating image " + System.IO.Path.GetFileName(FileName);
+                statusStrip1.Refresh();
+
+                MapWinGIS.Image map_image = new MapWinGIS.UtilsClass().GridToImage(grid, GridColorscheme, this);
+
+                toolStripStatusLabel1.Text = "Ready";
+
+                map_image.CustomColorScheme = GridColorscheme;
+
+                grid.Close();
+
+                int LayerHandle = axMap1.AddLayer(map_image, true);
+
+                TreeNode node = new TreeNode();
+                node.Name = FileName;
+                node.Text = System.IO.Path.GetFileName(FileName);
+                node.ToolTipText = FileName;
+                node.Tag = new string[] { new OutputFileMap(FileName).Year.ToString(), LayerHandle.ToString() };
+
+                for (int index = 0; index < treeViewLayers.Nodes.Count; index++)
+                {
+                    if (int.Parse(((string[])treeViewLayers.Nodes[index].Tag)[0].ToString()) > int.Parse(((string[])node.Tag)[0].ToString()))
+                    {
+                        treeViewLayers.Nodes.Insert(index, node);
+                        break;
+                    }
+
+                }
+                if (treeViewLayers.Nodes.ContainsKey(node.Name) == false)
+                {
+                    treeViewLayers.Nodes.Add(node);
+                }
+                axMap1.set_LayerName(LayerHandle, node.Name);
+
+                axMap1.SetImageLayerColorScheme(LayerHandle, GridColorscheme);
+
+                axMap1.ZoomToMaxExtents();
+
+                TreeViewLegend.Nodes.Clear();
+
+                for (int i = 0; i < GridColorscheme.NumBreaks; i++)
+                {
+                    MapWinGIS.GridColorBreak colorbreak = GridColorscheme.get_Break(i);
+
+                    string Label = null;
+                    if (colorbreak.HighValue - colorbreak.LowValue <= 1)
+                    {
+                        Label = colorbreak.HighValue.ToString();
+                    }
+                    else
+                    {
+                        Label = colorbreak.LowValue.ToString() + "-" + colorbreak.HighValue.ToString();
+                    }
+
+                    TreeNode legend_node = new TreeNode();
+
+                    legend_node.Text = colorbreak.LowValue.ToString() + "-" + colorbreak.HighValue.ToString();
+
+                    legend_node.ToolTipText = "";
+
+                    string ImageKey = colorbreak.LowValue.ToString() + "-" + colorbreak.HighValue.ToString();
+                    if (TreeViewLegend.ImageList.Images.ContainsKey(ImageKey) == false)
+                    {
+                        TreeViewLegend.ImageList.Images.Add(ImageKey, NodeRect(this.TreeViewLegend.Font, Color.UIntToColor(colorbreak.HighColor)));
+                    }
+                    legend_node.Tag = legend_node.SelectedImageKey = legend_node.ImageKey = ImageKey;
+
+                    this.TreeViewLegend.Nodes.Add(legend_node);
+
+                }
+                SetLayerSelection(FileName);
+
+
+                this.axMap1.Invalidate();
+                this.axMap1.Update();
+                this.axMap1.Refresh();
+
+                this.toolStripProgressBar1.Value = 0;
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (this.ImageFileLoaderBackGroundWorker.IsBusy == false)
+            {
+                ImageFileLoaderBackGroundWorker.RunWorkerAsync();
+            }
+        }
     }
 }
