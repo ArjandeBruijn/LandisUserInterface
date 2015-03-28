@@ -81,7 +81,8 @@ namespace LandisUserInterface
                 {
                     if (curve.Label.Text == LabelsFromTo[label][0])
                     {
-                        Graph1.GraphPane.CurveList[label].Label.Text = LabelsFromTo[label][1];
+                        curve.Label.Text = LabelsFromTo[label][1];
+                        this.Graph1.Refresh();
                     }
                 }
             }
