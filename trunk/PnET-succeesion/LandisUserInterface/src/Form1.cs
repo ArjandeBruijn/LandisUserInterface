@@ -212,8 +212,9 @@ namespace LandisUserInterface
         {
             string path = parent.ToolTipText;
 
-            if (System.IO.Directory.Exists(path))
+            try
             {
+
                 foreach (string file_path in System.IO.Directory.GetFiles(path))
                 {
                     if (parent.Nodes[System.IO.Path.GetFileName(file_path)] == null)
@@ -222,7 +223,7 @@ namespace LandisUserInterface
                         child.Name = child.Text = System.IO.Path.GetFileName(file_path);
                         child.ToolTipText = file_path;
                         child.ImageKey = child.SelectedImageKey = "File";
-                        this.updateoutputbackgroundworker.Schedule(new TreeNode[] { parent, child } );
+                        this.updateoutputbackgroundworker.Schedule(new TreeNode[] { parent, child });
                     }
                 }
                 foreach (string subfolder in System.IO.Directory.GetDirectories(path))
@@ -233,12 +234,14 @@ namespace LandisUserInterface
                         child.Name = child.Text = subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last();
                         child.ToolTipText = subfolder;
                         child.ImageKey = child.SelectedImageKey = "Folder";
-                        updateoutputbackgroundworker.Schedule(new TreeNode[] { parent, child } );
+                        updateoutputbackgroundworker.Schedule(new TreeNode[] { parent, child });
                     }
                     else AddNewNodes(parent.Nodes[subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last()]);
                 }
-                
             }
+            catch { }
+                
+            
             
         }
         private void updateInputBackGroundWorker_DoWork(object sender, DoWorkEventArgs e)
