@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmTXTDisplay));
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -77,6 +78,7 @@
             this.ClientSize = new System.Drawing.Size(586, 356);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.richTextBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmTXTDisplay";
             this.Text = "TXTDisplay";
             this.TextChanged += new System.EventHandler(this.FrmTXTDisplay_TextChanged);

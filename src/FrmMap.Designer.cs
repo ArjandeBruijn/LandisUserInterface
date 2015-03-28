@@ -212,6 +212,7 @@
             this.Controls.Add(this.TreeViewLegend);
             this.Controls.Add(this.treeViewLayers);
             this.Controls.Add(this.toolBar1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmMap";
             this.Text = "FrmMap";
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.FrmMap_DragEnter);
