@@ -43,7 +43,9 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ImageFileLoaderBackGroundWorker = new System.ComponentModel.BackgroundWorker();
             this.axMap1 = new AxMapWinGIS.AxMap();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axMap1)).BeginInit();
             this.SuspendLayout();
@@ -176,6 +178,10 @@
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
             // 
+            // ImageFileLoaderBackGroundWorker
+            // 
+            this.ImageFileLoaderBackGroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.ImageFileLoaderBackGroundWorker_RunWorkerCompleted);
+            // 
             // axMap1
             // 
             this.axMap1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -187,6 +193,10 @@
             this.axMap1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axMap1.OcxState")));
             this.axMap1.Size = new System.Drawing.Size(312, 380);
             this.axMap1.TabIndex = 41;
+            // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // FrmMap
             // 
@@ -202,7 +212,6 @@
             this.Controls.Add(this.toolBar1);
             this.Name = "FrmMap";
             this.Text = "FrmMap";
-            this.Load += new System.EventHandler(this.FrmMap_Load);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.FrmMap_DragEnter);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
@@ -228,5 +237,7 @@
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private AxMapWinGIS.AxMap axMap1;
+        private System.ComponentModel.BackgroundWorker ImageFileLoaderBackGroundWorker;
+        private System.Windows.Forms.Timer timer1;
     }
 }
