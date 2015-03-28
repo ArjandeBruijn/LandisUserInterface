@@ -44,8 +44,8 @@
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.ImageFileLoaderBackGroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.axMap1 = new AxMapWinGIS.AxMap();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.axMap1 = new AxMapWinGIS.AxMap();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axMap1)).BeginInit();
             this.SuspendLayout();
@@ -156,6 +156,8 @@
             this.TreeViewLegend.ShowNodeToolTips = true;
             this.TreeViewLegend.Size = new System.Drawing.Size(166, 380);
             this.TreeViewLegend.TabIndex = 39;
+            this.TreeViewLegend.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewLegend_AfterSelect);
+            this.TreeViewLegend.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TreeViewLegend_MouseDoubleClick);
             // 
             // statusStrip1
             // 
@@ -182,6 +184,10 @@
             // 
             this.ImageFileLoaderBackGroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.ImageFileLoaderBackGroundWorker_RunWorkerCompleted);
             // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // axMap1
             // 
             this.axMap1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -193,10 +199,6 @@
             this.axMap1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axMap1.OcxState")));
             this.axMap1.Size = new System.Drawing.Size(312, 380);
             this.axMap1.TabIndex = 41;
-            // 
-            // timer1
-            // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // FrmMap
             // 

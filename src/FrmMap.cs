@@ -309,5 +309,38 @@ namespace LandisUserInterface
                 ImageFileLoaderBackGroundWorker.RunWorkerAsync();
             }
         }
+
+        private void TreeViewLegend_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+
+        }
+        string[] LegendLabels
+        {
+            get
+            {
+                List<string> Labels = new List<string>();
+                foreach (TreeNode node in TreeViewLegend.Nodes)
+                {
+                    Labels.Add(node.Text);
+                }
+                return Labels.ToArray();
+            }
+        }
+        void UpdateLabels(string[] NewLabels)
+        {
+            for (int label = 0; label < this.TreeViewLegend.Nodes.Count; label++)
+            {
+                TreeViewLegend.Nodes[label].Text = NewLabels[label];
+            }
+        }
+        private void TreeViewLegend_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+
+            FrmRelable f = new FrmRelable(Cursor.Position, LegendLabels);
+
+            f.ShowDialog();
+
+            UpdateLabels(f.NewLabels);
+        }
     }
 }

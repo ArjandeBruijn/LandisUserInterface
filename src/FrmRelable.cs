@@ -8,14 +8,11 @@ using System.Windows.Forms;
 
 namespace LandisUserInterface
 {
-    public partial class FrmRelableGraph : Form
+    public partial class FrmRelable : Form
     {
-        ZedGraph.CurveList curve_list;
-
-        public delegate void UpdateGraph();
-
-        UpdateGraph update_graph;
-
+        public string[] NewLabels { get; private set; }
+        string[] OldLabels;
+ 
         System.Drawing.Point DesiredStartLocation;
 
         public bool ImplementForAllGraphs
@@ -25,35 +22,21 @@ namespace LandisUserInterface
                 return this.checkBox1.Checked;
             }
         }
-
-        public FrmRelableGraph(System.Drawing.Point p, ZedGraph.CurveList curve_list, UpdateGraph update_graph)
+        
+        public FrmRelable(System.Drawing.Point p, string[] OldTerms)
         {
             this.DesiredStartLocation = p;
 
-           
-
             InitializeComponent();
 
-             
-            this.update_graph += update_graph;
+            this.OldLabels = OldTerms;
+            this.NewLabels = OldTerms;
 
-            this.curve_list = curve_list;
-
-            FillTextBox();
-        }
-
-        private void FillTextBox()
-        {
-            foreach (ZedGraph.CurveItem curve in curve_list)
+            foreach (string term in OldLabels)
             {
-                this.richTextBox1.Text += curve.Label.Text + '\t';
+                this.richTextBox1.Text += term + '\n';
             }
-            
-            
         }
-
-        
-       
  
         private void button1_Click(object sender, EventArgs e)
         {
@@ -66,13 +49,13 @@ namespace LandisUserInterface
 
             for (int term = 0; term < content.Length; term++)
             {
-                if (term >= curve_list.Count)
+                if (term >= OldLabels.Length)
                 {
                     this.richTextBox1.Text = this.richTextBox1.Text.Replace(content[term], "");
                     return;
                 }
-                curve_list[term].Label.Text = content[term];
-                update_graph();
+                NewLabels[term] = content[term];
+                
 
             }
         }
@@ -80,6 +63,16 @@ namespace LandisUserInterface
         private void FrmRelableGraph_Load(object sender, EventArgs e)
         {
              this.SetDesktopLocation(DesiredStartLocation.X, DesiredStartLocation.Y);
+        }
+
+        
+
+        private void richTextBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode ==  Keys.Return)
+            {
+                this.Close();
+            }
         }
 
          
