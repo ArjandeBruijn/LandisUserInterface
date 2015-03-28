@@ -204,6 +204,11 @@ namespace LandisUserInterface
 
                 ImageFilesToLoad.RemoveAt(0);
 
+                if (treeViewLayers.Nodes.ContainsKey(FileName) == true)
+                {
+                    continue;
+                }
+
                 MapWinGIS.Grid grid = new MapWinGIS.Grid();
 
 
