@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 namespace LandisUserInterface
 {
@@ -13,73 +14,102 @@ namespace LandisUserInterface
     {
         List<string> TextToAppend = new List<string>();
 
-        bool TextChangedFlag = false;
         string FileName;
+         
+        string LastTextBoxTextOnFile = null;
+        private DateTime FileCreationTime;
+
         public FrmTXTDisplay(string FileName)
         {
             InitializeComponent();
             this.FileName = this.Text = FileName;
             timer1.Interval = 500;
             timer1.Start();
-        }
-         
-        public void AppendText(string[] text)
-        {
-            TextToAppend.AddRange(text);
+
+            TextToAppend.AddRange(System.IO.File.ReadAllLines(FileName));
             
+            FileCreationTime = System.IO.File.GetLastWriteTime(FileName);
         }
         
-       
         private void timer1_Tick(object sender, EventArgs e)
         {
-            // Write cedits to file
-            if (TextChangedFlag == false) return;
-
-            string temp_file = System.IO.Path.ChangeExtension(FileName, "~temp.txt");
-
-            try
-            {
-                System.IO.File.Move(FileName, temp_file);
-
-                System.IO.File.WriteAllLines(FileName, new string[] { richTextBox1.Text });
-
-                System.IO.File.Delete(temp_file);
-
-                TextChangedFlag = false;
-            }
-            catch
-            {
-                System.IO.File.Move(temp_file, FileName);
-            }
-
+            
             if (this.backgroundWorker1.IsBusy == false)
             {
                 backgroundWorker1.RunWorkerAsync();
             }
         }
         
-
-        private void FrmTXTDisplay_TextChanged(object sender, EventArgs e)
-        {
-            TextChangedFlag = true;
-        }
-
-        private void richTextBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            for (int line = 0; line < TextToAppend.Count;line++ )
+            if (System.IO.File.Exists(FileName) == false)
             {
-                richTextBox1.AppendText(TextToAppend[line] + "\n");
+                this.Close();
+                return;
+            }
+
+            int count = 0;
+            float InitialLength = (float)TextToAppend.Count();
+            while (TextToAppend.Count() > 0)
+            {
+                richTextBox1.AppendText(TextToAppend[0] + "\n");
                 richTextBox1.SelectionStart = richTextBox1.Text.Length;
                 richTextBox1.ScrollToCaret();
 
-                this.toolStripProgressBar1.Value = (int) (100 * ((float)line / (float)TextToAppend.Count));
+                this.toolStripProgressBar1.Value = (int)(100 * ((float)count / InitialLength));
+                count++;
+                TextToAppend.RemoveAt(0);
+
+                // Distinguish used changes
+                LastTextBoxTextOnFile = richTextBox1.Text;
             }
             this.toolStripProgressBar1.Value = 0;
+
+
+            // If text changed in the text editor
+            if (richTextBox1.Text != LastTextBoxTextOnFile)
+            {
+                try
+                {
+                    System.IO.File.Delete(FileName);
+
+                    StreamWriter sw = new StreamWriter(FileName);
+
+                    foreach (string s in richTextBox1.Text.Split('\n'))
+                    {
+                        sw.WriteLine(s);
+                    }
+                    sw.Close();
+
+                    LastTextBoxTextOnFile = richTextBox1.Text;
+
+                    FileCreationTime = System.IO.File.GetLastWriteTime(FileName);
+                }
+                catch (System.Exception error)
+                {
+                    toolStripStatusLabel1.Text = "Could not write content to " + FileName + " " + error.Message;
+                }
+            }
+
+            // If files was changed in external editor
+            if (FileCreationTime != System.IO.File.GetLastWriteTime(FileName))
+            {
+                 
+               richTextBox1.Text ="";
+               TextToAppend.AddRange(System.IO.File.ReadAllLines(FileName));
+            }
+           
+        }
+        
+
+     
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+           
+
+ 
+
+
         }
 
          
