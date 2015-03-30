@@ -47,7 +47,11 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.axMap1 = new AxMapWinGIS.AxMap();
             this.statusStrip1.SuspendLayout();
+
+            
             ((System.ComponentModel.ISupportInitialize)(this.axMap1)).BeginInit();
+
+             
             this.SuspendLayout();
             // 
             // toolBar1
@@ -199,6 +203,7 @@
             this.axMap1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axMap1.OcxState")));
             this.axMap1.Size = new System.Drawing.Size(312, 380);
             this.axMap1.TabIndex = 41;
+
             // 
             // FrmMap
             // 
@@ -221,6 +226,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.axMap1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
 
         }
 
