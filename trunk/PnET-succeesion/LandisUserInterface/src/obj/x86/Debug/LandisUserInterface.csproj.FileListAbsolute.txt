@@ -14,7 +14,6 @@ C:\Users\adebruij\Desktop\PnET-Succession\LandisUserInterface\obj\x86\Debug\Land
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\Interop.MapWinGIS.dll
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\AxInterop.MapWinGIS.dll
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.csproj.ResolveComReference.cache
-C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.Form1.resources
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.FrmMap.resources
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.Properties.Resources.resources
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.csproj.GenerateResource.Cache
@@ -35,3 +34,4 @@ C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\sr
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\unvell.ReoScript.dll
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\Antlr3.Runtime.dll
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.FrmRelable.resources
+C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.FrmMain.resources

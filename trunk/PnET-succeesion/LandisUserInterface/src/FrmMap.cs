@@ -18,7 +18,10 @@ namespace LandisUserInterface
         IColorScheme Colorscheme;
         public FrmMap(DragEventHandler DragDrop)
         {
+            
             InitializeComponent();
+             
+
 
             this.timer1.Interval = 100;
             this.timer1.Start();
@@ -26,6 +29,7 @@ namespace LandisUserInterface
             this.DragDrop += DragDrop;
             TreeViewLegend.ImageList = new ImageList();
 
+             
         }
         public void Progress(string s1, int p, string s2)
         {
@@ -40,6 +44,7 @@ namespace LandisUserInterface
 
         public void LoadImageFile(string FileName)
         {
+            
             ImageFilesToLoad.Add(FileName);
 
 
@@ -198,9 +203,15 @@ namespace LandisUserInterface
 
         private void ImageFileLoaderBackGroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+             
+            LogFile.Write("Loading " + ImageFilesToLoad.Count() +" image files.");
             while (ImageFilesToLoad.Count() > 0)
             {
                 string FileName = ImageFilesToLoad[0];
+
+                LogFile.Write("Loading image file" + FileName);
+                
+
 
                 ImageFilesToLoad.RemoveAt(0);
 
@@ -209,10 +220,14 @@ namespace LandisUserInterface
                     continue;
                 }
 
+                LogFile.Write("Creating MapWinGIS grid");
+
                 MapWinGIS.Grid grid = new MapWinGIS.Grid();
 
 
                 statusStrip1.Refresh();
+
+                LogFile.Write("Opening MapWinGIS grid");
 
                 grid.Open(FileName, MapWinGIS.GridDataType.LongDataType, true, MapWinGIS.GridFileType.UseExtension, this);
 
@@ -234,6 +249,8 @@ namespace LandisUserInterface
                 toolStripStatusLabel1.Text = "Ready";
 
                 map_image.CustomColorScheme = GridColorscheme;
+
+                LogFile.Write("Closing MapWinGIS grid");
 
                 grid.Close();
 
@@ -298,11 +315,11 @@ namespace LandisUserInterface
                 }
                 SetLayerSelection(FileName);
 
+                LogFile.Write("Refreshing interface");
 
                 this.axMap1.Invalidate();
                 this.axMap1.Update();
                 this.axMap1.Refresh();
-
                 this.toolStripProgressBar1.Value = 0;
             }
         }
