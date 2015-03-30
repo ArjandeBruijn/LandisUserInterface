@@ -25,15 +25,8 @@ namespace LandisUserInterface
         {
             foreach (TreeNode[] node in nodes)
             {
-                try
-                {
-                    if (add_or_remove == AddOrRemove.Add) node[0].Nodes.Add(node[1]);
-                    else node[0].Nodes.Remove(node[1]);
-                }
-                catch
-                {
-                    double t = 0.0;
-                }
+                if (add_or_remove == AddOrRemove.Add) node[0].Nodes.Add(node[1]);
+                else node[0].Nodes.Remove(node[1]);
             }
             nodes.Clear();
         }
