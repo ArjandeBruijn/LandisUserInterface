@@ -6,6 +6,10 @@ namespace LandisUserInterface
 {
     class UpdateBackgroundWorker : System.ComponentModel.BackgroundWorker
     {
+        public delegate void RemoveDockWindow(string FileName);
+
+        RemoveDockWindow remove_dockwindow;
+
         Dictionary<TreeNode[], AddOrRemove> nodes = new Dictionary<TreeNode[], AddOrRemove>();
         
         public enum AddOrRemove
@@ -14,8 +18,10 @@ namespace LandisUserInterface
             Remove
         }
 
-        public UpdateBackgroundWorker()
+        public UpdateBackgroundWorker(RemoveDockWindow remove_dockwindow)
         {
+            this.remove_dockwindow = remove_dockwindow;
+
             RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
         }
         
@@ -24,7 +30,11 @@ namespace LandisUserInterface
             foreach (KeyValuePair<TreeNode[],AddOrRemove>  node in nodes)
             {
                 if (node.Value == AddOrRemove.Add) node.Key[0].Nodes.Add(node.Key[1]);
-                else node.Key[0].Nodes.Remove(node.Key[1]);
+                else
+                {
+                    node.Key[0].Nodes.Remove(node.Key[1]);
+                    remove_dockwindow(node.Key[1].ToolTipText);
+                }
             }
             nodes.Clear();
         }
