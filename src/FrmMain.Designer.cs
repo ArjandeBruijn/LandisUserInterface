@@ -34,24 +34,16 @@
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.FileFolderIcons = new System.Windows.Forms.ImageList(this.components);
             this.dockContainer1 = new Crom.Controls.Docking.DockContainer();
-            
-           
              
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.ScenarioOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.RunSim = new System.Windows.Forms.ToolStripMenuItem();
-            this.Remove = new System.Windows.Forms.ToolStripMenuItem();
-            this.ContextMenuOpenLocation = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.ShowFileOrFolderLocation = new System.Windows.Forms.ToolStripMenuItem();
+             
+             
             this.updateoutputbackgroundworker = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Add);
             this.updateInputBackGroundWorker = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Add);
             this.updateBackgourndWorkerRemove = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Remove);
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-             
-            this.ScenarioOptions.SuspendLayout();
-            this.ContextMenuOpenLocation.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -115,43 +107,7 @@
             this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             
-            // 
-            // RunSim
-            // 
-            this.RunSim.Name = "RunSim";
-            this.RunSim.Size = new System.Drawing.Size(205, 22);
-            this.RunSim.Text = "Run simulation";
-            this.RunSim.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
-            // 
-            // Remove
-            // 
-            this.Remove.Name = "Remove";
-            this.Remove.Size = new System.Drawing.Size(205, 22);
-            this.Remove.Text = "Remove from workspace";
-            this.Remove.Click += new System.EventHandler(this.Remove_Click);
-            // 
-            // ContextMenuOpenLocation
-            // 
-            this.ContextMenuOpenLocation.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ShowFileOrFolderLocation});
-            this.ContextMenuOpenLocation.Name = "contextMenuStrip1";
-            this.ContextMenuOpenLocation.Size = new System.Drawing.Size(184, 26);
-            // 
-            // ShowFileOrFolderLocation
-            // 
-            this.ShowFileOrFolderLocation.Name = "ShowFileOrFolderLocation";
-            this.ShowFileOrFolderLocation.Size = new System.Drawing.Size(183, 22);
-            this.ShowFileOrFolderLocation.Text = "Show folder location";
-            this.ShowFileOrFolderLocation.Click += new System.EventHandler(this.ShowFolderLocation_Click);
-            // 
-            // ScenarioOptions
-            // 
-            this.ScenarioOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.RunSim,
-            this.Remove,
-            this.ShowFileOrFolderLocation});
-            this.ScenarioOptions.Name = "contextMenuStrip1";
-            this.ScenarioOptions.Size = new System.Drawing.Size(206, 48);
+              
             // 
             // updateoutputbackgroundworker
             // 
@@ -179,8 +135,8 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
              
-            this.ScenarioOptions.ResumeLayout(false);
-            this.ContextMenuOpenLocation.ResumeLayout(false);
+            
+            
             this.ResumeLayout(false);
 
         }
@@ -203,12 +159,9 @@
 
          
         private System.Windows.Forms.ImageList FileFolderIcons;
+
         
-        private System.Windows.Forms.ToolStripMenuItem RunSim;
-        private System.Windows.Forms.ToolStripMenuItem Remove;
-        private System.Windows.Forms.ToolStripMenuItem ShowFileOrFolderLocation;
-        private System.Windows.Forms.ContextMenuStrip ContextMenuOpenLocation;
-        private System.Windows.Forms.ContextMenuStrip ScenarioOptions;
+          
 
     }
 }
