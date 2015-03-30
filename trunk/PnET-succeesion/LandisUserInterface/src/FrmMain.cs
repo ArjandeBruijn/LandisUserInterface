@@ -14,10 +14,8 @@ namespace LandisUserInterface
     {
         private TreeNode HeaderScenarioFiles;
 
-        private UpdateBackgroundWorker updateoutputbackgroundworker;
-        private UpdateBackgroundWorker updateInputBackGroundWorker;
-        private UpdateBackgroundWorker updateBackgroundWorkerRemoveRemoveNodes;
-        private BackgroundWorker updateBackgroundWorkerRemoveRemoveDockingWindows;
+        private UpdateBackgroundWorker UpdatBackGroundWorker;
+         
 
         Dictionary<Crom.Controls.Docking.DockableFormInfo, string> DockingWindows = new Dictionary<Crom.Controls.Docking.DockableFormInfo, string>();
 
@@ -27,16 +25,14 @@ namespace LandisUserInterface
              
             InitializeComponent();
 
-            this.updateoutputbackgroundworker = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Add);
-            this.updateInputBackGroundWorker = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Add);
-            this.updateBackgroundWorkerRemoveRemoveNodes = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Remove);
-            this.updateBackgroundWorkerRemoveRemoveDockingWindows = new BackgroundWorker();
+            this.UpdatBackGroundWorker = new LandisUserInterface.UpdateBackgroundWorker();
 
-            this.updateoutputbackgroundworker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateoutputbackgroundworker_DoWork);
-            this.updateInputBackGroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateInputBackGroundWorker_DoWork);
-            this.updateBackgroundWorkerRemoveRemoveNodes.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateBackgourndWorkerRemoveNodes_DoWork);
-            this.updateBackgroundWorkerRemoveRemoveDockingWindows.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.updateBackgroundWorkerRemoveRemoveDockingWindows_RunWorkerCompleted);
 
+            this.UpdatBackGroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateoutputbackgroundworker_DoWork);
+            this.UpdatBackGroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateInputBackGroundWorker_DoWork);
+            this.UpdatBackGroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateBackgourndWorkerRemoveNodes_DoWork);
+            
+           
             this.WindowState = FormWindowState.Maximized;
 
             this.treeView1.AllowDrop = true;
@@ -243,7 +239,7 @@ namespace LandisUserInterface
                 {
                     if (System.IO.File.Exists(child.ToolTipText) == false && System.IO.Directory.Exists(child.ToolTipText) == false)
                     {
-                        this.updateBackgroundWorkerRemoveRemoveNodes.Schedule(new TreeNode[] { parent, child });
+                        this.UpdatBackGroundWorker.Schedule(new TreeNode[] { parent, child }, UpdateBackgroundWorker.AddOrRemove.Remove);
 
                     }
                     RemoveOldNodes(child);
@@ -267,7 +263,7 @@ namespace LandisUserInterface
                         child.Name = child.Text = System.IO.Path.GetFileName(file_path);
                         child.ToolTipText = file_path;
                         child.ImageKey = child.SelectedImageKey = "File";
-                        this.updateoutputbackgroundworker.Schedule(new TreeNode[] { parent, child });
+                        this.UpdatBackGroundWorker.Schedule(new TreeNode[] { parent, child }, UpdateBackgroundWorker.AddOrRemove.Add);
                     }
                 }
                 foreach (string subfolder in System.IO.Directory.GetDirectories(path))
@@ -278,7 +274,7 @@ namespace LandisUserInterface
                         child.Name = child.Text = subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last();
                         child.ToolTipText = subfolder;
                         child.ImageKey = child.SelectedImageKey = "Folder";
-                        updateoutputbackgroundworker.Schedule(new TreeNode[] { parent, child });
+                        UpdatBackGroundWorker.Schedule(new TreeNode[] { parent, child }, UpdateBackgroundWorker.AddOrRemove.Add);
                     }
                     else AddNewNodes(parent.Nodes[subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last()]);
                 }
@@ -319,7 +315,7 @@ namespace LandisUserInterface
                             }
                             if (scenario_node.Nodes[node.Name] == null)
                             {
-                                updateInputBackGroundWorker.Schedule(new TreeNode[] { scenario_node, node } );
+                                UpdatBackGroundWorker.Schedule(new TreeNode[] { scenario_node, node }, UpdateBackgroundWorker.AddOrRemove.Add);
                                 return;
                             }
                         }
@@ -346,7 +342,7 @@ namespace LandisUserInterface
                         child.ToolTipText = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(scenario_node.ToolTipText), "output");
                         child.ImageKey = child.SelectedImageKey = "Folder";
 
-                        updateoutputbackgroundworker.Schedule(new TreeNode[] { scenario_node, child } );
+                        UpdatBackGroundWorker.Schedule(new TreeNode[] { scenario_node, child }, UpdateBackgroundWorker.AddOrRemove.Add);
                         return; 
                     }
                     AddNewNodes(scenario_node.Nodes["output"]);
@@ -356,16 +352,7 @@ namespace LandisUserInterface
             }
         }
         
-        private void updateBackgroundWorkerRemoveRemoveDockingWindows_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            foreach (KeyValuePair<DockableFormInfo, string> i in DockingWindows)
-            {
-                if (System.IO.File.Exists(i.Value) == false)
-                {
-                    this.dockContainer1.Remove(i.Key);
-                }
-            }
-        }
+       
         private void updateBackgourndWorkerRemoveNodes_DoWork(object sender, DoWorkEventArgs e)
         {
             foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
@@ -378,25 +365,12 @@ namespace LandisUserInterface
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (updateoutputbackgroundworker.IsBusy == false)
+            if (this.UpdatBackGroundWorker.IsBusy == false)
             {
-                updateoutputbackgroundworker.RunWorkerAsync();
+                UpdatBackGroundWorker.RunWorkerAsync();
             }
 
-            if (updateInputBackGroundWorker.IsBusy == false)
-            {
-                updateInputBackGroundWorker.RunWorkerAsync();
-            }
-
-            if (updateBackgroundWorkerRemoveRemoveNodes.IsBusy == false)
-            {
-                updateBackgroundWorkerRemoveRemoveNodes.RunWorkerAsync();
-            }
-
-            if (updateBackgroundWorkerRemoveRemoveDockingWindows.IsBusy == false)
-            {
-                updateBackgroundWorkerRemoveRemoveDockingWindows.RunWorkerAsync();
-            }
+           
         }
         public void RunSimulation(string path)
         {
