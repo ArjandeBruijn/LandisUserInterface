@@ -275,6 +275,8 @@ namespace LandisUserInterface
             {
                 string path_scenario_file = scenario_node.ToolTipText;
 
+                if (System.IO.File.Exists(path_scenario_file) == false) continue;
+
                 foreach (string line in System.IO.File.ReadAllLines(path_scenario_file))
                 {
                     string _line = line;
@@ -535,7 +537,7 @@ namespace LandisUserInterface
 
                    txt.Location = this.dockContainer1.PointToClient(Cursor.Position);
 
-                   txt.AppendText(System.IO.File.ReadAllLines(path));
+                  
 
                    dockContainer1.Add(txt, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid());
                }
