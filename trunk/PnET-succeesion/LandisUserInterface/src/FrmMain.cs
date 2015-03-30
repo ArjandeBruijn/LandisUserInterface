@@ -135,19 +135,17 @@ namespace LandisUserInterface
                 AddLastScenarioFileName(path);
             }
         }
-        System.Windows.Forms.ContextMenuStrip ContextMenuStrip_ProjectOptions
+        System.Windows.Forms.ContextMenuStrip ContextMenuStrip(System.Windows.Forms.ToolStripItem[] ToolStripItems)
         {
-            get
-            {
                 System.Windows.Forms.ContextMenuStrip c = new System.Windows.Forms.ContextMenuStrip();
                 // 
                 // ProjectOptions
                 // 
-                c.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this.ToolStripMenuItemAddScenarioFile, this.ToolStripMenuItem_ClearScenarioFiles });
+                c.Items.AddRange(ToolStripItems);
                 c.Name = "contextMenuStrip1";
                 c.Size = new System.Drawing.Size(166, 48);
                 return c;
-            }
+             
         }
         private void treeView1_MouseClick(object sender, MouseEventArgs e)
         {
@@ -157,7 +155,7 @@ namespace LandisUserInterface
 
                 if (treeView1.SelectedNode == HeaderScenarioFiles)
                 {
-                    ContextMenuStrip_ProjectOptions.Show(this.treeView1, e.Location);
+                    ContextMenuStrip(new System.Windows.Forms.ToolStripItem[] { this.ToolStripMenuItemAddScenarioFile, this.ToolStripMenuItem_ClearScenarioFiles }).Show(this.treeView1, e.Location);
                 }
                 else if (IsScenarioFile(treeView1.SelectedNode.ToolTipText))
                 {
