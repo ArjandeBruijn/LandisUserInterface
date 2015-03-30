@@ -135,7 +135,20 @@ namespace LandisUserInterface
                 AddLastScenarioFileName(path);
             }
         }
-
+        System.Windows.Forms.ContextMenuStrip ContextMenuStrip_ProjectOptions
+        {
+            get
+            {
+                System.Windows.Forms.ContextMenuStrip c = new System.Windows.Forms.ContextMenuStrip();
+                // 
+                // ProjectOptions
+                // 
+                c.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this.ToolStripMenuItemAddScenarioFile, this.ToolStripMenuItem_ClearScenarioFiles });
+                c.Name = "contextMenuStrip1";
+                c.Size = new System.Drawing.Size(166, 48);
+                return c;
+            }
+        }
         private void treeView1_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -144,7 +157,7 @@ namespace LandisUserInterface
 
                 if (treeView1.SelectedNode == HeaderScenarioFiles)
                 {
-                    ProjectOptions.Show(this.treeView1, e.Location);
+                    ContextMenuStrip_ProjectOptions.Show(this.treeView1, e.Location);
                 }
                 else if (IsScenarioFile(treeView1.SelectedNode.ToolTipText))
                 {
@@ -166,7 +179,18 @@ namespace LandisUserInterface
                 }
             }
         }
-
+        System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemAddScenarioFile
+        {
+            get
+            {
+                System.Windows.Forms.ToolStripMenuItem t = new System.Windows.Forms.ToolStripMenuItem();
+                t.Name = "AddScnFl";
+                t.Size = new System.Drawing.Size(165, 22);
+                t.Text = "Add Scenario File";
+                t.Click += new System.EventHandler(this.AddScnFl_Click);
+                return t;
+            }
+        }
         private void AddScnFl_Click(object sender, EventArgs e)
         {
             OpenFileDialog of = new OpenFileDialog();
@@ -177,8 +201,22 @@ namespace LandisUserInterface
                 AddScenarioFile(of.FileName);
             }
         }
-
-        private void RmvScnFl_Click(object sender, EventArgs e)
+        System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_ClearScenarioFiles
+        {
+            get
+            {
+                System.Windows.Forms.ToolStripMenuItem t = new System.Windows.Forms.ToolStripMenuItem();
+                // 
+                // RmvScnFl
+                // 
+                t.Name = "RmvScnFl";
+                t.Size = new System.Drawing.Size(165, 22);
+                t.Text = "Clear";
+                t.Click += new System.EventHandler(this.ClearScenarioFiles_Click);
+                return t;
+            }
+        }
+        private void ClearScenarioFiles_Click(object sender, EventArgs e)
         {
             this.HeaderScenarioFiles.Nodes.Clear();
         }

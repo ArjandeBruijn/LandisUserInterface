@@ -34,9 +34,9 @@
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.FileFolderIcons = new System.Windows.Forms.ImageList(this.components);
             this.dockContainer1 = new Crom.Controls.Docking.DockContainer();
-            this.ProjectOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.AddScnFl = new System.Windows.Forms.ToolStripMenuItem();
-            this.RmvScnFl = new System.Windows.Forms.ToolStripMenuItem();
+            
+           
+             
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.ScenarioOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.RunSim = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,7 +49,7 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.ProjectOptions.SuspendLayout();
+             
             this.ScenarioOptions.SuspendLayout();
             this.ContextMenuOpenLocation.SuspendLayout();
             this.SuspendLayout();
@@ -107,28 +107,8 @@
             this.dockContainer1.TabIndex = 1;
             this.dockContainer1.DragDrop += new System.Windows.Forms.DragEventHandler(this.dockContainer1_DragDrop);
             this.dockContainer1.DragEnter += new System.Windows.Forms.DragEventHandler(this.dockContainer1_DragEnter);
-            // 
-            // ProjectOptions
-            // 
-            this.ProjectOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.AddScnFl,
-            this.RmvScnFl});
-            this.ProjectOptions.Name = "contextMenuStrip1";
-            this.ProjectOptions.Size = new System.Drawing.Size(166, 48);
-            // 
-            // AddScnFl
-            // 
-            this.AddScnFl.Name = "AddScnFl";
-            this.AddScnFl.Size = new System.Drawing.Size(165, 22);
-            this.AddScnFl.Text = "Add Scenario File";
-            this.AddScnFl.Click += new System.EventHandler(this.AddScnFl_Click);
-            // 
-            // RmvScnFl
-            // 
-            this.RmvScnFl.Name = "RmvScnFl";
-            this.RmvScnFl.Size = new System.Drawing.Size(165, 22);
-            this.RmvScnFl.Text = "Clear";
-            this.RmvScnFl.Click += new System.EventHandler(this.RmvScnFl_Click);
+            
+            
             // 
             // timer1
             // 
@@ -198,7 +178,7 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
-            this.ProjectOptions.ResumeLayout(false);
+             
             this.ScenarioOptions.ResumeLayout(false);
             this.ContextMenuOpenLocation.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -207,12 +187,14 @@
 
         #endregion
 
+        
+
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TreeView treeView1;
         private Crom.Controls.Docking.DockContainer dockContainer1;
-        private System.Windows.Forms.ContextMenuStrip ProjectOptions;
-        private System.Windows.Forms.ToolStripMenuItem AddScnFl;
-        private System.Windows.Forms.ToolStripMenuItem RmvScnFl;
+         
+         
+         
         private UpdateBackgroundWorker updateoutputbackgroundworker;
         private UpdateBackgroundWorker updateInputBackGroundWorker;
         private UpdateBackgroundWorker updateBackgourndWorkerRemove;
