@@ -38,10 +38,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
              
              
-            this.updateoutputbackgroundworker = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Add);
-            this.updateInputBackGroundWorker = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Add);
-            this.updateBackgourndWorkerRemove = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Remove);
-            this.splitContainer1.Panel1.SuspendLayout();
+             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
@@ -108,19 +105,7 @@
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             
               
-            // 
-            // updateoutputbackgroundworker
-            // 
-            this.updateoutputbackgroundworker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateoutputbackgroundworker_DoWork);
-            // 
-            // updateInputBackGroundWorker
-            // 
-            this.updateInputBackGroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateInputBackGroundWorker_DoWork);
-            // 
-            // updateBackgourndWorkerRemove
-            // 
-            this.updateBackgourndWorkerRemove.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateBackgourndWorkerRemove_DoWork);
-            // 
+             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -151,9 +136,7 @@
          
          
          
-        private UpdateBackgroundWorker updateoutputbackgroundworker;
-        private UpdateBackgroundWorker updateInputBackGroundWorker;
-        private UpdateBackgroundWorker updateBackgourndWorkerRemove;
+        
 
         private System.Windows.Forms.Timer timer1;
 

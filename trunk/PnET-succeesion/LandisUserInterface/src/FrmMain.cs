@@ -13,13 +13,23 @@ namespace LandisUserInterface
     {
         private TreeNode HeaderScenarioFiles;
 
+        private UpdateBackgroundWorker updateoutputbackgroundworker;
+        private UpdateBackgroundWorker updateInputBackGroundWorker;
+        private UpdateBackgroundWorker updateBackgroundWorkerRemoveRemoveNodes;
+
         public FrmMain()
         {
              
             InitializeComponent();
-            
 
+            this.updateoutputbackgroundworker = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Add);
+            this.updateInputBackGroundWorker = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Add);
+            this.updateBackgroundWorkerRemoveRemoveNodes = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Remove);
 
+            this.updateoutputbackgroundworker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateoutputbackgroundworker_DoWork);
+            this.updateInputBackGroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateInputBackGroundWorker_DoWork);
+            this.updateBackgroundWorkerRemoveRemoveNodes.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateBackgourndWorkerRemove_DoWork);
+           
             this.WindowState = FormWindowState.Maximized;
 
             this.treeView1.AllowDrop = true;
@@ -225,7 +235,7 @@ namespace LandisUserInterface
                 {
                     if (System.IO.File.Exists(child.ToolTipText) == false && System.IO.Directory.Exists(child.ToolTipText) == false)
                     {
-                        this.updateBackgourndWorkerRemove.Schedule(new TreeNode[] { parent, child });
+                        this.updateBackgroundWorkerRemoveRemoveNodes.Schedule(new TreeNode[] { parent, child });
                     }
                     RemoveOldNodes(child);
                 }
@@ -345,10 +355,6 @@ namespace LandisUserInterface
                 {
                     RemoveOldNodes(scenario_node.Nodes["output"]);
                 }
-                else if(scenario_node.Nodes["output"] != null)
-                {
-                    updateBackgourndWorkerRemove.Schedule(new TreeNode[] { scenario_node, scenario_node.Nodes["output"] });
-                }
             }
         }
         private void timer1_Tick(object sender, EventArgs e)
@@ -363,9 +369,9 @@ namespace LandisUserInterface
                 updateInputBackGroundWorker.RunWorkerAsync();
             }
 
-            if (updateBackgourndWorkerRemove.IsBusy == false)
+            if (updateBackgroundWorkerRemoveRemoveNodes.IsBusy == false)
             {
-                updateBackgourndWorkerRemove.RunWorkerAsync();
+                updateBackgroundWorkerRemoveRemoveNodes.RunWorkerAsync();
             }
         }
         public void RunSimulation(string path)
