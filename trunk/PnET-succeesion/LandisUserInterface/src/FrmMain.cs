@@ -320,7 +320,7 @@ namespace LandisUserInterface
                             TreeNode node = new TreeNode();
                             node.ToolTipText = node.Text = node.Name = term;
 
-                            if (term.Contains(System.IO.Directory.GetCurrentDirectory()) == false)
+                            if (term.Trim().Contains(System.IO.Directory.GetCurrentDirectory()) == false)
                             {
                                 node.ToolTipText = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), term);
                             }
