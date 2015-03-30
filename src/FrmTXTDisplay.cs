@@ -44,7 +44,6 @@ namespace LandisUserInterface
         {
             if (System.IO.File.Exists(FileName) == false)
             {
-                this.Close();
                 return;
             }
 
