@@ -155,29 +155,91 @@ namespace LandisUserInterface
 
                 if (treeView1.SelectedNode == HeaderScenarioFiles)
                 {
-                    ContextMenuStrip(new System.Windows.Forms.ToolStripItem[] { this.ToolStripMenuItemAddScenarioFile, this.ToolStripMenuItem_ClearScenarioFiles }).Show(this.treeView1, e.Location);
+                    ContextMenuStrip(new ToolStripItem[] { this.ToolStripMenuItem_AddScenarioFile, this.ToolStripMenuItem_ClearScenarioFiles }).Show(this.treeView1, e.Location);
                 }
                 else if (IsScenarioFile(treeView1.SelectedNode.ToolTipText))
                 {
-                    ScenarioOptions.Items["ShowFileOrFolderLocation"].Text = "Show File Location";
-
-                    ScenarioOptions.Show(this.treeView1, e.Location);
+                    ContextMenuStrip(new ToolStripItem[] { this.ToolStripMenuItem_RemoveSimulation, this.ToolStripMenuItem_ShowFileLocation }).Show(this.treeView1, e.Location);
+                   
                 }
                 else if (System.IO.File.Exists(treeView1.SelectedNode.ToolTipText))
                 {
-                    ContextMenuOpenLocation.Items["ShowFileOrFolderLocation"].Text = "Show File Location";
-                    
-                    ContextMenuOpenLocation.Show(this.treeView1, e.Location);
+                    ContextMenuStrip(new ToolStripItem[] { this.ToolStripMenuItem_ShowFileLocation  }).Show(this.treeView1, e.Location);
                 }
                 else if (System.IO.Directory.Exists(treeView1.SelectedNode.ToolTipText))
                 {
-                    ContextMenuOpenLocation.Items["ShowFileOrFolderLocation"].Text = "Show Folder Location";
+                    ContextMenuStrip(new ToolStripItem[]{ this.ToolStripMenuItem_ShowFolderLocation }).Show(this.treeView1, e.Location);
 
-                    ContextMenuOpenLocation.Show(this.treeView1, e.Location);
+                    
                 }
             }
         }
-        System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemAddScenarioFile
+        System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_ShowFileLocation
+        {
+            get
+            {
+                // 
+                // ShowFileOrFolderLocation
+                // 
+                System.Windows.Forms.ToolStripMenuItem t = new System.Windows.Forms.ToolStripMenuItem();
+                t.Name = "ShowFileLocation";
+                t.Size = new System.Drawing.Size(183, 22);
+                t.Text = "Show File Location";
+                t.Click += new System.EventHandler(this.ShowFileLocation_Click);
+
+                return t;
+            }
+        }
+        System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_ShowFolderLocation
+        {
+            get
+            {
+                // 
+                // ShowFileOrFolderLocation
+                // 
+                System.Windows.Forms.ToolStripMenuItem t = new System.Windows.Forms.ToolStripMenuItem();
+                t.Name = "ShowFileOrFolderLocation";
+                t.Size = new System.Drawing.Size(183, 22);
+                t.Text = "Show folder location";
+                t.Click += new System.EventHandler(this.ShowFolderLocation_Click);
+
+                return t;
+            }
+        }
+        System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_RunSimulation
+        {
+            get
+            {
+                // 
+                // RunSim
+                // 
+                System.Windows.Forms.ToolStripMenuItem t = new System.Windows.Forms.ToolStripMenuItem();
+                t.Name = "RunSim";
+                t.Size = new System.Drawing.Size(205, 22);
+                t.Text = "Run Simulation";
+                t.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+
+                return t;
+            }
+        }
+        System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_RemoveSimulation
+        {
+            get
+            {
+                // 
+                // RunSim
+                // 
+                System.Windows.Forms.ToolStripMenuItem t = new System.Windows.Forms.ToolStripMenuItem();
+                t.Name = "RemoveSimulation";
+                t.Size = new System.Drawing.Size(205, 22);
+                t.Text = "Remove Scenario";
+                t.Click += new System.EventHandler(this.Remove_Click);
+
+                return t;
+            }
+        }
+        
+        System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_AddScenarioFile
         {
             get
             {
@@ -423,6 +485,17 @@ namespace LandisUserInterface
         private void Remove_Click(object sender, EventArgs e)
         {
             this.treeView1.Nodes.Remove(treeView1.SelectedNode);
+        }
+
+        private void ShowFileLocation_Click(object sender, EventArgs e)
+        {
+            string path = treeView1.SelectedNode.ToolTipText;
+
+           
+            if (System.IO.File.Exists(path))
+            {
+                System.Diagnostics.Process.Start(System.IO.Path.GetDirectoryName(path));
+            }
         }
 
         private void ShowFolderLocation_Click(object sender, EventArgs e)
