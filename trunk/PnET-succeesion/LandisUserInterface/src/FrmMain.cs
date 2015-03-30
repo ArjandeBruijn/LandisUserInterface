@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Crom.Controls.Docking;
 
 namespace LandisUserInterface
 {
@@ -16,6 +17,10 @@ namespace LandisUserInterface
         private UpdateBackgroundWorker updateoutputbackgroundworker;
         private UpdateBackgroundWorker updateInputBackGroundWorker;
         private UpdateBackgroundWorker updateBackgroundWorkerRemoveRemoveNodes;
+        private BackgroundWorker updateBackgroundWorkerRemoveRemoveDockingWindows;
+
+        Dictionary<Crom.Controls.Docking.DockableFormInfo, string> DockingWindows = new Dictionary<Crom.Controls.Docking.DockableFormInfo, string>();
+
 
         public FrmMain()
         {
@@ -25,11 +30,13 @@ namespace LandisUserInterface
             this.updateoutputbackgroundworker = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Add);
             this.updateInputBackGroundWorker = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Add);
             this.updateBackgroundWorkerRemoveRemoveNodes = new LandisUserInterface.UpdateBackgroundWorker(UpdateBackgroundWorker.AddOrRemove.Remove);
+            this.updateBackgroundWorkerRemoveRemoveDockingWindows = new BackgroundWorker();
 
             this.updateoutputbackgroundworker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateoutputbackgroundworker_DoWork);
             this.updateInputBackGroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateInputBackGroundWorker_DoWork);
-            this.updateBackgroundWorkerRemoveRemoveNodes.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateBackgourndWorkerRemove_DoWork);
-           
+            this.updateBackgroundWorkerRemoveRemoveNodes.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateBackgourndWorkerRemoveNodes_DoWork);
+            this.updateBackgroundWorkerRemoveRemoveDockingWindows.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.updateBackgroundWorkerRemoveRemoveDockingWindows_RunWorkerCompleted);
+
             this.WindowState = FormWindowState.Maximized;
 
             this.treeView1.AllowDrop = true;
@@ -145,7 +152,7 @@ namespace LandisUserInterface
                 AddLastScenarioFileName(path);
             }
         }
-        System.Windows.Forms.ContextMenuStrip ContextMenuStrip(System.Windows.Forms.ToolStripItem[] ToolStripItems)
+        System.Windows.Forms.ContextMenuStrip GetContextMenuStrip(System.Windows.Forms.ToolStripItem[] ToolStripItems)
         {
                 System.Windows.Forms.ContextMenuStrip c = new System.Windows.Forms.ContextMenuStrip();
                 // 
@@ -165,19 +172,19 @@ namespace LandisUserInterface
 
                 if (treeView1.SelectedNode == HeaderScenarioFiles)
                 {
-                    ContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.AddScnFl_Click), "Add Scenario"), GetToolStripMenuItem(new EventHandler(this.ClearScenarioFiles_Click), "Clear Scenarios") }).Show(this.treeView1, e.Location);
+                    GetContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.AddScnFl_Click), "Add Scenario"), GetToolStripMenuItem(new EventHandler(this.ClearScenarioFiles_Click), "Clear Scenarios") }).Show(this.treeView1, e.Location);
                 }
                 else if (IsScenarioFile(treeView1.SelectedNode.ToolTipText))
                 {
-                    ContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.Remove_Click), "Remove Scenario"), GetToolStripMenuItem(new EventHandler(this.ShowFileLocation_Click), "Show File Location"), GetToolStripMenuItem(new EventHandler(this.RunSimulation_Click), "Run Simulation") }).Show(this.treeView1, e.Location);
+                    GetContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.Remove_Click), "Remove Scenario"), GetToolStripMenuItem(new EventHandler(this.ShowFileLocation_Click), "Show File Location"), GetToolStripMenuItem(new EventHandler(this.RunSimulation_Click), "Run Simulation") }).Show(this.treeView1, e.Location);
                 }
                 else if (System.IO.File.Exists(treeView1.SelectedNode.ToolTipText))
                 {
-                    ContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.ShowFileLocation_Click), "Show File Location") }).Show(this.treeView1, e.Location);
+                    GetContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.ShowFileLocation_Click), "Show File Location") }).Show(this.treeView1, e.Location);
                 }
                 else if (System.IO.Directory.Exists(treeView1.SelectedNode.ToolTipText))
                 {
-                    ContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.ShowFolderLocation_Click), "Show Folder Location") }).Show(this.treeView1, e.Location);
+                    GetContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.ShowFolderLocation_Click), "Show Folder Location") }).Show(this.treeView1, e.Location);
 
                     
                 }
@@ -213,6 +220,7 @@ namespace LandisUserInterface
        
         private void ClearScenarioFiles_Click(object sender, EventArgs e)
         {
+            // TODO: remove associated windows??
             this.HeaderScenarioFiles.Nodes.Clear();
         }
        
@@ -236,6 +244,7 @@ namespace LandisUserInterface
                     if (System.IO.File.Exists(child.ToolTipText) == false && System.IO.Directory.Exists(child.ToolTipText) == false)
                     {
                         this.updateBackgroundWorkerRemoveRemoveNodes.Schedule(new TreeNode[] { parent, child });
+
                     }
                     RemoveOldNodes(child);
                 }
@@ -347,7 +356,17 @@ namespace LandisUserInterface
             }
         }
         
-        private void updateBackgourndWorkerRemove_DoWork(object sender, DoWorkEventArgs e)
+        private void updateBackgroundWorkerRemoveRemoveDockingWindows_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            foreach (KeyValuePair<DockableFormInfo, string> i in DockingWindows)
+            {
+                if (System.IO.File.Exists(i.Value) == false)
+                {
+                    this.dockContainer1.Remove(i.Key);
+                }
+            }
+        }
+        private void updateBackgourndWorkerRemoveNodes_DoWork(object sender, DoWorkEventArgs e)
         {
             foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
             {
@@ -372,6 +391,11 @@ namespace LandisUserInterface
             if (updateBackgroundWorkerRemoveRemoveNodes.IsBusy == false)
             {
                 updateBackgroundWorkerRemoveRemoveNodes.RunWorkerAsync();
+            }
+
+            if (updateBackgroundWorkerRemoveRemoveDockingWindows.IsBusy == false)
+            {
+                updateBackgroundWorkerRemoveRemoveDockingWindows.RunWorkerAsync();
             }
         }
         public void RunSimulation(string path)
