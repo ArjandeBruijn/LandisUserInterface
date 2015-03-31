@@ -125,11 +125,15 @@ namespace LandisUserInterface
                     lastscenariofilenames.Add(path);
                 }
             }
-            if (Properties.Settings.Default.LastScenarioFileNames.Contains(FileName + ";"))
+            string LastScenarioFileNames = Properties.Settings.Default.LastScenarioFileNames;
+
+            while (Properties.Settings.Default.LastScenarioFileNames.Contains(FileName + ";"))
             { 
-                Properties.Settings.Default.LastScenarioFileNames.Replace(FileName + ";", "");
+                Properties.Settings.Default.LastScenarioFileNames = Properties.Settings.Default.LastScenarioFileNames.Replace(FileName + ";", "");
+                Properties.Settings.Default.Save();
             }
-            Properties.Settings.Default.Save();
+            
+            
         }
         
                 
