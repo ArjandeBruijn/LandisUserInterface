@@ -262,36 +262,30 @@ namespace LandisUserInterface
         {
             string path = parent.ToolTipText;
 
-            try
+            foreach (string file_path in System.IO.Directory.GetFiles(path))
             {
-
-                foreach (string file_path in System.IO.Directory.GetFiles(path))
+                if (parent.Nodes[System.IO.Path.GetFileName(file_path)] == null)
                 {
-                    if (parent.Nodes[System.IO.Path.GetFileName(file_path)] == null)
-                    {
-                        TreeNode child = new TreeNode();
-                        child.Name = child.Text = System.IO.Path.GetFileName(file_path);
-                        child.ToolTipText = file_path;
-                        child.ImageKey = child.SelectedImageKey = "File";
-                        NodesForAddition.Add(new TreeNode[] { parent, child });
-//                        this.update_backround_worker.Schedule(, UpdateBackgroundWorker.AddOrRemove.Add);
-                    }
-                }
-                foreach (string subfolder in System.IO.Directory.GetDirectories(path))
-                {
-                    if (parent.Nodes[subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last()] == null)
-                    {
-                        TreeNode child = new TreeNode();
-                        child.Name = child.Text = subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last();
-                        child.ToolTipText = subfolder;
-                        child.ImageKey = child.SelectedImageKey = "Folder";
-                        NodesForAddition.Add(new TreeNode[] { parent, child });
-//                        update_backround_worker.Schedule(new TreeNode[] { parent, child }, UpdateBackgroundWorker.AddOrRemove.Add);
-                    }
-                    else AddNewNodes(parent.Nodes[subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last()]);
+                    TreeNode child = new TreeNode();
+                    child.Name = child.Text = System.IO.Path.GetFileName(file_path);
+                    child.ToolTipText = file_path;
+                    child.ImageKey = child.SelectedImageKey = "File";
+                    NodesForAddition.Add(new TreeNode[] { parent, child });
+                
                 }
             }
-            catch { }
+            foreach (string subfolder in System.IO.Directory.GetDirectories(path))
+            {
+                if (parent.Nodes[subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last()] == null)
+                {
+                    TreeNode child = new TreeNode();
+                    child.Name = child.Text = subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last();
+                    child.ToolTipText = subfolder;
+                    child.ImageKey = child.SelectedImageKey = "Folder";
+                    NodesForAddition.Add(new TreeNode[] { parent, child });
+                }
+                else AddNewNodes(parent.Nodes[subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last()]);
+            }
                 
             
             
@@ -363,7 +357,6 @@ namespace LandisUserInterface
 
                 System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(path_scenario_file));
 
-                
                 if (System.IO.Directory.Exists("output"))
                 {
                     if (scenario_node.Nodes["output"] == null)
@@ -375,10 +368,12 @@ namespace LandisUserInterface
 
                         NodesForAddition.Add(new TreeNode[] { scenario_node, child });
 
-                         
-                        return; 
+                        return;
                     }
-                    AddNewNodes(scenario_node.Nodes["output"]);
+                    else
+                    {
+                        AddNewNodes(scenario_node.Nodes["output"]);
+                    }
                 }
                 
 
