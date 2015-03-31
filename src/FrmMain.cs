@@ -353,6 +353,8 @@ namespace LandisUserInterface
             // List all files that should be in the interface
             foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
             {
+                if (scenario_node == null) return;
+
                 string path_scenario_file = scenario_node.ToolTipText;
 
                 System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(path_scenario_file));
