@@ -35,9 +35,7 @@ namespace LandisUserInterface
 
             bgw.Add(new TimerBackgroundWorker(CheckForNewOutputNodesToAdd, AddNewNodes));
             bgw.Add(new TimerBackgroundWorker(CheckForNewInputNodesToAdd, null));
-            bgw.Add(new TimerBackgroundWorker(CheckForNodesToRemove, RemoveNodes));
-
-         
+            
             this.WindowState = FormWindowState.Maximized;
 
             this.treeView1.AllowDrop = true;
@@ -153,8 +151,8 @@ namespace LandisUserInterface
         {
             if (IsScenarioFile(path))
             {
-                TreeNode node = new TreeNode();
-                node.Text = node.Name = System.IO.Path.GetFileName(path);
+                TreeNode node = new TreeNode(System.IO.Path.GetFileName(path));
+                node.Name = System.IO.Path.GetFileName(path);
                 node.ToolTipText = path;
 
                 HeaderScenarioFiles.Nodes.Add(node);
@@ -191,9 +189,7 @@ namespace LandisUserInterface
                 }
                 else if (System.IO.Directory.Exists(treeView1.SelectedNode.ToolTipText))
                 {
-                    GetContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.ShowFolderLocation_Click), "Show Folder Location") }).Show(this.treeView1, e.Location);
-
-                    
+                    GetContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.ShowFolderLocation_Click), "Show Folder Location") }).Show(this.treeView1, e.Location);                    
                 }
             }
         }
@@ -264,8 +260,8 @@ namespace LandisUserInterface
             {
                 if (parent.Nodes[System.IO.Path.GetFileName(file_path)] == null)
                 {
-                    TreeNode child = new TreeNode();
-                    child.Name = child.Text = System.IO.Path.GetFileName(file_path);
+                    TreeNode child = new TreeNode(System.IO.Path.GetFileName(file_path));
+                    child.Name =  System.IO.Path.GetFileName(file_path);
                     child.ToolTipText = file_path;
                     child.ImageKey = child.SelectedImageKey = "File";
                     NodesForAddition.Add(new TreeNode[] { parent, child });
@@ -276,13 +272,13 @@ namespace LandisUserInterface
             {
                 if (parent.Nodes[subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last()] == null)
                 {
-                    TreeNode child = new TreeNode();
-                    child.Name = child.Text = subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last();
+                    TreeNode child = new TreeNode(subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last());
+                    child.Name =  subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last();
                     child.ToolTipText = subfolder;
                     child.ImageKey = child.SelectedImageKey = "Folder";
                     NodesForAddition.Add(new TreeNode[] { parent, child });
                 }
-                else AddNewNodes(parent.Nodes[subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last()]);
+                else AddNewNodes((TreeNode)parent.Nodes[subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last()]);
             }
                 
             
@@ -310,8 +306,8 @@ namespace LandisUserInterface
                     {
                         if (System.IO.File.Exists(term) && SubNodeTexts(scenario_node.Nodes).Contains(term) == false)
                         {
-                            TreeNode node = new TreeNode();
-                            node.ToolTipText = node.Text = node.Name = term;
+                            TreeNode node = new TreeNode(term);
+                            node.ToolTipText = node.Name = term;
 
                             if (term.Trim().Contains(System.IO.Directory.GetCurrentDirectory()) == false)
                             {
@@ -357,12 +353,22 @@ namespace LandisUserInterface
 
                 System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(path_scenario_file));
 
+                if (System.IO.File.Exists("Landis-log.txt") && scenario_node.Nodes.ContainsKey("Landis-log.txt") ==false)
+                {
+                    TreeNode child = new TreeNode("Landis-log.txt");
+                    child.Name = "Landis-log.txt";
+                    child.ToolTipText = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(scenario_node.ToolTipText), "Landis-log.txt");
+                    child.ImageKey = child.SelectedImageKey = "File";
+
+                    NodesForAddition.Add(new TreeNode[] { scenario_node, child });
+                }
+
                 if (System.IO.Directory.Exists("output"))
                 {
                     if (scenario_node.Nodes["output"] == null)
                     {
-                        TreeNode child = new TreeNode();
-                        child.Text = child.Name = "output";
+                        TreeNode child = new TreeNode("output");
+                        child.Name = "output";
                         child.ToolTipText = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(scenario_node.ToolTipText), "output");
                         child.ImageKey = child.SelectedImageKey = "Folder";
 
@@ -372,7 +378,7 @@ namespace LandisUserInterface
                     }
                     else
                     {
-                        AddNewNodes(scenario_node.Nodes["output"]);
+                        AddNewNodes((TreeNode)scenario_node.Nodes["output"]);
                     }
                 }
                 
@@ -381,25 +387,7 @@ namespace LandisUserInterface
         }
 
 
-        private void CheckForNodesToRemove(object sender, DoWorkEventArgs e)
-        {
-            foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
-            {
-                if (scenario_node == null) continue;
-
-                if (System.IO.File.Exists(scenario_node.ToolTipText) == false)
-                {
-                    NodesForRemoval.Add(scenario_node);
-                }
-                
-
-                if (scenario_node.Nodes["output"]!= null)
-                {
-                    RemoveOldNodes(scenario_node.Nodes["output"]);
-                }
-            }
-        }
-        
+       
         public void RunSimulation(string path)
         {
             if (System.IO.File.Exists(path) == false) throw new System.Exception("File " + path + " does not exist");
