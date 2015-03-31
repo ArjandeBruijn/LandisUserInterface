@@ -14,8 +14,10 @@ namespace LandisUserInterface
     {
         private TreeNode HeaderScenarioFiles;
 
-        private UpdateBackgroundWorker update_backround_worker;
-         
+        List<TreeNode> NodesForRemoval;
+        List<TreeNode[]> NodesForAddition;
+
+        List<TimerBackgroundWorker> bgw;
 
         Dictionary<Crom.Controls.Docking.DockableFormInfo, string> DockingWindows = new Dictionary<Crom.Controls.Docking.DockableFormInfo, string>();
 
@@ -25,14 +27,17 @@ namespace LandisUserInterface
              
             InitializeComponent();
 
-            this.update_backround_worker = new LandisUserInterface.UpdateBackgroundWorker(remove_dock_window);
+            NodesForRemoval = new List<TreeNode>();
+            NodesForAddition = new List<TreeNode[]>();
+
+            bgw = new List<TimerBackgroundWorker>();
 
 
-            this.update_backround_worker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateoutputbackgroundworker_DoWork);
-            this.update_backround_worker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateInputBackGroundWorker_DoWork);
-            this.update_backround_worker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.updateBackgourndWorkerRemoveNodes_DoWork);
-            
-           
+            bgw.Add(new TimerBackgroundWorker(CheckForNewOutputNodesToAdd, AddNewNodes));
+            bgw.Add(new TimerBackgroundWorker(CheckForNewInputNodesToAdd, null));
+            bgw.Add(new TimerBackgroundWorker(CheckForNodesToRemove, RemoveNodes));
+
+         
             this.WindowState = FormWindowState.Maximized;
 
             this.treeView1.AllowDrop = true;
@@ -46,21 +51,15 @@ namespace LandisUserInterface
             this.treeView1.Nodes.Add(HeaderScenarioFiles);
             HeaderScenarioFiles.ExpandAll();
 
-            timer1.Start();
+         
 
            
         }
 
         Dictionary<string, DockableFormInfo> Docks = new Dictionary<string, DockableFormInfo>();
 
-        void remove_dock_window(string FileName)
-        {
-            if (Docks.ContainsKey(FileName) == false) return;
 
-            DockableFormInfo info = Docks[FileName];
-            this.dockContainer1.Remove(info);
-            Docks.Remove(FileName);
-        }
+       
         string LandisConsoleExe
         {
             get
@@ -241,7 +240,7 @@ namespace LandisUserInterface
             return SubNodeTexts;
         }
 
-
+        
         void RemoveOldNodes(TreeNode parent)
         {
             if (System.IO.Directory.Exists(parent.ToolTipText))
@@ -250,7 +249,7 @@ namespace LandisUserInterface
                 {
                     if (System.IO.File.Exists(child.ToolTipText) == false && System.IO.Directory.Exists(child.ToolTipText) == false)
                     {
-                        this.update_backround_worker.Schedule(new TreeNode[] { parent, child }, UpdateBackgroundWorker.AddOrRemove.Remove);
+                        NodesForRemoval.Add(child);// }, UpdateBackgroundWorker.AddOrRemove.Remove);
 
                     }
                     RemoveOldNodes(child);
@@ -274,7 +273,8 @@ namespace LandisUserInterface
                         child.Name = child.Text = System.IO.Path.GetFileName(file_path);
                         child.ToolTipText = file_path;
                         child.ImageKey = child.SelectedImageKey = "File";
-                        this.update_backround_worker.Schedule(new TreeNode[] { parent, child }, UpdateBackgroundWorker.AddOrRemove.Add);
+                        NodesForAddition.Add(new TreeNode[] { parent, child });
+//                        this.update_backround_worker.Schedule(, UpdateBackgroundWorker.AddOrRemove.Add);
                     }
                 }
                 foreach (string subfolder in System.IO.Directory.GetDirectories(path))
@@ -285,7 +285,8 @@ namespace LandisUserInterface
                         child.Name = child.Text = subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last();
                         child.ToolTipText = subfolder;
                         child.ImageKey = child.SelectedImageKey = "Folder";
-                        update_backround_worker.Schedule(new TreeNode[] { parent, child }, UpdateBackgroundWorker.AddOrRemove.Add);
+                        NodesForAddition.Add(new TreeNode[] { parent, child });
+//                        update_backround_worker.Schedule(new TreeNode[] { parent, child }, UpdateBackgroundWorker.AddOrRemove.Add);
                     }
                     else AddNewNodes(parent.Nodes[subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last()]);
                 }
@@ -295,7 +296,7 @@ namespace LandisUserInterface
             
             
         }
-        private void updateInputBackGroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void CheckForNewInputNodesToAdd(object sender, DoWorkEventArgs e)
         {
             foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
             {
@@ -326,7 +327,8 @@ namespace LandisUserInterface
                             }
                             if (scenario_node.Nodes[node.Name] == null)
                             {
-                                update_backround_worker.Schedule(new TreeNode[] { scenario_node, node }, UpdateBackgroundWorker.AddOrRemove.Add);
+                                NodesForAddition.Add(new TreeNode[] { scenario_node, node });
+//                                update_backround_worker.Schedule(, UpdateBackgroundWorker.AddOrRemove.Add);
                                 return;
                             }
                         }
@@ -334,7 +336,25 @@ namespace LandisUserInterface
                 }
             }
         }
-        private void updateoutputbackgroundworker_DoWork(object sender, DoWorkEventArgs e)
+
+        private void RemoveNodes(object sender, RunWorkerCompletedEventArgs e)
+        {
+            while (NodesForRemoval.Count > 0)
+            {
+                treeView1.Nodes.Remove(NodesForRemoval[0]);
+                NodesForRemoval.RemoveAt(0);
+            }
+             
+        }
+        private void AddNewNodes(object sender, RunWorkerCompletedEventArgs  e)
+        {
+            while (this.NodesForAddition.Count > 0)
+            {
+                NodesForAddition[0][0].Nodes.Add(NodesForAddition[0][1]);
+                NodesForAddition.RemoveAt(0);
+            }
+        }
+        private void CheckForNewOutputNodesToAdd(object sender, DoWorkEventArgs e)
         {
             // List all files that should be in the interface
             foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
@@ -353,7 +373,9 @@ namespace LandisUserInterface
                         child.ToolTipText = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(scenario_node.ToolTipText), "output");
                         child.ImageKey = child.SelectedImageKey = "Folder";
 
-                        update_backround_worker.Schedule(new TreeNode[] { scenario_node, child }, UpdateBackgroundWorker.AddOrRemove.Add);
+                        NodesForAddition.Add(new TreeNode[] { scenario_node, child });
+
+                         
                         return; 
                     }
                     AddNewNodes(scenario_node.Nodes["output"]);
@@ -362,15 +384,16 @@ namespace LandisUserInterface
 
             }
         }
-        
-       
-        private void updateBackgourndWorkerRemoveNodes_DoWork(object sender, DoWorkEventArgs e)
+
+
+        private void CheckForNodesToRemove(object sender, DoWorkEventArgs e)
         {
             foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
             {
                 if (System.IO.File.Exists(scenario_node.ToolTipText) == false)
                 {
-                    this.update_backround_worker.Schedule(new TreeNode[] { HeaderScenarioFiles, scenario_node }, UpdateBackgroundWorker.AddOrRemove.Remove);
+                    NodesForRemoval.Add(scenario_node);
+//                    this.update_backround_worker.Schedule(new TreeNode[] { HeaderScenarioFiles, scenario_node }, UpdateBackgroundWorker.AddOrRemove.Remove);
                 }
                 
 
@@ -380,15 +403,7 @@ namespace LandisUserInterface
                 }
             }
         }
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            if (this.update_backround_worker.IsBusy == false)
-            {
-                update_backround_worker.RunWorkerAsync();
-            }
-
-           
-        }
+        
         public void RunSimulation(string path)
         {
             if (System.IO.File.Exists(path) == false) throw new System.Exception("File " + path + " does not exist");
