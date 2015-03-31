@@ -315,7 +315,7 @@ namespace LandisUserInterface
 
                             if (term.Trim().Contains(System.IO.Directory.GetCurrentDirectory()) == false)
                             {
-                                node.ToolTipText = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), term);
+                                node.ToolTipText = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), term.Trim());
                             }
                             if (scenario_node.Nodes[node.Name] == null)
                             {
