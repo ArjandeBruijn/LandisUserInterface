@@ -24,6 +24,12 @@ namespace LandisUserInterface
             this.update_curvelabels = update_curvelabels;
 
             InitializeComponent();
+
+            this.Graph1.GraphPane.XAxis.Scale.Min = double.MaxValue;
+            this.Graph1.GraphPane.XAxis.Scale.Max = double.MinValue;
+            this.Graph1.GraphPane.YAxis.Scale.Min = double.MaxValue;
+            this.Graph1.GraphPane.YAxis.Scale.Max = double.MinValue;
+
             this.Name = Name;
 
         }
@@ -67,11 +73,11 @@ namespace LandisUserInterface
         
         double Max_Axis(double Range, double max_value)
         {
-            return max_value + 0.01F * Range;
+            return max_value + 0.025F * Range;
         }
         double Min_Axis(double Range, double min_value)
         {
-            return min_value - 0.01F * Range;
+            return min_value - 0.025F * Range;
         }
         public void UpdateLegend(List<string[]> LabelsFromTo)
         {
@@ -105,7 +111,7 @@ namespace LandisUserInterface
             curve.Line.Width = 2;
             curve.Label.IsVisible = true;
 
-            Graph1.AxisChange();
+            
 
             double Xmin = double.MaxValue;
             double Ymin = double.MaxValue;
@@ -134,7 +140,7 @@ namespace LandisUserInterface
             myPane.YAxis.Scale.MajorStep = range2 / 10;
             myPane.YAxis.Scale.MinorStep = myPane.YAxis.Scale.MajorStep;
 
-
+            Graph1.AxisChange();
             Graph1.Refresh();
         }
         
@@ -170,6 +176,44 @@ namespace LandisUserInterface
             this.ResumeLayout(false);
 
         }
+        void UpdateAxisMinMax(string[] AxisMinMax)
+        {
+            foreach (string line in AxisMinMax)
+            {
+                if (line.Split('\t')[0].Contains("X_min"))
+                {
+                    double result;
+                    if(double.TryParse( line.Split('\t')[1].Trim(), out result)==true)
+                    {
+                        Graph1.GraphPane.XAxis.Scale.Min = result;
+                    }
+                }
+                if (line.Split('\t')[0].Contains("X_max"))
+                {
+                    double result;
+                    if (double.TryParse(line.Split('\t')[1].Trim(), out result) == true)
+                    {
+                        Graph1.GraphPane.XAxis.Scale.Max = result;
+                    }
+                }
+                if (line.Split('\t')[0].Contains("Y_min"))
+                {
+                    double result;
+                    if (double.TryParse(line.Split('\t')[1].Trim(), out result) == true)
+                    {
+                        Graph1.GraphPane.YAxis.Scale.Min = result;
+                    }
+                }
+                if (line.Split('\t')[0].Contains("Y_max"))
+                {
+                    double result;
+                    if (double.TryParse(line.Split('\t')[1].Trim(), out result) == true)
+                    {
+                        Graph1.GraphPane.YAxis.Scale.Max = result;
+                    }
+                }
+            }
+        }
         void UpdateLabels(string[] NewLabels)
         {
             for (int label = 0; label < this.Graph1.GraphPane.CurveList.Count(); label++)
@@ -199,17 +243,32 @@ namespace LandisUserInterface
 
                 UpdateLabels(frg.NewLabels);
 
-                
-
                 if (frg.ImplementForAllGraphs)
                 {
                     update_curvelabels(new List<string[]>(LabelsFromTo.Where(o => o[0] != o[1])));
                 }
-
-              
-
             }
+            /*
+            if (this.Graph1.GraphPane.Rect.Contains(e.X, e.Y))
+            {
+                List<string> OldTerms = new List<string>();
 
+                OldTerms.Add("X_min\t" + Graph1.GraphPane.XAxis.Scale.Min);
+                OldTerms.Add("X_max\t" + Graph1.GraphPane.XAxis.Scale.Max);
+                OldTerms.Add("Y_min\t" + Graph1.GraphPane.YAxis.Scale.Min);
+                OldTerms.Add("Y_max\t" + Graph1.GraphPane.YAxis.Scale.Max);
+
+                FrmRelable frg = new FrmRelable(Cursor.Position, OldTerms.ToArray(), false);
+
+                frg.Location = this.Graph1.Location;
+
+                frg.ShowDialog();
+
+                UpdateAxisMinMax(frg.NewLabels);
+
+                
+            }
+            */
              
         }
 
