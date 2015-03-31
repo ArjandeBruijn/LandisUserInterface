@@ -19,8 +19,7 @@ namespace LandisUserInterface
 
         List<TimerBackgroundWorker> bgw;
 
-        Dictionary<Crom.Controls.Docking.DockableFormInfo, string> DockingWindows = new Dictionary<Crom.Controls.Docking.DockableFormInfo, string>();
-
+        Dictionary<string, DockableFormInfo> Docks = new Dictionary<string, DockableFormInfo>();
 
         public FrmMain()
         {
@@ -56,7 +55,7 @@ namespace LandisUserInterface
            
         }
 
-        Dictionary<string, DockableFormInfo> Docks = new Dictionary<string, DockableFormInfo>();
+        
 
 
        
