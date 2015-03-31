@@ -324,16 +324,7 @@ namespace LandisUserInterface
                 }
             }
         }
-
-        private void RemoveNodes(object sender, RunWorkerCompletedEventArgs e)
-        {
-            while (NodesForRemoval.Count > 0)
-            {
-                treeView1.Nodes.Remove(NodesForRemoval[0]);
-                NodesForRemoval.RemoveAt(0);
-            }
-             
-        }
+ 
         private void AddNewNodes(object sender, RunWorkerCompletedEventArgs  e)
         {
             while (this.NodesForAddition.Count > 0)
