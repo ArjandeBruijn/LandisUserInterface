@@ -256,9 +256,8 @@ namespace LandisUserInterface
 
                 int LayerHandle = axMap1.AddLayer(map_image, true);
 
-                TreeNode node = new TreeNode();
+                TreeNode node = new TreeNode(System.IO.Path.GetFileName(FileName));
                 node.Name = FileName;
-                node.Text = System.IO.Path.GetFileName(FileName);
                 node.ToolTipText = FileName;
                 node.Tag = new string[] { new OutputFileMap(FileName).Year.ToString(), LayerHandle.ToString() };
 
@@ -297,7 +296,7 @@ namespace LandisUserInterface
                         Label = colorbreak.LowValue.ToString() + "-" + colorbreak.HighValue.ToString();
                     }
 
-                    TreeNode legend_node = new TreeNode();
+                    System.Windows.Forms.TreeNode legend_node = new System.Windows.Forms.TreeNode();
 
                     legend_node.Text = colorbreak.LowValue.ToString() + "-" + colorbreak.HighValue.ToString();
 
