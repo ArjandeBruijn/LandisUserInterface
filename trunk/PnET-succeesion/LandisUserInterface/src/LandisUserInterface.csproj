@@ -94,9 +94,7 @@
     <Compile Include="TabPageWithGraph.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UpdateBackgroundWorker.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="TimerBackgroundWorker.cs" />
     <Compile Include="Color.cs" />
     <Compile Include="ColorScheme.cs" />
     <Compile Include="ColorSchemeClassified.cs" />
