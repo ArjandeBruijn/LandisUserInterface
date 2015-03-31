@@ -176,6 +176,7 @@ namespace LandisUserInterface
             {
                 Graph1.GraphPane.CurveList[label].Label.Text = NewLabels[label];
             }
+            Graph1.Refresh();
         }
         private void Graph1_MouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
         {
@@ -192,17 +193,13 @@ namespace LandisUserInterface
 
                 FrmRelable frg = new FrmRelable(Cursor.Position, Graph1.GraphPane.CurveList.Select(o=> o.Label.Text).ToArray(), false);
 
-                UpdateLabels(frg.NewLabels);
-                 
                 frg.Location = this.Graph1.Location;
 
                 frg.ShowDialog();
 
-                for (int curve =0; curve < Graph1.GraphPane.CurveList.Count; curve++)
-                {
-                    LabelsFromTo[curve][1] = Graph1.GraphPane.CurveList[curve].Label.Text;
-                }
+                UpdateLabels(frg.NewLabels);
 
+                
 
                 if (frg.ImplementForAllGraphs)
                 {
