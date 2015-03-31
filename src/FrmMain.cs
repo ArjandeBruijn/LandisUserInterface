@@ -19,7 +19,8 @@ namespace LandisUserInterface
 
         List<TimerBackgroundWorker> bgw;
 
-        Dictionary<string, DockableFormInfo> Docks = new Dictionary<string, DockableFormInfo>();
+        Dictionary<string, List<DockableFormInfo>> Docks = new Dictionary<string, List<DockableFormInfo>>();
+
 
         public FrmMain()
         {
@@ -160,11 +161,8 @@ namespace LandisUserInterface
         System.Windows.Forms.ContextMenuStrip GetContextMenuStrip(System.Windows.Forms.ToolStripItem[] ToolStripItems)
         {
                 System.Windows.Forms.ContextMenuStrip c = new System.Windows.Forms.ContextMenuStrip();
-                // 
-                // ProjectOptions
-                // 
                 c.Items.AddRange(ToolStripItems);
-                c.Name = "contextMenuStrip1";
+                //c.Name = "";
                 c.Size = new System.Drawing.Size(166, 48);
                 return c;
              
@@ -200,11 +198,8 @@ namespace LandisUserInterface
         
         System.Windows.Forms.ToolStripMenuItem GetToolStripMenuItem(EventHandler eventhandler, string Text)
         {
-            // 
-            // RunSim
-            // 
             System.Windows.Forms.ToolStripMenuItem t = new System.Windows.Forms.ToolStripMenuItem();
-            t.Name = "RemoveSimulation";
+            //t.Name = "";
             t.Size = new System.Drawing.Size(205, 22);
             t.Text = Text;
             t.Click += new System.EventHandler(eventhandler);
@@ -386,10 +381,11 @@ namespace LandisUserInterface
         {
             foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
             {
+                if (scenario_node == null) continue;
+
                 if (System.IO.File.Exists(scenario_node.ToolTipText) == false)
                 {
                     NodesForRemoval.Add(scenario_node);
-//                    this.update_backround_worker.Schedule(new TreeNode[] { HeaderScenarioFiles, scenario_node }, UpdateBackgroundWorker.AddOrRemove.Remove);
                 }
                 
 
@@ -443,6 +439,8 @@ namespace LandisUserInterface
 
         private void Remove_Click(object sender, EventArgs e)
         {
+            RemoveLastScenarioFileNames(treeView1.SelectedNode.ToolTipText);
+
             this.treeView1.Nodes.Remove(treeView1.SelectedNode);
         }
 
@@ -503,7 +501,12 @@ namespace LandisUserInterface
 
                     map.Location = this.dockContainer1.PointToClient(Cursor.Position);
 
-                    Docks.Add(file, dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
+                    if (Docks.ContainsKey(file) == false)
+                    { 
+                        Docks.Add(file, new List<DockableFormInfo>());
+                    }
+
+                    Docks[file].Add(dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
                 }
                 map.LoadImageFile(file);
             }
@@ -535,8 +538,13 @@ namespace LandisUserInterface
 
                 LogFile.Write("Adding map to dockContainer1");
 
-                Docks.Add(path, dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
-                 
+                if (Docks.ContainsKey(path) == false)
+                { 
+                    Docks.Add(path, new List<DockableFormInfo>());
+                }
+
+                Docks[path].Add(dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
+ 
                 LogFile.Write("LoadImageFile");
 
                 map.LoadImageFile(path);
@@ -558,7 +566,14 @@ namespace LandisUserInterface
 
                    txt.Location = this.dockContainer1.PointToClient(Cursor.Position);
 
-                   Docks.Add(path, dockContainer1.Add(txt, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
+                   if (Docks.ContainsKey(path) == false)
+                   { 
+                       Docks.Add(path, new List<DockableFormInfo>());
+                   }
+
+                   Docks[path].Add(dockContainer1.Add(txt, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
+
+                   
                }
                if (fsp.Selection == FrmSelectProgram.Options.Excel)
                {
@@ -566,7 +581,14 @@ namespace LandisUserInterface
 
                    grid.Location = this.dockContainer1.PointToClient(Cursor.Position);
 
-                   Docks.Add(path, dockContainer1.Add(grid, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
+                   if (Docks.ContainsKey(path) == false)
+                   { 
+                       Docks.Add(path, new List<DockableFormInfo>());
+                   }
+
+                   Docks[path].Add(dockContainer1.Add(grid, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
+
+                   
                }
                if (fsp.Selection == FrmSelectProgram.Options.Zgraph)
                {
@@ -578,8 +600,14 @@ namespace LandisUserInterface
 
                    graph.Location = this.dockContainer1.PointToClient(Cursor.Position);
 
+                   if (Docks.ContainsKey(path) == false)
+                   { 
+                       Docks.Add(path, new List<DockableFormInfo>());
+                   }
+
+                   Docks[path].Add(dockContainer1.Add(graph, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
                    
-                   Docks.Add(path, dockContainer1.Add(graph, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
+                    
                }
                
             }
