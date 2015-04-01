@@ -17,7 +17,7 @@ namespace LandisUserInterface
         List<TreeNode> NodesForRemoval;
         List<TreeNode[]> NodesForAddition;
 
-        List<TimerBackgroundWorker> bgw;
+         
 
         Dictionary<string, List<DockableFormInfo>> Docks = new Dictionary<string, List<DockableFormInfo>>();
 
@@ -26,16 +26,16 @@ namespace LandisUserInterface
         {
              
             InitializeComponent();
+            
+            TimerBackgroundWorker.Initialize();
 
             NodesForRemoval = new List<TreeNode>();
             NodesForAddition = new List<TreeNode[]>();
 
-            bgw = new List<TimerBackgroundWorker>();
+            TimerBackgroundWorker.BackGroundWorker.DoWork += CheckForNewOutputNodesToAdd;
+            TimerBackgroundWorker.BackGroundWorker.DoWork += CheckForNewInputNodesToAdd;
+            TimerBackgroundWorker.BackGroundWorker.RunWorkerCompleted += AddNewNodes;
 
-
-            bgw.Add(new TimerBackgroundWorker(CheckForNewOutputNodesToAdd, AddNewNodes));
-            bgw.Add(new TimerBackgroundWorker(CheckForNewInputNodesToAdd, null));
-            
             this.WindowState = FormWindowState.Maximized;
 
             this.treeView1.AllowDrop = true;

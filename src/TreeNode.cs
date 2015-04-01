@@ -10,9 +10,7 @@ namespace LandisUserInterface
 {
     class TreeNode : System.Windows.Forms.TreeNode
     {
-        Timer timer;
-        BackgroundWorker bgw;
-
+         
         List<TreeNode> NodesToRemove;
 
 
@@ -33,26 +31,12 @@ namespace LandisUserInterface
                 treenode.Remove();
             }
         }
-        void Run_BackgroundWorker(object sender, EventArgs e)
-        {
-            if (bgw.IsBusy == false)
-            {
-                bgw.RunWorkerAsync();
-            }
-            
-        }
-
+       
         public TreeNode(string Text)
             : base(Text)
         {
-            timer = new Timer();
-            timer.Interval = 500;
-            timer.Start();
-            timer.Tick += Run_BackgroundWorker;
-
-            bgw = new BackgroundWorker();
-            bgw.DoWork += DoWork;
-            bgw.RunWorkerCompleted += RunWorkerCompleted;
+            TimerBackgroundWorker.BackGroundWorker.DoWork += DoWork;
+            TimerBackgroundWorker.BackGroundWorker.RunWorkerCompleted += RunWorkerCompleted;
 
             NodesToRemove = new List<TreeNode>();
         }
