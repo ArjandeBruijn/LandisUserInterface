@@ -336,45 +336,57 @@ namespace LandisUserInterface
         }
         private void CheckForNewOutputNodesToAdd(object sender, DoWorkEventArgs e)
         {
-            // List all files that should be in the interface
-            foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
+            try
             {
-                if (scenario_node == null) return;
-
-                string path_scenario_file = scenario_node.ToolTipText;
-
-                System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(path_scenario_file));
-
-                if (System.IO.File.Exists("Landis-log.txt") && scenario_node.Nodes.ContainsKey("Landis-log.txt") ==false)
+                // List all files that should be in the interface
+                foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
                 {
-                    TreeNode child = new TreeNode("Landis-log.txt");
-                    child.Name = "Landis-log.txt";
-                    child.ToolTipText = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(scenario_node.ToolTipText), "Landis-log.txt");
-                    child.ImageKey = child.SelectedImageKey = "File";
+                    if (scenario_node == null) return;
 
-                    NodesForAddition.Add(new TreeNode[] { scenario_node, child });
-                }
+                    string path_scenario_file = scenario_node.ToolTipText;
 
-                if (System.IO.Directory.Exists("output"))
-                {
-                    if (scenario_node.Nodes["output"] == null)
+                    System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(path_scenario_file));
+
+
+                    if (System.IO.File.Exists("Landis-log.txt"))
                     {
-                        TreeNode child = new TreeNode("output");
-                        child.Name = "output";
-                        child.ToolTipText = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(scenario_node.ToolTipText), "output");
-                        child.ImageKey = child.SelectedImageKey = "Folder";
+                        if (scenario_node.Nodes["Landis-log.txt"] == null)
+                        {
+                            TreeNode child = new TreeNode("Landis-log.txt");
+                            child.Name = "Landis-log.txt";
+                            child.ToolTipText = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(scenario_node.ToolTipText), "Landis-log.txt");
+                            child.ImageKey = child.SelectedImageKey = "File";
 
-                        NodesForAddition.Add(new TreeNode[] { scenario_node, child });
+                            NodesForAddition.Add(new TreeNode[] { scenario_node, child });
 
-                        return;
+                            return;
+                        }
                     }
-                    else
+                    if (System.IO.Directory.Exists("output"))
                     {
-                        AddNewNodes((TreeNode)scenario_node.Nodes["output"]);
-                    }
-                }
-                
+                        if (scenario_node.Nodes["output"] == null)
+                        {
+                            TreeNode child = new TreeNode("output");
+                            child.Name = "output";
+                            child.ToolTipText = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(scenario_node.ToolTipText), "output");
+                            child.ImageKey = child.SelectedImageKey = "Folder";
 
+                            NodesForAddition.Add(new TreeNode[] { scenario_node, child });
+
+                            return;
+                        }
+                        else
+                        {
+                            AddNewNodes((TreeNode)scenario_node.Nodes["output"]);
+                        }
+                    }
+
+
+                }
+            }
+            catch (System.Exception em)
+            {
+                double t = 0.0;
             }
         }
 
@@ -502,7 +514,6 @@ namespace LandisUserInterface
         private void dockContainer1_DragDrop(object sender, DragEventArgs e)
         {
             
-
             if (treeView1.SelectedNode == null) return;
 
             string path = treeView1.SelectedNode.ToolTipText;

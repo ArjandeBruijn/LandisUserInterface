@@ -11,10 +11,13 @@ DefaultGroupName=Landis User Interface
 UninstallDisplayIcon={app}\MyProg.exe
 Compression=lzma2
 SolidCompression=yes
+
+
  
 [Files]
 Source: "MapWinGIS-only-v4.9.3.4-Win32.exe"; DestDir: "{app}"; AfterInstall: RunOtherInstaller()
-;Source: C:\Program Files\LANDIS-II\v6\bin\extensions\Landis.Extension.Succession.BiomassPnET.dll; DestDir: {app}\bin; Flags: replacesameversion
+
+Source: "C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\Icons\Landis.ico"; DestDir: "{app}" 
 Source: "C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\Antlr3.Runtime.dll"; DestDir: "{app}"
 Source: "C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\AxInterop.MapWinGIS.dll"; DestDir: "{app}"
 Source: "C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\Crom.Controls.dll"; DestDir: "{app}"
@@ -27,7 +30,9 @@ Source: "C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInt
 Source: "LANDIS-II User Interface User Guide.docx"; DestDir: "{app}"; Flags: isreadme
 
 [Icons]
-Name: "{group}\Landis User Interface"; Filename: "{app}\LandisUserInterface.exe"
+
+Name: "{group}\Landis User Interface"; Filename: "{app}\LandisUserInterface.exe"   ; IconFilename: "{app}\Landis.ico"
+ 
 
 [Code]
 
