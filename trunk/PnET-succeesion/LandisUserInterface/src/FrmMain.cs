@@ -288,6 +288,7 @@ namespace LandisUserInterface
         {
             foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
             {
+                if (scenario_node == null) continue;
                 string path_scenario_file = scenario_node.ToolTipText;
 
                 if (System.IO.File.Exists(path_scenario_file) == false) continue;
