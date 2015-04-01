@@ -4,20 +4,20 @@ using System.Windows.Forms;
 
 namespace LandisUserInterface
 {
-    public class TimerBackgroundWorker
+    public static class TimerBackgroundWorker
     {
-        Timer timer;
-        BackgroundWorker BackGroundWorker;
+        public static Timer timer;
+        public static BackgroundWorker BackGroundWorker;
 
-        private void timer_tick(object sender, EventArgs e)
+        private static void timer_tick(object sender, EventArgs e)
         {
-            if (this.BackGroundWorker.IsBusy == false)
+            if (BackGroundWorker.IsBusy == false)
             {
                 BackGroundWorker.RunWorkerAsync();
             }
         }
 
-        public TimerBackgroundWorker(DoWorkEventHandler DoWork, RunWorkerCompletedEventHandler CompleteWork)
+        public static void Initialize()
         {
             timer = new Timer();
             timer.Interval = 500;
@@ -25,8 +25,7 @@ namespace LandisUserInterface
             timer.Tick += timer_tick;
 
             BackGroundWorker = new BackgroundWorker();
-            BackGroundWorker.DoWork += DoWork;
-            BackGroundWorker.RunWorkerCompleted += CompleteWork;
+            
         }
     }
 }
