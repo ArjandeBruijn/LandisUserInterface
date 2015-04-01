@@ -71,11 +71,11 @@ namespace LandisUserInterface
                 return;
             }
         }
-        void UpdateCurveLabels(List<string[]> LabelsFromTo)
+        void UpdateCurveLabels(string[] Labels)
         {
             for (int i = 0; i < tabControl1.TabPages.Count;i++ )
             {
-                ((TabPageWithGraph)tabControl1.TabPages[i]).UpdateLegend(LabelsFromTo);
+                ((TabPageWithGraph)tabControl1.TabPages[i]).UpdateLegend(Labels);
             }
         }
           
