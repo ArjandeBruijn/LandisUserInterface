@@ -14,7 +14,7 @@ namespace LandisUserInterface
 
         public ColorScheme Colorscheme = new ColorScheme();
 
-        public delegate void UpdateCurvelabels(List<string[]> LabelsFromTo);
+        public delegate void UpdateCurvelabels(string[] Labels);
 
         UpdateCurvelabels update_curvelabels;
 
@@ -79,17 +79,14 @@ namespace LandisUserInterface
         {
             return min_value - 0.025F * Range;
         }
-        public void UpdateLegend(List<string[]> LabelsFromTo)
+        public void UpdateLegend(string[] Labels)
         {
             foreach (CurveItem curve in Graph1.GraphPane.CurveList)
             {
-                for (int label = 0; label < LabelsFromTo.Count; label++)
+                for (int label = 0; label < Labels.Length; label++)
                 {
-                    if (curve.Label.Text == LabelsFromTo[label][0])
-                    {
-                        curve.Label.Text = LabelsFromTo[label][1];
-                        this.Graph1.Refresh();
-                    }
+                    curve.Label.Text = Labels[label];
+                    this.Graph1.Refresh();
                 }
             }
 
@@ -228,12 +225,7 @@ namespace LandisUserInterface
 
             if (rect.Contains(e.X, e.Y))
             {
-                List<string[]> LabelsFromTo = new List<string[]>();
-
-                foreach (CurveItem curve in Graph1.GraphPane.CurveList)
-                {
-                    LabelsFromTo.Add(new string[] { curve.Label.Text, String.Empty });
-                }
+                 
 
                 FrmRelable frg = new FrmRelable(Cursor.Position, Graph1.GraphPane.CurveList.Select(o=> o.Label.Text).ToArray(), false);
 
@@ -245,7 +237,7 @@ namespace LandisUserInterface
 
                 if (frg.ImplementForAllGraphs)
                 {
-                    update_curvelabels(new List<string[]>(LabelsFromTo.Where(o => o[0] != o[1])));
+                    update_curvelabels(frg.NewLabels);
                 }
             }
             /*
