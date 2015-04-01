@@ -17,14 +17,15 @@ namespace LandisUserInterface
         List<TreeNode> NodesForRemoval;
         List<TreeNode[]> NodesForAddition;
 
-         
+        
 
         Dictionary<string, List<DockableFormInfo>> Docks = new Dictionary<string, List<DockableFormInfo>>();
 
 
         public FrmMain()
         {
-             
+            TreeNode.sendmessage = SendMessage;
+
             InitializeComponent();
             
             TimerBackgroundWorker.Initialize();
@@ -54,8 +55,11 @@ namespace LandisUserInterface
            
         }
 
-        
 
+        void SendMessage(string msg)
+        {
+            toolStripStatusLabel1.Text = msg;
+        }
 
        
         string LandisConsoleExe
