@@ -12,39 +12,27 @@ namespace LandisUserInterface
         public delegate void SendMessage(string msg);
 
         public static SendMessage sendmessage;
+         
+        public delegate TreeNode[] GetSubNodes(TreeNode me);
 
-        List<TreeNode> NodesToRemove;
+         
 
-
-        void DoWork(object sender, DoWorkEventArgs e)
-        {
-            sendmessage("Updating " + this.Tag.ToString());
-
-            foreach (TreeNode tree_node in Nodes)
-            {
-                if (System.IO.File.Exists(tree_node.ToolTipText) == false && System.IO.Directory.Exists(tree_node.ToolTipText) == false)
-                {
-                    NodesToRemove.Add(tree_node);
-                }
-            }
-        }
-        void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            foreach(TreeNode treenode in NodesToRemove)
-            {
-                treenode.Remove();
-            }
-        }
-
-        public TreeNode(string Text)
+        public TreeNode(string FullPath, string Text, string ImageKey, GetSubNodes get_sub_nodes)
             
         {
-            this.Tag = this.Text = Text;
+            this.Tag =this.Name = this.ToolTipText = FullPath;
+            this.Text = Text;
+            this.ImageKey = this.SelectedImageKey = ImageKey;
 
-            TimerBackgroundWorker.BackGroundWorker.DoWork += DoWork;
-            TimerBackgroundWorker.BackGroundWorker.RunWorkerCompleted += RunWorkerCompleted;
-
-            NodesToRemove = new List<TreeNode>();
+            if (get_sub_nodes != null)
+            {
+                foreach (TreeNode node in get_sub_nodes(this))
+                {
+                    Nodes.Add(node);
+                }
+            }
+           
+          
         }
 
 
