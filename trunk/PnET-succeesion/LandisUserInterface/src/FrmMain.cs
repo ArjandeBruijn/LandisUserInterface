@@ -454,7 +454,7 @@ namespace LandisUserInterface
                 
                 map.Location = this.dockContainer1.PointToClient(Cursor.Position);
 
-                LogFile.Write("Adding map to dockContainer1");
+                 
 
                 if (Docks.ContainsKey(path) == false)
                 { 
@@ -463,7 +463,7 @@ namespace LandisUserInterface
 
                 Docks[path].Add(dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
  
-                LogFile.Write("LoadImageFile");
+                 
 
                 map.LoadImageFile(path);
                 
