@@ -17,6 +17,7 @@ namespace LandisUserInterface
         {
             InitializeComponent();
         
+            
         }
          
         public void LoadFile(string FileName)
@@ -82,6 +83,11 @@ namespace LandisUserInterface
         private void FrmGraph_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = e.AllowedEffect;
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
         
         

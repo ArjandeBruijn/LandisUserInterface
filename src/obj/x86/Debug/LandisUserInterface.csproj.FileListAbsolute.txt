@@ -28,10 +28,10 @@ C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\sr
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.FrmSelectProgram.resources
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\unvell.ReoGrid.dll
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.FrmGrid.resources
-C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\ZedGraph.dll
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.TabPageWithGraph.resources
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.FrmGraph.resources
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\unvell.ReoScript.dll
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\Antlr3.Runtime.dll
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.FrmRelable.resources
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.FrmMain.resources
+C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\ZedGraph.dll
