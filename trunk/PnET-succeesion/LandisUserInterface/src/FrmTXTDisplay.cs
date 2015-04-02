@@ -19,6 +19,8 @@ namespace LandisUserInterface
         string LastTextBoxTextOnFile = null;
         private DateTime FileCreationTime;
 
+        
+
         public FrmTXTDisplay(string FileName)
         {
             InitializeComponent();
@@ -26,9 +28,20 @@ namespace LandisUserInterface
             timer1.Interval = 500;
             timer1.Start();
 
-            TextToAppend.AddRange(System.IO.File.ReadAllLines(FileName));
             
-            FileCreationTime = System.IO.File.GetLastWriteTime(FileName);
+            try
+            {
+                string[] Content = System.IO.File.ReadAllLines(FileName);
+                TextToAppend.AddRange(Content);
+
+                FileCreationTime = System.IO.File.GetLastWriteTime(FileName);
+            }
+            catch(System.Exception e)
+            {
+                TextToAppend.AddRange(new string[]{e.Message}); 
+            }
+
+            
         }
         
         private void timer1_Tick(object sender, EventArgs e)
@@ -42,11 +55,6 @@ namespace LandisUserInterface
         
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (System.IO.File.Exists(FileName) == false)
-            {
-                return;
-            }
-
             int count = 0;
             float InitialLength = (float)TextToAppend.Count();
             while (TextToAppend.Count() > 0)
@@ -62,6 +70,20 @@ namespace LandisUserInterface
                 // Distinguish used changes
                 LastTextBoxTextOnFile = richTextBox1.Text;
             }
+
+            try
+            {
+                System.IO.File.OpenRead(FileName);
+            }
+            catch
+            {
+                return;
+            }
+            if (System.IO.File.Exists(FileName) == false)
+            {
+                return;
+            }
+
             this.toolStripProgressBar1.Value = 0;
 
 
