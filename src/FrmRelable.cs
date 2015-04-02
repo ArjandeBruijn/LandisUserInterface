@@ -29,6 +29,8 @@ namespace LandisUserInterface
 
             InitializeComponent();
 
+            this.ShowInTaskbar = false;
+
             if (HideReplaceInAll) this.checkBox1.Visible = false;
 
             this.OldLabels = OldTerms;
