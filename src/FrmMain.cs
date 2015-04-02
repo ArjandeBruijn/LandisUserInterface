@@ -66,11 +66,15 @@ namespace LandisUserInterface
             {
                 if (this.treeView1.Nodes["Scenario Files"].Nodes.ContainsKey(LoadingScenarioFile))
                 {
-                    this.treeView1.Nodes["Scenario Files"].Nodes.RemoveByKey(LoadingScenarioFile);
+                    int index = this.treeView1.Nodes["Scenario Files"].Nodes.IndexOfKey(LoadingScenarioFile);
+                    this.treeView1.Nodes["Scenario Files"].Nodes.RemoveAt(index);
+                    this.treeView1.Nodes["Scenario Files"].Nodes.Insert(index, ScenarioNode);
                 }
-                this.treeView1.Nodes["Scenario Files"].Nodes.Add(ScenarioNode);
+                else this.treeView1.Nodes["Scenario Files"].Nodes.Add(ScenarioNode);
                 ScenarioNode = null;
             }
+            LoadingScenarioFile = null;
+
             foreach (string ScenarioFile in LastScenarioPathList)
             {
                 if (this.treeView1.Nodes["Scenario Files"].Nodes.ContainsKey(ScenarioFile) == false)
@@ -94,7 +98,7 @@ namespace LandisUserInterface
             if (LoadingScenarioFile != null)
             {
                 ScenarioNode = new TreeNode(LoadingScenarioFile, System.IO.Path.GetFileName(LoadingScenarioFile), "File", GetScenarioSubNodes);
-                LoadingScenarioFile = null;
+            
             }
            
         }
