@@ -14,48 +14,137 @@ namespace LandisUserInterface
     {
         private TreeNode HeaderScenarioFiles;
 
-        List<TreeNode> NodesForRemoval;
-        List<TreeNode[]> NodesForAddition;
-
-        
+         
 
         Dictionary<string, List<DockableFormInfo>> Docks = new Dictionary<string, List<DockableFormInfo>>();
 
-
+        BackgroundWorker backgroundworker;
+        Timer timer;
         public FrmMain()
         {
-            TreeNode.sendmessage = SendMessage;
+            
 
             InitializeComponent();
             
-            TimerBackgroundWorker.Initialize();
-
-            NodesForRemoval = new List<TreeNode>();
-            NodesForAddition = new List<TreeNode[]>();
-
-            TimerBackgroundWorker.BackGroundWorker.DoWork += CheckForNewOutputNodesToAdd;
-            TimerBackgroundWorker.BackGroundWorker.DoWork += CheckForNewInputNodesToAdd;
-            TimerBackgroundWorker.BackGroundWorker.RunWorkerCompleted += AddNewNodes;
-
+            
             this.WindowState = FormWindowState.Maximized;
 
             this.treeView1.AllowDrop = true;
             this.treeView1.Font = new Font("Times New Roman", 14);
             this.treeView1.ShowNodeToolTips = true;
-
+             
+            HeaderScenarioFiles = new TreeNode("Scenario Files","Scenario Files", "RightArrow", null);
            
-
-            HeaderScenarioFiles = new TreeNode("Scenario Files");
-            HeaderScenarioFiles.SelectedImageKey =  HeaderScenarioFiles.ImageKey = "RightArrow";
             this.treeView1.Nodes.Add(HeaderScenarioFiles);
             HeaderScenarioFiles.ExpandAll();
 
-         
+            backgroundworker = new BackgroundWorker();
+            timer = new Timer();
+            timer.Tick += RunWorker;
+            timer.Interval = 500;
+            timer.Start();
 
+            backgroundworker.DoWork += LoadFiles;
+            backgroundworker.RunWorkerCompleted += AddScenarioNodes;
+            TreeNode.sendmessage = SendMessage;
+
+             
+        }
+        void RunWorker(object sender, EventArgs e)
+        {
+            if (backgroundworker.IsBusy == false)
+            {
+                this.backgroundworker.RunWorkerAsync();
+            }
+        }
+        TreeNode ScenarioNode = null;
+        string LoadingScenarioFile = null;
+        static int c = 0;
+        void AddScenarioNodes(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (ScenarioNode != null)
+            {
+                if (this.treeView1.Nodes["Scenario Files"].Nodes.ContainsKey(LoadingScenarioFile))
+                {
+                    this.treeView1.Nodes["Scenario Files"].Nodes.RemoveByKey(LoadingScenarioFile);
+                }
+                this.treeView1.Nodes["Scenario Files"].Nodes.Add(ScenarioNode);
+                ScenarioNode = null;
+            }
+            foreach (string ScenarioFile in LastScenarioPathList)
+            {
+                if (this.treeView1.Nodes["Scenario Files"].Nodes.ContainsKey(ScenarioFile) == false)
+                {
+                    LoadingScenarioFile = ScenarioFile;
+                    toolStripStatusLabel1.Text = "Loading " + LoadingScenarioFile;
+                    toolStripStatusLabel1.ToolTipText = LoadingScenarioFile;
+                    return;
+                }
+            }
+            if (LoadingScenarioFile == null)
+            {
+                LoadingScenarioFile = treeView1.Nodes["Scenario Files"].Nodes[c++].Tag.ToString();
+                toolStripStatusLabel1.Text = "Updating " + LoadingScenarioFile;
+                toolStripStatusLabel1.ToolTipText = LoadingScenarioFile;
+                if (c == treeView1.Nodes["Scenario Files"].Nodes.Count) c = 0;
+            }
+        }
+        void LoadFiles(object sender, DoWorkEventArgs e)
+        {
+            if (LoadingScenarioFile != null)
+            {
+                ScenarioNode = new TreeNode(LoadingScenarioFile, System.IO.Path.GetFileName(LoadingScenarioFile), "File", GetScenarioSubNodes);
+                LoadingScenarioFile = null;
+            }
            
         }
 
+        TreeNode[] GetFolderContent(TreeNode parent)
+        {
+            List<TreeNode> TreeNodes = new List<TreeNode>();
 
+            string path = parent.Tag.ToString();
+
+            foreach (string folder in System.IO.Directory.GetDirectories(path))
+            {
+                string lastsubdir = folder.Split(System.IO.Path.DirectorySeparatorChar).Last();
+                TreeNodes.Add(new TreeNode(folder, lastsubdir, "Folder", GetFolderContent));
+            }
+
+            foreach (string file in System.IO.Directory.GetFiles(path))
+            {
+                TreeNode node = new TreeNode(file, System.IO.Path.GetFileName(file),"File", null);
+
+                TreeNodes.Add(node);
+            }
+
+            return TreeNodes.ToArray();
+        }
+        TreeNode[] GetScenarioSubNodes(TreeNode parent)
+        {
+            List<TreeNode> TreeNodes = new List<TreeNode>();
+
+            string path = parent.Tag.ToString();
+
+            string Directory = System.IO.Path.GetDirectoryName(path);
+
+            string OutputDirectory =System.IO.Path.Combine(Directory, "output");
+
+            if(System.IO.Directory.Exists(OutputDirectory))
+            {
+                string folder = OutputDirectory.Split(System.IO.Path.DirectorySeparatorChar).Last();
+                TreeNodes.Add(new TreeNode(OutputDirectory, folder, "Folder", GetFolderContent));
+            }
+
+            string LogFile = System.IO.Path.Combine(Directory, "Landis-log.txt");
+
+            if (System.IO.File.Exists(LogFile))
+            {
+                TreeNodes.Add(new TreeNode(LogFile, System.IO.Path.GetFileName(LogFile), "File", null));
+            }
+
+            return TreeNodes.ToArray();
+        }
         void SendMessage(string msg)
         {
             toolStripStatusLabel1.Text = msg;
@@ -139,31 +228,8 @@ namespace LandisUserInterface
         }
         
                 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            if (LastScenarioFileNames != null && LastScenarioFileNames.Length > 0)
-            {
-                foreach (string FileName in LastScenarioPathList)
-                {
-                    AddScenarioFile(FileName);
-                }
-            }
-        }
-
-        
-        void AddScenarioFile(string path)
-        {
-            if (IsScenarioFile(path))
-            {
-                TreeNode node = new TreeNode(System.IO.Path.GetFileName(path));
-                node.Name = System.IO.Path.GetFileName(path);
-                node.ToolTipText = path;
-
-                HeaderScenarioFiles.Nodes.Add(node);
-                HeaderScenarioFiles.Expand();
-                AddLastScenarioFileName(path);
-            }
-        }
+      
+      
         System.Windows.Forms.ContextMenuStrip GetContextMenuStrip(System.Windows.Forms.ToolStripItem[] ToolStripItems)
         {
                 System.Windows.Forms.ContextMenuStrip c = new System.Windows.Forms.ContextMenuStrip();
@@ -218,7 +284,7 @@ namespace LandisUserInterface
 
             if(of.ShowDialog() == DialogResult.OK)
             {
-                AddScenarioFile(of.FileName);
+                AddLastScenarioFileName(of.FileName);
             }
         }
        
@@ -239,161 +305,10 @@ namespace LandisUserInterface
         }
 
         
-        void RemoveOldNodes(TreeNode parent)
-        {
-            if (System.IO.Directory.Exists(parent.ToolTipText))
-            {
-                foreach (TreeNode child in parent.Nodes)
-                {
-                    if (System.IO.File.Exists(child.ToolTipText) == false && System.IO.Directory.Exists(child.ToolTipText) == false)
-                    {
-                        NodesForRemoval.Add(child);// }, UpdateBackgroundWorker.AddOrRemove.Remove);
-
-                    }
-                    RemoveOldNodes(child);
-                }
-
-            }
-
-        }
-        void AddNewNodes(TreeNode parent)
-        {
-            string path = parent.ToolTipText;
-
-            foreach (string file_path in System.IO.Directory.GetFiles(path))
-            {
-                if (parent.Nodes[System.IO.Path.GetFileName(file_path)] == null)
-                {
-                    TreeNode child = new TreeNode(System.IO.Path.GetFileName(file_path));
-                    child.Name =  System.IO.Path.GetFileName(file_path);
-                    child.ToolTipText = file_path;
-                    child.ImageKey = child.SelectedImageKey = "File";
-                    NodesForAddition.Add(new TreeNode[] { parent, child });
-                
-                }
-            }
-            foreach (string subfolder in System.IO.Directory.GetDirectories(path))
-            {
-                if (parent.Nodes[subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last()] == null)
-                {
-                    TreeNode child = new TreeNode(subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last());
-                    child.Name =  subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last();
-                    child.ToolTipText = subfolder;
-                    child.ImageKey = child.SelectedImageKey = "Folder";
-                    NodesForAddition.Add(new TreeNode[] { parent, child });
-                }
-                else AddNewNodes((TreeNode)parent.Nodes[subfolder.Split(System.IO.Path.DirectorySeparatorChar).Last()]);
-            }
-                
-            
-            
-        }
-        private void CheckForNewInputNodesToAdd(object sender, DoWorkEventArgs e)
-        {
-            foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
-            {
-                if (scenario_node == null) continue;
-                string path_scenario_file = scenario_node.ToolTipText;
-
-                if (System.IO.File.Exists(path_scenario_file) == false) continue;
-
-                foreach (string line in System.IO.File.ReadAllLines(path_scenario_file))
-                {
-                    string _line = line;
-                    if (_line.Contains("<<"))
-                    {
-                        _line = _line.Remove(line.IndexOf("<<"));
-                    }
-
-                    string[] terms = _line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                     
-                    foreach (string term in terms)
-                    {
-                        if (System.IO.File.Exists(term) && SubNodeTexts(scenario_node.Nodes).Contains(term) == false)
-                        {
-                            TreeNode node = new TreeNode(term);
-                            node.ToolTipText = node.Name = term;
-
-                            if (term.Trim().Contains(System.IO.Directory.GetCurrentDirectory()) == false)
-                            {
-                                node.ToolTipText = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), term.Trim());
-                            }
-                            if (scenario_node.Nodes[node.Name] == null)
-                            {
-                                NodesForAddition.Add(new TreeNode[] { scenario_node, node });
-//                                update_backround_worker.Schedule(, UpdateBackgroundWorker.AddOrRemove.Add);
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-        }
- 
-        private void AddNewNodes(object sender, RunWorkerCompletedEventArgs  e)
-        {
-            while (this.NodesForAddition.Count > 0)
-            {
-                NodesForAddition[0][0].Nodes.Add(NodesForAddition[0][1]);
-                NodesForAddition.RemoveAt(0);
-            }
-        }
-        private void CheckForNewOutputNodesToAdd(object sender, DoWorkEventArgs e)
-        {
-            try
-            {
-                // List all files that should be in the interface
-                foreach (TreeNode scenario_node in HeaderScenarioFiles.Nodes)
-                {
-                    if (scenario_node == null) return;
-
-                    string path_scenario_file = scenario_node.ToolTipText;
-
-                    System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(path_scenario_file));
-
-
-                    if (System.IO.File.Exists("Landis-log.txt"))
-                    {
-                        if (scenario_node.Nodes["Landis-log.txt"] == null)
-                        {
-                            TreeNode child = new TreeNode("Landis-log.txt");
-                            child.Name = "Landis-log.txt";
-                            child.ToolTipText = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(scenario_node.ToolTipText), "Landis-log.txt");
-                            child.ImageKey = child.SelectedImageKey = "File";
-
-                            NodesForAddition.Add(new TreeNode[] { scenario_node, child });
-
-                            return;
-                        }
-                    }
-                    if (System.IO.Directory.Exists("output"))
-                    {
-                        if (scenario_node.Nodes["output"] == null)
-                        {
-                            TreeNode child = new TreeNode("output");
-                            child.Name = "output";
-                            child.ToolTipText = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(scenario_node.ToolTipText), "output");
-                            child.ImageKey = child.SelectedImageKey = "Folder";
-
-                            NodesForAddition.Add(new TreeNode[] { scenario_node, child });
-
-                            return;
-                        }
-                        else
-                        {
-                            AddNewNodes((TreeNode)scenario_node.Nodes["output"]);
-                        }
-                    }
-
-
-                }
-            }
-            catch (System.Exception em)
-            {
-                double t = 0.0;
-            }
-        }
-
+         
+         
+         
+        
 
        
         public void RunSimulation(string path)

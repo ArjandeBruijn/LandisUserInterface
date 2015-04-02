@@ -256,7 +256,7 @@ namespace LandisUserInterface
 
                 int LayerHandle = axMap1.AddLayer(map_image, true);
 
-                TreeNode node = new TreeNode(System.IO.Path.GetFileName(FileName));
+                System.Windows.Forms.TreeNode node = new System.Windows.Forms.TreeNode(System.IO.Path.GetFileName(FileName));
                 node.Name = FileName;
                 node.ToolTipText = FileName;
                 node.Tag = new string[] { new OutputFileMap(FileName).Year.ToString(), LayerHandle.ToString() };
