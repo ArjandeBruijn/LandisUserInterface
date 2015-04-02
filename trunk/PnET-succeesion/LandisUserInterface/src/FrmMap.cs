@@ -133,7 +133,7 @@ namespace LandisUserInterface
                 }
 
             }
-            foreach (TreeNode _node in treeViewLayers.Nodes)
+            foreach (System.Windows.Forms.TreeNode _node in treeViewLayers.Nodes)
             {
                 if (_node.Name == FileName) _node.Checked = true;
                 else _node.Checked = false;
@@ -143,7 +143,7 @@ namespace LandisUserInterface
        
         private void PlayAnimation(object sender, EventArgs e)
         {
-            foreach (TreeNode tree_node in this.treeViewLayers.Nodes)
+            foreach (System.Windows.Forms.TreeNode tree_node in this.treeViewLayers.Nodes)
             {
                 SetLayerSelection(tree_node.ToolTipText);
                 
