@@ -75,11 +75,11 @@ namespace LandisUserInterface
             }
             LoadingScenarioFile = null;
 
-            foreach (string ScenarioFile in LastScenarioPathList)
+            for (int file = LastScenarioPathList.Count() - 1; file >= 0;file-- )
             {
-                if (this.treeView1.Nodes["Scenario Files"].Nodes.ContainsKey(ScenarioFile) == false)
+                if (this.treeView1.Nodes["Scenario Files"].Nodes.ContainsKey(LastScenarioPathList[file]) == false)
                 {
-                    LoadingScenarioFile = ScenarioFile;
+                    LoadingScenarioFile = LastScenarioPathList[file];
                     toolStripStatusLabel1.Text = "Loading " + LoadingScenarioFile;
                     toolStripStatusLabel1.ToolTipText = LoadingScenarioFile;
                     return;
