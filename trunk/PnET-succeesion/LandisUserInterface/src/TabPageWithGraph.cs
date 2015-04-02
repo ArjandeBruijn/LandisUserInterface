@@ -23,8 +23,12 @@ namespace LandisUserInterface
         {
             this.update_curvelabels = update_curvelabels;
 
+            
+
             InitializeComponent();
 
+            
+            
             this.Graph1.GraphPane.XAxis.Scale.Min = double.MaxValue;
             this.Graph1.GraphPane.XAxis.Scale.Max = double.MinValue;
             this.Graph1.GraphPane.YAxis.Scale.Min = double.MaxValue;
@@ -140,9 +144,8 @@ namespace LandisUserInterface
             Graph1.AxisChange();
             Graph1.Refresh();
         }
-        
- 
-        
+
+      
 
         private void InitializeComponent()
         {
@@ -164,6 +167,7 @@ namespace LandisUserInterface
             this.Graph1.ScrollMinY2 = 0D;
             this.Graph1.Size = new System.Drawing.Size(200, 100);
             this.Graph1.TabIndex = 0;
+            this.Graph1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Graph1_MouseClick);
             this.Graph1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.Graph1_MouseDoubleClick);
             // 
             // TabPageWithGraph
@@ -172,6 +176,7 @@ namespace LandisUserInterface
             this.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ResumeLayout(false);
 
+            Graph1.IsShowContextMenu = false;
         }
         void UpdateAxisMinMax(string[] AxisMinMax)
         {
@@ -262,6 +267,89 @@ namespace LandisUserInterface
             }
             */
              
+        }
+        System.Windows.Forms.ToolStripMenuItem GetToolStripMenuItem(EventHandler eventhandler, string Text)
+        {
+            System.Windows.Forms.ToolStripMenuItem t = new System.Windows.Forms.ToolStripMenuItem();
+            t.Size = new System.Drawing.Size(205, 22);
+            t.Text = Text;
+            t.Click += new System.EventHandler(eventhandler);
+            return t;
+        }
+        void OnExportAsCsvFileClick(object sender, EventArgs e)
+        {
+            SaveFileDialog s = new SaveFileDialog();
+            s.Filter = "Comma delimited (.csv)|*.csv|Tab delimited (.txt)|*.txt";
+            if (s.ShowDialog() == DialogResult.OK)
+            {
+                char delimiter = ' ';
+
+                if( System.IO.Path.GetFileNameWithoutExtension(s.FileName)==".txt")delimiter = '\t';
+                else if (System.IO.Path.GetFileNameWithoutExtension(s.FileName) == ".csv") delimiter = ',';
+
+                List<string> Content = new List<string>();
+
+                string hdr = "Time" + delimiter;
+
+                Graph1.GraphPane.CurveList.ForEach(o => hdr += o.Label.Text + delimiter);
+
+                Content.Add(hdr);
+
+                List<double> X = new List<double>();
+
+                foreach (CurveItem curve in Graph1.GraphPane.CurveList)
+                {
+                    for (int i = 0; i < curve.Points.Count; i++)
+                    {
+                        X.Add(curve.Points[i].X);
+                    }
+                }
+
+                X = new List<double>(X.OrderBy(o=>o));
+
+                foreach (double x in X)
+                {
+                    string line = x.ToString() + '\t';
+
+                    foreach (CurveItem curve in Graph1.GraphPane.CurveList)
+                    {
+                        bool FlagFound = false;
+                        for (int i = 0; i < curve.Points.Count; i++)
+                        {
+                            if (curve.Points[i].X == x)
+                            {
+                                line += curve.Points[i].Y + delimiter;
+                                FlagFound=true;
+                                break;
+                            }
+                        }
+                        if (FlagFound == false)
+                        {
+                            line += delimiter;
+                        }
+                    }
+
+                    Content.Add(line);
+                }
+                System.IO.File.WriteAllLines(s.FileName, Content.ToArray());
+            }
+
+            
+             
+        }
+        private void Graph1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                ContextMenuStrip s = new System.Windows.Forms.ContextMenuStrip();
+
+                ToolStripMenuItem t = GetToolStripMenuItem(OnExportAsCsvFileClick, "Export as text file");
+
+                s.Items.Add(t);
+
+                s.Show(this.Graph1, e.Location);
+            }
+           
         }
 
          

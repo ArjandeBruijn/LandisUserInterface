@@ -328,7 +328,6 @@ namespace LandisUserInterface
         System.Windows.Forms.ToolStripMenuItem GetToolStripMenuItem(EventHandler eventhandler, string Text)
         {
             System.Windows.Forms.ToolStripMenuItem t = new System.Windows.Forms.ToolStripMenuItem();
-            //t.Name = "";
             t.Size = new System.Drawing.Size(205, 22);
             t.Text = Text;
             t.Click += new System.EventHandler(eventhandler);
