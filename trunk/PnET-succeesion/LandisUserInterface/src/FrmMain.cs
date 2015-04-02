@@ -14,18 +14,16 @@ namespace LandisUserInterface
     {
         private TreeNode HeaderScenarioFiles;
 
-         
+        TreeNode ScenarioNode = null;
+        string LoadingScenarioFile = null;
+        static int c = 0;
 
         Dictionary<string, List<DockableFormInfo>> Docks = new Dictionary<string, List<DockableFormInfo>>();
-
         BackgroundWorker backgroundworker;
         Timer timer;
         public FrmMain()
         {
-            
-
             InitializeComponent();
-            
             
             this.WindowState = FormWindowState.Maximized;
 
@@ -57,9 +55,7 @@ namespace LandisUserInterface
                 this.backgroundworker.RunWorkerAsync();
             }
         }
-        TreeNode ScenarioNode = null;
-        string LoadingScenarioFile = null;
-        static int c = 0;
+        
         void AddScenarioNodes(object sender, RunWorkerCompletedEventArgs e)
         {
             if (ScenarioNode != null)
@@ -71,6 +67,9 @@ namespace LandisUserInterface
                     this.treeView1.Nodes["Scenario Files"].Nodes.Insert(index, ScenarioNode);
                 }
                 else this.treeView1.Nodes["Scenario Files"].Nodes.Add(ScenarioNode);
+                
+                foreach (TreeNode tn in treeView1.Nodes)tn.Expand();
+                 
                 ScenarioNode = null;
             }
             LoadingScenarioFile = null;
@@ -147,6 +146,12 @@ namespace LandisUserInterface
                 TreeNodes.Add(new TreeNode(LogFile, System.IO.Path.GetFileName(LogFile), "File", null));
             }
 
+            foreach (string File in GetFileNamesInFile(path).Distinct())
+            {
+                TreeNodes.Add(new TreeNode(File, System.IO.Path.GetFileName(File), "File", null));
+            }
+
+
             return TreeNodes.ToArray();
         }
         void SendMessage(string msg)
@@ -154,6 +159,39 @@ namespace LandisUserInterface
             toolStripStatusLabel1.Text = msg;
         }
 
+        string[] GetFileNamesInFile(string path)
+        {
+            List<string> FileNamesInFile = new List<string>();
+
+            List<string> Content = new List<string>(System.IO.File.ReadAllLines(path));
+
+            Content.ForEach(o => { if (o.Contains(">>")) o.Remove(o.IndexOf(">>")); });
+
+            for (int l =0; l< Content.Count(); l++)
+            {
+                string[] line = Content[l].Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach(string term in line)
+                {
+                    try
+                    {
+                        string FileName = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), term);
+                        if (System.IO.File.Exists(FileName) == true)
+                        {
+                            FileNamesInFile.Add(FileName);
+                            FileNamesInFile.AddRange(GetFileNamesInFile(FileName));
+                        }
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                    
+                }
+            }
+
+            return FileNamesInFile.ToArray();
+        }
        
         string LandisConsoleExe
         {
@@ -238,7 +276,6 @@ namespace LandisUserInterface
         {
                 System.Windows.Forms.ContextMenuStrip c = new System.Windows.Forms.ContextMenuStrip();
                 c.Items.AddRange(ToolStripItems);
-                //c.Name = "";
                 c.Size = new System.Drawing.Size(166, 48);
                 return c;
              
@@ -297,24 +334,7 @@ namespace LandisUserInterface
             // TODO: remove associated windows??
             this.HeaderScenarioFiles.Nodes.Clear();
         }
-       
-        List<string> SubNodeTexts(TreeNodeCollection node_collection)
-        {
-            List<string> SubNodeTexts = new List<string>();
-            foreach (TreeNode node in node_collection)
-            {
-                SubNodeTexts.Add(node.Text);
-            }
-            return SubNodeTexts;
-        }
-
         
-         
-         
-         
-        
-
-       
         public void RunSimulation(string path)
         {
             if (System.IO.File.Exists(path) == false) throw new System.Exception("File " + path + " does not exist");
