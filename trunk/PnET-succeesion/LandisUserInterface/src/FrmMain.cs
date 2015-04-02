@@ -24,6 +24,7 @@ namespace LandisUserInterface
         public FrmMain()
         {
             InitializeComponent();
+
             
             this.WindowState = FormWindowState.Maximized;
 
@@ -165,14 +166,31 @@ namespace LandisUserInterface
 
             List<string> Content = new List<string>(System.IO.File.ReadAllLines(path));
 
-            Content.ForEach(o => { if (o.Contains(">>")) o.Remove(o.IndexOf(">>")); });
-
+            for (int line = Content.Count()-1; line > 0; line--)
+            {
+                if(Content[line].Contains(">>"))
+                {
+                    Content[line] = Content[line].Remove(Content[line].IndexOf(">>"));
+                }
+                if (Content[line].Trim().Length == 0)
+                {
+                    Content.RemoveAt(line);
+                    continue;
+                }
+            }
+            
             for (int l =0; l< Content.Count(); l++)
             {
                 string[] line = Content[l].Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
                 foreach(string term in line)
                 {
+                    if (term.Contains('.')==false)continue;
+
+                    //if (term.IndexOf('.') != term.Length - 4) continue;
+
+                    if (term.Contains(".img") || term.Contains(".gis")) continue;
+
                     try
                     {
                         string FileName = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), term);
@@ -420,16 +438,7 @@ namespace LandisUserInterface
             
         }
 
-        // Set the target drop effect to the effect  
-        // specified in the ItemDrag event handler. 
-        private void treeView1_DragEnter(object sender, DragEventArgs e)
-        {
-            //e.Effect = e.AllowedEffect;
-        }
-        private void treeView1_DragLeave(object sender, EventArgs e)
-        {
-           
-        }
+         
         void AddMapsInFolder(string path, ref FrmMap map)
         {
             foreach (string file in System.IO.Directory.GetFiles(path).Where(o => System.IO.Path.GetExtension(o) == ".img" || System.IO.Path.GetExtension(o) == ".gis"))
@@ -579,6 +588,7 @@ namespace LandisUserInterface
             }
         }
 
+    
        
         
 
