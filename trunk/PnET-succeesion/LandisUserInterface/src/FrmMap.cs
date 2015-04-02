@@ -16,21 +16,30 @@ namespace LandisUserInterface
         private int MapMin = int.MaxValue;
         private int MapMax = int.MinValue;
         IColorScheme Colorscheme;
+        BackgroundWorker backgroundworker;
+
         public FrmMap(DragEventHandler DragDrop)
         {
             
             InitializeComponent();
-             
 
 
-            this.timer1.Interval = 100;
-            this.timer1.Start();
+            backgroundworker = new BackgroundWorker();
+            backgroundworker.RunWorkerCompleted += LoadGridFiles;
+
+            backgroundworker.DoWork += new DoWorkEventHandler(SleepWorker);
+            backgroundworker.RunWorkerAsync();
 
             this.DragDrop += DragDrop;
             TreeViewLegend.ImageList = new ImageList();
 
              
         }
+        void SleepWorker(object sender, DoWorkEventArgs e)
+        {
+            System.Threading.Thread.Sleep(1000);
+        }
+
         public void Progress(string s1, int p, string s2)
         {
             toolStripProgressBar1.Value = p;
@@ -200,18 +209,40 @@ namespace LandisUserInterface
                 SetLayerSelection(e.Node.Name);
             }
         }
-
-        private void ImageFileLoaderBackGroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private static bool PathIsNetworkPath(string path)
         {
-             
-             
+            return new System.IO.DriveInfo(path).DriveType == System.IO.DriveType.Network;
+        }
+        private void LoadGridFiles(object sender, RunWorkerCompletedEventArgs e)
+        {
             while (ImageFilesToLoad.Count() > 0)
             {
                 string FileName = ImageFilesToLoad[0];
-
-                 
                 ImageFilesToLoad.RemoveAt(0);
-
+                if (PathIsNetworkPath(FileName))
+                {
+                    string NewFileName = System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetFileName(FileName));
+                    
+                    while (System.IO.File.Exists(NewFileName))
+                    {
+                        try
+                        {
+                            System.IO.File.Delete(NewFileName);
+                        }
+                        catch
+                        {
+                            int c = 0;
+                            while (System.IO.File.Exists(NewFileName))
+                            {
+                                NewFileName = System.IO.Path.GetFileNameWithoutExtension(NewFileName) + (c++).ToString() + System.IO.Path.GetExtension(NewFileName);
+                                c++;
+                            }
+                        }
+                    }
+                    System.IO.File.Copy(FileName, NewFileName);
+                    FileName = NewFileName;
+                }
+                
                 if (treeViewLayers.Nodes.ContainsKey(FileName) == true)
                 {
                     continue;
@@ -315,16 +346,10 @@ namespace LandisUserInterface
                 this.axMap1.Refresh();
                 this.toolStripProgressBar1.Value = 0;
             }
+            backgroundworker.RunWorkerAsync();
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            if (this.ImageFileLoaderBackGroundWorker.IsBusy == false)
-            {
-                ImageFileLoaderBackGroundWorker.RunWorkerAsync();
-            }
-        }
-
+         
         private void TreeViewLegend_AfterSelect(object sender, TreeViewEventArgs e)
         {
 

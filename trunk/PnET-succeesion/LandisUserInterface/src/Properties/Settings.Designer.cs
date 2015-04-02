@@ -46,5 +46,17 @@ namespace LandisUserInterface.Properties {
                 this["LandisConsoleExe"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\")]
+        public string LocalRootPaths {
+            get {
+                return ((string)(this["LocalRootPaths"]));
+            }
+            set {
+                this["LocalRootPaths"] = value;
+            }
+        }
     }
 }
