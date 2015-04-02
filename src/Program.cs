@@ -13,8 +13,7 @@ namespace LandisUserInterface
         [STAThread]
         static void Main()
         {
-            LogFile.Reset();
-
+             
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FrmMain());

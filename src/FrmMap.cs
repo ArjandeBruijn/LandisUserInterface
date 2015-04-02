@@ -204,15 +204,12 @@ namespace LandisUserInterface
         private void ImageFileLoaderBackGroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
              
-            LogFile.Write("Loading " + ImageFilesToLoad.Count() +" image files.");
+             
             while (ImageFilesToLoad.Count() > 0)
             {
                 string FileName = ImageFilesToLoad[0];
 
-                LogFile.Write("Loading image file" + FileName);
-                
-
-
+                 
                 ImageFilesToLoad.RemoveAt(0);
 
                 if (treeViewLayers.Nodes.ContainsKey(FileName) == true)
@@ -220,15 +217,13 @@ namespace LandisUserInterface
                     continue;
                 }
 
-                LogFile.Write("Creating MapWinGIS grid");
-
+                
                 MapWinGIS.Grid grid = new MapWinGIS.Grid();
 
 
                 statusStrip1.Refresh();
 
-                LogFile.Write("Opening MapWinGIS grid");
-
+                 
                 grid.Open(FileName, MapWinGIS.GridDataType.LongDataType, true, MapWinGIS.GridFileType.UseExtension, this);
 
 
@@ -250,8 +245,7 @@ namespace LandisUserInterface
 
                 map_image.CustomColorScheme = GridColorscheme;
 
-                LogFile.Write("Closing MapWinGIS grid");
-
+                 
                 grid.Close();
 
                 int LayerHandle = axMap1.AddLayer(map_image, true);
@@ -314,7 +308,7 @@ namespace LandisUserInterface
                 }
                 SetLayerSelection(FileName);
 
-                LogFile.Write("Refreshing interface");
+                
 
                 this.axMap1.Invalidate();
                 this.axMap1.Update();
