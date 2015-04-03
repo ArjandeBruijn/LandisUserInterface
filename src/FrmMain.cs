@@ -28,7 +28,15 @@ namespace LandisUserInterface
                 return backgroundworker.CancellationPending;
             }
         }
-
+        static int get_Year(System.Windows.Forms.TreeNode node)
+        {
+            int year = -1;
+            if (int.TryParse(System.Text.RegularExpressions.Regex.Match(node.Tag.ToString(), @"\d+").Value, out year))
+            {
+                return year;
+            }
+            return year;
+        }
         
         public FrmMain()
         {
@@ -39,6 +47,7 @@ namespace LandisUserInterface
             this.treeView1.AllowDrop = true;
             this.treeView1.Font = new Font("Times New Roman", 14);
             this.treeView1.ShowNodeToolTips = true;
+            this.treeView1.TreeViewNodeSorter = new NodeSorter(get_Year);
 
             backgroundworker = new BackgroundWorker();
 
@@ -90,7 +99,7 @@ namespace LandisUserInterface
             // Get a placeholder without subnodes
             System.Windows.Forms.TreeNode node = new System.Windows.Forms.TreeNode();
             node.ToolTipText = node.Name = FileName;
-            node.Text = System.IO.Path.GetFileName(FileName);
+            node.Tag = node.Text = System.IO.Path.GetFileName(FileName);
             node.ImageKey = node.SelectedImageKey = "File";
             this.treeView1.Nodes["Scenario Files"].Nodes.Add(node);
             foreach (TreeNode tn in treeView1.Nodes) tn.Expand();
