@@ -35,6 +35,12 @@ namespace LandisUserInterface
             Properties.Settings.Default.LastScenarioFileNames.Replace(FileName + ";", "");
             Properties.Settings.Default.Save();
         }
+        public static void ClearScenarios()
+        {
+            Properties.Settings.Default.LastScenarioFileNames = "";
+            Properties.Settings.Default.Save();
+        }
+        
         public static string LandisConsoleExe
         {
             get
