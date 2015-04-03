@@ -80,10 +80,7 @@ namespace LandisUserInterface
         private void AddScenario(string FileName)
         {
             // Get a placeholder without subnodes
-            System.Windows.Forms.TreeNode node = new System.Windows.Forms.TreeNode();
-            node.ToolTipText = node.Name = FileName;
-            node.Tag = node.Text = System.IO.Path.GetFileName(FileName);
-            node.ImageKey = node.SelectedImageKey = "File";
+            TreeNode node = new TreeNode(FileName, System.IO.Path.GetFileName(FileName), "File", null);
             this.treeView1.Nodes["Scenario Files"].Nodes.Add(node);
             foreach (TreeNode tn in treeView1.Nodes) tn.Expand();
             UpdateScenarioNode = node;
