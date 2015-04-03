@@ -41,10 +41,10 @@ namespace LandisUserInterface
         public TreeNode(string FullPath, string Text, string ImageKey, GetSubNodes get_sub_nodes)
             
         {
+            
             this.FileName = System.IO.Path.GetFileName(FullPath);
             this.Year = get_Year(FileName);
             this.get_sub_nodes = get_sub_nodes;
-            if (FrmMain.BackgroundWorkerCancellationPending) return;
             this.Tag =this.Name = this.ToolTipText = FullPath;
             this.Text = Text;
             this.ImageKey = this.SelectedImageKey = ImageKey;
@@ -52,7 +52,7 @@ namespace LandisUserInterface
             if (get_sub_nodes != null)
             {
                 foreach (TreeNode node in get_sub_nodes(this))
-                {
+                { 
                     Nodes.Add(node);
                 }
             }
