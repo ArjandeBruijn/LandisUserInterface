@@ -18,7 +18,7 @@ namespace LandisUserInterface
         IColorScheme Colorscheme;
         BackgroundWorker backgroundworker;
 
-        static int get_Year(System.Windows.Forms.TreeNode node)
+        static int get_Year(TreeNode node)
         {
             int year = -1;
             if (int.TryParse(System.Text.RegularExpressions.Regex.Match(((string[])node.Tag)[0].ToString(), @"\d+").Value, out year))
@@ -42,7 +42,7 @@ namespace LandisUserInterface
 
             this.DragDrop += DragDrop;
             TreeViewLegend.ImageList = new ImageList();
-            this.treeViewLayers.TreeViewNodeSorter = new NodeSorter(get_Year);
+            this.treeViewLayers.TreeViewNodeSorter = new NodeSorter();
              
         }
         void SleepWorker(object sender, DoWorkEventArgs e)
@@ -59,12 +59,12 @@ namespace LandisUserInterface
             toolStripStatusLabel1.Text = s1;
 
         }
-        private List<string> ImageFilesToLoad = new List<string>();
+        private List<TreeNode> ImageFilesToLoad = new List<TreeNode>();
 
-        public void LoadImageFile(string FileName)
+        public void LoadImageFile(TreeNode node)
         {
-            
-            ImageFilesToLoad.Add(FileName);
+
+            ImageFilesToLoad.Add(node);
 
 
 
@@ -136,9 +136,9 @@ namespace LandisUserInterface
             return flag;
         }
         
-        private void SetLayerSelection(string FileName)
+        private void SetLayerSelection(TreeNode node)
         {
-            int LayerHandle = int.Parse(((string[])treeViewLayers.Nodes[FileName].Tag)[1]);
+            int LayerHandle = node.LayerHandle;
             
             axMap1.set_LayerVisible(LayerHandle, true);
 
@@ -152,9 +152,9 @@ namespace LandisUserInterface
                 }
 
             }
-            foreach (System.Windows.Forms.TreeNode _node in treeViewLayers.Nodes)
+            foreach (TreeNode _node in treeViewLayers.Nodes)
             {
-                if (_node.Name == FileName) _node.Checked = true;
+                if (_node.Name == node.FileName) _node.Checked = true;
                 else _node.Checked = false;
             }
         
@@ -162,9 +162,9 @@ namespace LandisUserInterface
        
         private void PlayAnimation(object sender, EventArgs e)
         {
-            foreach (System.Windows.Forms.TreeNode tree_node in this.treeViewLayers.Nodes)
+            foreach (TreeNode tree_node in this.treeViewLayers.Nodes)
             {
-                SetLayerSelection(tree_node.ToolTipText);
+                SetLayerSelection(tree_node);
                 
 
                 axMap1.Invalidate();
@@ -216,7 +216,7 @@ namespace LandisUserInterface
         {
             if (e.Action != TreeViewAction.Unknown)
             {
-                SetLayerSelection(e.Node.Name);
+                SetLayerSelection((TreeNode)e.Node);
             }
         }
         private static bool PathIsNetworkPath(string path)
@@ -227,7 +227,8 @@ namespace LandisUserInterface
         {
             while (ImageFilesToLoad.Count() > 0)
             {
-                string FileName = ImageFilesToLoad[0];
+                TreeNode node = ImageFilesToLoad[0];
+                string FileName = node.Tag.ToString();
                 ImageFilesToLoad.RemoveAt(0);
                 if (PathIsNetworkPath(FileName))
                 {
@@ -291,28 +292,9 @@ namespace LandisUserInterface
 
                 int LayerHandle = axMap1.AddLayer(map_image, true);
 
-                System.Windows.Forms.TreeNode node = new System.Windows.Forms.TreeNode(System.IO.Path.GetFileName(FileName));
-                node.Name = FileName;
-                node.ToolTipText = FileName;
-                node.Tag = new string[] { new OutputFileMap(System.IO.Path.GetFileName(FileName)).Year.ToString(), LayerHandle.ToString() };
+                treeViewLayers.Nodes.Add(node.Clone(LayerHandle));
 
-                treeViewLayers.Nodes.Add(node);
-
-                /*
-                for (int index = 0; index < treeViewLayers.Nodes.Count; index++)
-                {
-                    if (int.Parse(((string[])treeViewLayers.Nodes[index].Tag)[0].ToString()) > int.Parse(((string[])node.Tag)[0].ToString()))
-                    {
-                        treeViewLayers.Nodes.Insert(index, node);
-                        break;
-                    }
-
-                }
-                if (treeViewLayers.Nodes.ContainsKey(node.Name) == false)
-                {
-                    
-                }
-                 */
+               
                 axMap1.set_LayerName(LayerHandle, node.Name);
 
                 axMap1.SetImageLayerColorScheme(LayerHandle, GridColorscheme);
@@ -351,7 +333,7 @@ namespace LandisUserInterface
                     this.TreeViewLegend.Nodes.Add(legend_node);
 
                 }
-                SetLayerSelection(FileName);
+                SetLayerSelection(node);
 
                 
 
