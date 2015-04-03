@@ -89,6 +89,7 @@
     <Compile Include="FrmTXTDisplay.Designer.cs">
       <DependentUpon>FrmTXTDisplay.cs</DependentUpon>
     </Compile>
+    <Compile Include="NodeSorter.cs" />
     <Compile Include="TabPageWithGraph.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -18,6 +18,16 @@ namespace LandisUserInterface
         IColorScheme Colorscheme;
         BackgroundWorker backgroundworker;
 
+        static int get_Year(System.Windows.Forms.TreeNode node)
+        {
+            int year = -1;
+            if (int.TryParse(System.Text.RegularExpressions.Regex.Match(((string[])node.Tag)[0].ToString(), @"\d+").Value, out year))
+            {
+                return year;
+            }
+            return year;
+        }
+
         public FrmMap(DragEventHandler DragDrop)
         {
             
@@ -32,7 +42,7 @@ namespace LandisUserInterface
 
             this.DragDrop += DragDrop;
             TreeViewLegend.ImageList = new ImageList();
-
+            this.treeViewLayers.TreeViewNodeSorter = new NodeSorter(get_Year);
              
         }
         void SleepWorker(object sender, DoWorkEventArgs e)
@@ -284,8 +294,11 @@ namespace LandisUserInterface
                 System.Windows.Forms.TreeNode node = new System.Windows.Forms.TreeNode(System.IO.Path.GetFileName(FileName));
                 node.Name = FileName;
                 node.ToolTipText = FileName;
-                node.Tag = new string[] { new OutputFileMap(FileName).Year.ToString(), LayerHandle.ToString() };
+                node.Tag = new string[] { new OutputFileMap(System.IO.Path.GetFileName(FileName)).Year.ToString(), LayerHandle.ToString() };
 
+                treeViewLayers.Nodes.Add(node);
+
+                /*
                 for (int index = 0; index < treeViewLayers.Nodes.Count; index++)
                 {
                     if (int.Parse(((string[])treeViewLayers.Nodes[index].Tag)[0].ToString()) > int.Parse(((string[])node.Tag)[0].ToString()))
@@ -297,8 +310,9 @@ namespace LandisUserInterface
                 }
                 if (treeViewLayers.Nodes.ContainsKey(node.Name) == false)
                 {
-                    treeViewLayers.Nodes.Add(node);
+                    
                 }
+                 */
                 axMap1.set_LayerName(LayerHandle, node.Name);
 
                 axMap1.SetImageLayerColorScheme(LayerHandle, GridColorscheme);
