@@ -259,7 +259,7 @@ namespace LandisUserInterface
             return FileNamesInFile.ToArray();
         }
        
-        string LandisConsoleExe
+        public static string LandisConsoleExe
         {
             get
             {
@@ -354,45 +354,11 @@ namespace LandisUserInterface
             }
         }
         
-        public void RunSimulation(string path)
-        {
-            if (System.IO.File.Exists(path) == false) throw new System.Exception("File " + path + " does not exist");
-
-            System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(path));
-
-            Directory.DeleteDirectory("output");
-
-            if (System.IO.File.Exists(path))
-            {
-                System.Diagnostics.Process simulation = new System.Diagnostics.Process();
-
-                simulation.StartInfo.FileName = @"C:\Program Files\LANDIS-II\v6\bin\Landis.Console-6.0.exe";
-
-                if (System.IO.File.Exists(simulation.StartInfo.FileName) == false)
-                {
-                    OpenFileDialog dlg = new OpenFileDialog();
-                    dlg.Title = "Select your landis console executable";
-                    if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        LandisConsoleExe = dlg.FileName;
-                        RunSimulation(path);
-                    }
-                    else return;
-                }
-
-                simulation.StartInfo.Arguments = "\"" + path + "\"";
-
-                simulation.Start();
-
-                 
-            }
-
-        }
+        
         private void RunSimulation_Click(object sender, EventArgs e)
         {
-            string path = treeView1.SelectedNode.ToolTipText;
-
-            RunSimulation(path);
+           
+            ((TreeNode)treeView1.SelectedNode).RunSimulation();
         }
 
         private void Remove_Click(object sender, EventArgs e)
