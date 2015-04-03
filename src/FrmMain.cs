@@ -14,97 +14,144 @@ namespace LandisUserInterface
     {
         private TreeNode HeaderScenarioFiles;
 
-        TreeNode ScenarioNode = null;
-        string LoadingScenarioFile = null;
+        TreeNode UpdatedScenarioNode = null;
+        System.Windows.Forms.TreeNode UpdateScenarioNode = null;
         static int c = 0;
 
         Dictionary<string, List<DockableFormInfo>> Docks = new Dictionary<string, List<DockableFormInfo>>();
-        BackgroundWorker backgroundworker;
         Timer timer;
+        static BackgroundWorker backgroundworker;
+        public static bool BackgroundWorkerCancellationPending
+        {
+            get
+            {
+                return backgroundworker.CancellationPending;
+            }
+        }
+
+        
         public FrmMain()
         {
             InitializeComponent();
 
-            
             this.WindowState = FormWindowState.Maximized;
 
             this.treeView1.AllowDrop = true;
             this.treeView1.Font = new Font("Times New Roman", 14);
             this.treeView1.ShowNodeToolTips = true;
-             
+
+            backgroundworker = new BackgroundWorker();
+
+
             HeaderScenarioFiles = new TreeNode("Scenario Files","Scenario Files", "RightArrow", null);
            
             this.treeView1.Nodes.Add(HeaderScenarioFiles);
             HeaderScenarioFiles.ExpandAll();
 
-            backgroundworker = new BackgroundWorker();
+            
             timer = new Timer();
             timer.Tick += RunWorker;
             timer.Interval = 500;
             timer.Start();
 
-            backgroundworker.DoWork += LoadFiles;
-            backgroundworker.RunWorkerCompleted += AddScenarioNodes;
-            TreeNode.sendmessage = SendMessage;
+            backgroundworker.DoWork += backgroundworker_DoWork;
+            backgroundworker.RunWorkerCompleted += backgroundworker_RunWorkerCompleted;
+            backgroundworker.WorkerSupportsCancellation = true;
+          
+        }
+        string[] LastScenarioFileNames
+        {
+            get
+            {
+                return Properties.Settings.Default.LastScenarioFileNames.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            }
+            set
+            {
+                Properties.Settings.Default.LastScenarioFileNames = string.Join(";", value.Select(x => x).Distinct().ToArray());
+                Properties.Settings.Default.Save();
+            }
+        }
+        private void FrmMain_Load(object sender, EventArgs e)
+        {
+            foreach (string FileName in LastScenarioFileNames)
+            {
+                AddScenario(FileName);
+            }
+            if (this.treeView1.Nodes["Scenario Files"].Nodes.Count > 0)
+            {
+                UpdateScenarioNode = this.treeView1.Nodes["Scenario Files"].Nodes[0];
+                toolStripStatusLabel1.Text = "Loading " + UpdateScenarioNode.Name;
+            }
+        }
+        private void AddScenario(string FileName)
+        {
+            // Add a node and a filename
+            backgroundworker.CancelAsync();
+            List<string> lastscenariofilenames = new List<string>(LastScenarioFileNames);
+            lastscenariofilenames.Add(FileName);
+            LastScenarioFileNames = lastscenariofilenames.ToArray();
 
-             
+            // Get a placeholder without subnodes
+            System.Windows.Forms.TreeNode node = new System.Windows.Forms.TreeNode();
+            node.ToolTipText = node.Name = FileName;
+            node.Text = System.IO.Path.GetFileName(FileName);
+            node.ImageKey = node.SelectedImageKey = "File";
+            this.treeView1.Nodes["Scenario Files"].Nodes.Add(node);
+            foreach (TreeNode tn in treeView1.Nodes) tn.Expand();
+            UpdateScenarioNode = node;
+            toolStripStatusLabel1.Text = "Loading " + UpdateScenarioNode.Name;
+        }
+        private void RemoveScenario(string FileName)
+        {
+            backgroundworker.CancelAsync();
+            List<string> lastscenariofilenames = new List<string>(LastScenarioFileNames);
+            lastscenariofilenames.Remove(FileName);
+            LastScenarioFileNames = lastscenariofilenames.ToArray();
+            this.treeView1.Nodes.RemoveByKey(FileName);
         }
         void RunWorker(object sender, EventArgs e)
         {
             if (backgroundworker.IsBusy == false)
             {
-                this.backgroundworker.RunWorkerAsync();
+                backgroundworker.RunWorkerAsync();
             }
         }
         
-        void AddScenarioNodes(object sender, RunWorkerCompletedEventArgs e)
+        void backgroundworker_DoWork(object sender, DoWorkEventArgs e)
         {
-            if (ScenarioNode != null)
+            // Update a predetermined scenario node
+            if (UpdateScenarioNode != null)
             {
-                if (this.treeView1.Nodes["Scenario Files"].Nodes.ContainsKey(LoadingScenarioFile))
-                {
-                    int index = this.treeView1.Nodes["Scenario Files"].Nodes.IndexOfKey(LoadingScenarioFile);
-                    this.treeView1.Nodes["Scenario Files"].Nodes.RemoveAt(index);
-                    this.treeView1.Nodes["Scenario Files"].Nodes.Insert(index, ScenarioNode);
-                }
-                else this.treeView1.Nodes["Scenario Files"].Nodes.Add(ScenarioNode);
-                
-                foreach (TreeNode tn in treeView1.Nodes)tn.Expand();
-                 
-                ScenarioNode = null;
+                UpdatedScenarioNode = new TreeNode(UpdateScenarioNode.Name, System.IO.Path.GetFileName(UpdateScenarioNode.Name), "File", GetScenarioSubNodes);
             }
-            LoadingScenarioFile = null;
+        }
+        void backgroundworker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (backgroundworker.CancellationPending == true)
+            {
+                return;
+            }
 
-            for (int file = LastScenarioPathList.Count() - 1; file >= 0;file-- )
+            // Replace scenario with updated version
+            if (UpdatedScenarioNode != null)
             {
-                if (this.treeView1.Nodes["Scenario Files"].Nodes.ContainsKey(LastScenarioPathList[file]) == false)
-                {
-                    LoadingScenarioFile = LastScenarioPathList[file];
-                    toolStripStatusLabel1.Text = "Loading " + LoadingScenarioFile;
-                    toolStripStatusLabel1.ToolTipText = LoadingScenarioFile;
-                    return;
-                }
+                int index = this.treeView1.Nodes["Scenario Files"].Nodes.IndexOfKey(UpdateScenarioNode.Name);
+                this.treeView1.Nodes["Scenario Files"].Nodes.RemoveAt(index);
+                this.treeView1.Nodes["Scenario Files"].Nodes.Insert(index, UpdatedScenarioNode);
+                
+                UpdatedScenarioNode = null;
             }
-            if (LoadingScenarioFile == null)
-            {
-                LoadingScenarioFile = treeView1.Nodes["Scenario Files"].Nodes[c++].Tag.ToString();
-                toolStripStatusLabel1.Text = "Updating " + LoadingScenarioFile;
-                toolStripStatusLabel1.ToolTipText = LoadingScenarioFile;
-                if (c == treeView1.Nodes["Scenario Files"].Nodes.Count) c = 0;
-            }
+
+            // Set scenario node for updating
+            UpdateScenarioNode = treeView1.Nodes["Scenario Files"].Nodes[c++];
+            toolStripStatusLabel1.Text = "Updating " + UpdateScenarioNode.Name;
+            if (c == treeView1.Nodes["Scenario Files"].Nodes.Count) c = 0;
         }
-        void LoadFiles(object sender, DoWorkEventArgs e)
-        {
-            if (LoadingScenarioFile != null)
-            {
-                ScenarioNode = new TreeNode(LoadingScenarioFile, System.IO.Path.GetFileName(LoadingScenarioFile), "File", GetScenarioSubNodes);
-            
-            }
-           
-        }
+        
 
         TreeNode[] GetFolderContent(TreeNode parent)
         {
+            /// Populate a treenode that is associated with a folder name with its subnodes
             List<TreeNode> TreeNodes = new List<TreeNode>();
 
             string path = parent.Tag.ToString();
@@ -126,6 +173,7 @@ namespace LandisUserInterface
         }
         TreeNode[] GetScenarioSubNodes(TreeNode parent)
         {
+            /// Populate a treenode that is associated with a scenario file name with its subnodes
             List<TreeNode> TreeNodes = new List<TreeNode>();
 
             string path = parent.Tag.ToString();
@@ -155,11 +203,7 @@ namespace LandisUserInterface
 
             return TreeNodes.ToArray();
         }
-        void SendMessage(string msg)
-        {
-            toolStripStatusLabel1.Text = msg;
-        }
-
+       
         string[] GetFileNamesInFile(string path)
         {
             List<string> FileNamesInFile = new List<string>();
@@ -223,26 +267,7 @@ namespace LandisUserInterface
                 Properties.Settings.Default.Save();
             }
         }
-        string LastScenarioFileNames
-        {
-            get
-            {
-                return Properties.Settings.Default.LastScenarioFileNames;
-            }
-        }
-        string[] LastScenarioPathList
-        {
-            get
-            {
-                return LastScenarioFileNames.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            }
-        }
-        void SetLastScenarioFileNames(List<string> Paths)
-        {
-            Properties.Settings.Default.LastScenarioFileNames = string.Join(";", Paths.Select(x => x).Distinct().ToArray());
-
-            Properties.Settings.Default.Save();
-        }
+        
         private bool IsScenarioFile(string path)
         {
             // LandisData  Scenario
@@ -258,38 +283,6 @@ namespace LandisUserInterface
             }
             return false;
         }
-        private void AddLastScenarioFileName(string path)
-        {
-            List<string> lastscenariofilenames = new List<string>(LastScenarioPathList);
-
-            lastscenariofilenames.Add(path);
-
-            SetLastScenarioFileNames(lastscenariofilenames);
-        }
-        private void RemoveLastScenarioFileNames(string FileName)
-        {
-            List<string> lastscenariofilenames = new List<string>();
-            foreach (string path in LastScenarioPathList)
-            {
-                if (System.IO.Path.GetFileName(path) != FileName)
-                {
-                    lastscenariofilenames.Add(path);
-                }
-            }
-            string LastScenarioFileNames = Properties.Settings.Default.LastScenarioFileNames;
-
-            while (Properties.Settings.Default.LastScenarioFileNames.Contains(FileName + ";"))
-            { 
-                Properties.Settings.Default.LastScenarioFileNames = Properties.Settings.Default.LastScenarioFileNames.Replace(FileName + ";", "");
-                Properties.Settings.Default.Save();
-            }
-            
-            
-        }
-        
-                
-      
-      
         System.Windows.Forms.ContextMenuStrip GetContextMenuStrip(System.Windows.Forms.ToolStripItem[] ToolStripItems)
         {
                 System.Windows.Forms.ContextMenuStrip c = new System.Windows.Forms.ContextMenuStrip();
@@ -342,14 +335,16 @@ namespace LandisUserInterface
 
             if(of.ShowDialog() == DialogResult.OK)
             {
-                AddLastScenarioFileName(of.FileName);
+                AddScenario(of.FileName);
             }
         }
        
         private void ClearScenarioFiles_Click(object sender, EventArgs e)
         {
-            // TODO: remove associated windows??
-            this.HeaderScenarioFiles.Nodes.Clear();
+            foreach (string scenario in LastScenarioFileNames)
+            {
+                RemoveScenario(scenario);
+            }
         }
         
         public void RunSimulation(string path)
@@ -395,7 +390,7 @@ namespace LandisUserInterface
 
         private void Remove_Click(object sender, EventArgs e)
         {
-            RemoveLastScenarioFileNames(treeView1.SelectedNode.ToolTipText);
+            RemoveScenario(treeView1.SelectedNode.ToolTipText);
 
             this.treeView1.Nodes.Remove(treeView1.SelectedNode);
         }
@@ -586,6 +581,8 @@ namespace LandisUserInterface
                 treeView1.SelectedNode = e.Node;
             }
         }
+
+        
 
     
        

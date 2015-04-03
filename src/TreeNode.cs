@@ -9,9 +9,6 @@ namespace LandisUserInterface
 {
     class TreeNode : System.Windows.Forms.TreeNode
     {
-        public delegate void SendMessage(string msg);
-
-        public static SendMessage sendmessage;
          
         public delegate TreeNode[] GetSubNodes(TreeNode me);
 
@@ -20,6 +17,7 @@ namespace LandisUserInterface
         public TreeNode(string FullPath, string Text, string ImageKey, GetSubNodes get_sub_nodes)
             
         {
+            if (FrmMain.BackgroundWorkerCancellationPending) return;
             this.Tag =this.Name = this.ToolTipText = FullPath;
             this.Text = Text;
             this.ImageKey = this.SelectedImageKey = ImageKey;
