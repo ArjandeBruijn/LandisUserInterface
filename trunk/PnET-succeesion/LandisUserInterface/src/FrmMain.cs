@@ -336,7 +336,7 @@ namespace LandisUserInterface
         }
         private void ClearScenarios_Click(object sender, EventArgs e)
         {
-            foreach (TreeNode node in treeView1.Nodes)
+            foreach (TreeNode node in treeView1.Nodes["Scenario Files"].Nodes)
             {
                 RemoveScenario(node);
             }
