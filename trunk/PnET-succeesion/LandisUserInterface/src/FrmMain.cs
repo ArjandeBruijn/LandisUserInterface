@@ -80,7 +80,10 @@ namespace LandisUserInterface
         {
             foreach (string FileName in LastScenarioFileNames)
             {
-                AddScenario(FileName);
+                if (System.IO.File.Exists(FileName))
+                {
+                    AddScenario(FileName);
+                }
             }
             if (this.treeView1.Nodes["Scenario Files"].Nodes.Count > 0)
             {
@@ -109,11 +112,40 @@ namespace LandisUserInterface
         private void RemoveScenario(string FileName)
         {
             backgroundworker.CancelAsync();
+
+            RemoveDocks(treeView1.Nodes["Scenario Files"].Nodes[FileName]);
+
+
             List<string> lastscenariofilenames = new List<string>(LastScenarioFileNames);
+
+           
             lastscenariofilenames.Remove(FileName);
             LastScenarioFileNames = lastscenariofilenames.ToArray();
+
+            
+            
             this.treeView1.Nodes.RemoveByKey(FileName);
+
         }
+
+        void RemoveDocks(System.Windows.Forms.TreeNode node)
+        {
+            string FileName = node.Tag.ToString();
+            if (Docks.ContainsKey(FileName))
+            {
+                foreach (DockableFormInfo info in Docks[FileName])
+                {
+                    dockContainer1.Remove(info);
+                }
+            }
+
+            foreach (System.Windows.Forms.TreeNode sub_node in node.Nodes)
+            {
+                RemoveDocks(sub_node);
+            }
+        }
+
+
         void RunWorker(object sender, EventArgs e)
         {
             if (backgroundworker.IsBusy == false)
@@ -599,6 +631,30 @@ namespace LandisUserInterface
             {
                 treeView1.SelectedNode = e.Node;
             }
+        }
+
+        private void treeView1_DragEnter(object sender, DragEventArgs e)
+        {
+            //e.Effect = e.AllowedEffect;
+        }
+
+        private void treeView1_DragDrop(object sender, DragEventArgs e)
+        {
+            /*
+            Point loc = ((TreeView)sender).PointToClient(new Point(e.X, e.Y));
+            System.Windows.Forms.TreeNode node = (System.Windows.Forms.TreeNode)e.Data.GetData(typeof(System.Windows.Forms.TreeNode));
+            System.Windows.Forms.TreeNode destNode = ((TreeView)sender).GetNodeAt(loc);
+
+            if (node.Parent == null)
+                node.TreeView.Nodes.Remove(node);
+            else
+                node.Parent.Nodes.Remove(node);
+
+            if (destNode.Parent == null)
+                destNode.TreeView.Nodes.Insert(destNode.Index + 1, node);
+            else
+                destNode.Parent.Nodes.Insert(destNode.Index + 1, node);
+             */
         }
 
         
