@@ -348,10 +348,15 @@ namespace LandisUserInterface
 
             OpenFileDialog of = new OpenFileDialog();
             of.Title = "Select Scenario File";
+            of.Multiselect = true;
 
             if(of.ShowDialog() == DialogResult.OK)
             {
-                AddScenario(of.FileName);
+                foreach (string file in of.FileNames)
+                {
+                    AddScenario(file);
+                }
+               
             }
 
             ResumeBackgroundWorker();
