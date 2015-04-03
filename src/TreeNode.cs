@@ -24,7 +24,7 @@ namespace LandisUserInterface
         }
         public string FileName { get; private set; }
 
-        public string FullPath { get; private set; }
+        new public string FullPath { get; private set; }
         
         public int LayerHandle { get; private set; }
 
@@ -47,7 +47,7 @@ namespace LandisUserInterface
                 dlg.Title = "Select your landis console executable";
                 if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    FrmMain.LandisConsoleExe = dlg.FileName;
+                    Global.LandisConsoleExe = dlg.FileName;
                     RunSimulation();
                 }
                 else return;

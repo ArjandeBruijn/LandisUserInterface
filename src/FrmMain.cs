@@ -28,6 +28,9 @@ namespace LandisUserInterface
         {
             InitializeComponent();
 
+            //Properties.Settings.Default.LastScenarioFileNames = "";
+            //Properties.Settings.Default.Save();
+
             this.WindowState = FormWindowState.Maximized;
 
             this.treeView1.AllowDrop = true;
@@ -50,24 +53,13 @@ namespace LandisUserInterface
             
             backgroundworker.DoWork += backgroundworker_DoWork;
             backgroundworker.RunWorkerCompleted += backgroundworker_RunWorkerCompleted;
-           
+            backgroundworker.WorkerSupportsCancellation = true;
             backgroundworker.RunWorkerAsync();
         }
-        List<string> LastScenarioFileNames
-        {
-            get
-            {
-                return new List<string>(Properties.Settings.Default.LastScenarioFileNames.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
-            }
-            set
-            {
-                Properties.Settings.Default.LastScenarioFileNames = string.Join(";", value.Select(x => x).Distinct().ToArray());
-                Properties.Settings.Default.Save();
-            }
-        }
+       
         private void FrmMain_Load(object sender, EventArgs e)
         {
-            foreach (string FileName in LastScenarioFileNames)
+            foreach (string FileName in Global.LastScenarioFileNames)
             {
                 AddScenario(FileName);
             }
@@ -80,27 +72,30 @@ namespace LandisUserInterface
         private void AddScenario(string FileName)
         {
             // Get a placeholder without subnodes
-            TreeNode node = new TreeNode(FileName, System.IO.Path.GetFileName(FileName), "File", null);
-            this.treeView1.Nodes["Scenario Files"].Nodes.Add(node);
-            foreach (TreeNode tn in treeView1.Nodes) tn.Expand();
-            UpdateScenarioNode = node;
-            toolStripStatusLabel1.Text = "Loading " + UpdateScenarioNode.Name;
+            if (this.treeView1.Nodes["Scenario Files"].Nodes.ContainsKey(FileName) == false)
+            {
+                TreeNode node = new TreeNode(FileName, System.IO.Path.GetFileName(FileName), "File", null);
+
+                this.treeView1.Nodes["Scenario Files"].Nodes.Add(node);
+                foreach (TreeNode tn in treeView1.Nodes) tn.Expand();
+                UpdateScenarioNode = node;
+                toolStripStatusLabel1.Text = "Loading " + UpdateScenarioNode.Name;
+            }
 
             // Add a node and a filename
-            LastScenarioFileNames.Add(FileName);
+            Global.AddScenario(FileName);
 
         }
-        private void RemoveScenario(string FileName)
+        // Removes a treenode and associated name in the registry
+        private void RemoveScenario(TreeNode node)
         {
-            timer.Stop();
+            //backgroundworker.CancelAsync();
 
-            while (backgroundworker.IsBusy) ;
+            Global.RemoveScenario(node.FullPath);
 
-            LastScenarioFileNames.Remove(FileName);
-         
-            this.treeView1.Nodes.RemoveByKey(FileName);
+            this.treeView1.Nodes.Remove(node);
 
-            timer.Start();
+            
         }
         void RunWorker(object sender, EventArgs e)
         {
@@ -112,30 +107,44 @@ namespace LandisUserInterface
         
         void backgroundworker_DoWork(object sender, DoWorkEventArgs e)
         {
-            // Update a predetermined scenario node
-            if (UpdateScenarioNode != null)
+            try
             {
-                UpdatedScenarioNode = new TreeNode(UpdateScenarioNode.Name, System.IO.Path.GetFileName(UpdateScenarioNode.Name), "File", GetScenarioSubNodes);
+                // Update a predetermined scenario node
+                if (UpdateScenarioNode != null)
+                {
+                    UpdatedScenarioNode = new TreeNode(UpdateScenarioNode.Name, System.IO.Path.GetFileName(UpdateScenarioNode.Name), "File", GetScenarioSubNodes);
+                }
+                System.Threading.Thread.Sleep(500);
             }
-            System.Threading.Thread.Sleep(500);
+            catch (System.Exception em)
+            {
+                double t = 0.0;
+            }
         }
         void backgroundworker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            // Replace scenario with updated version
-            if (UpdatedScenarioNode != null)
+            try
             {
-                NodesCompare(this.treeView1.Nodes["Scenario Files"].Nodes[UpdateScenarioNode.Name], UpdatedScenarioNode);
-                
-                UpdatedScenarioNode = null;
-            }
+                // Replace scenario with updated version
+                if (UpdatedScenarioNode != null)
+                {
+                    NodesCompare(this.treeView1.Nodes["Scenario Files"].Nodes[UpdateScenarioNode.Name], UpdatedScenarioNode);
 
-            // Set scenario node for updating
-            if (treeView1.Nodes["Scenario Files"].Nodes.Count > c)
-            {
-                UpdateScenarioNode = treeView1.Nodes["Scenario Files"].Nodes[c++];
-                toolStripStatusLabel1.Text = "Updating " + UpdateScenarioNode.Name;
+                    UpdatedScenarioNode = null;
+                }
+
+                // Set scenario node for updating
+                if (treeView1.Nodes["Scenario Files"].Nodes.Count > c)
+                {
+                    UpdateScenarioNode = treeView1.Nodes["Scenario Files"].Nodes[c++];
+                    toolStripStatusLabel1.Text = "Updating " + UpdateScenarioNode.Name;
+                }
+                else c = 0;
             }
-            else c = 0;
+            catch
+            {
+                return;
+            }
              
         }
         void NodesCompare(System.Windows.Forms.TreeNode old_node, System.Windows.Forms.TreeNode new_node)
@@ -259,18 +268,7 @@ namespace LandisUserInterface
             return FileNamesInFile.ToArray();
         }
        
-        public static string LandisConsoleExe
-        {
-            get
-            {
-                return Properties.Settings.Default.LandisConsoleExe;
-            }
-            set
-            {
-                Properties.Settings.Default.LandisConsoleExe = value;
-                Properties.Settings.Default.Save();
-            }
-        }
+        
         
         private bool IsScenarioFile(string path)
         {
@@ -303,7 +301,7 @@ namespace LandisUserInterface
 
                 if (treeView1.SelectedNode == HeaderScenarioFiles)
                 {
-                    GetContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.AddScnFl_Click), "Add Scenario"), GetToolStripMenuItem(new EventHandler(this.ClearScenarioFiles_Click), "Clear Scenarios") }).Show(this.treeView1, e.Location);
+                    GetContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.AddScnFl_Click), "Add Scenario"), GetToolStripMenuItem(new EventHandler(this.ClearScenarios_Click), "Clear Scenarios") }).Show(this.treeView1, e.Location);
                 }
                 else if (IsScenarioFile(treeView1.SelectedNode.ToolTipText))
                 {
@@ -339,20 +337,11 @@ namespace LandisUserInterface
 
             if(of.ShowDialog() == DialogResult.OK)
             {
-                if (LastScenarioFileNames.Contains(of.FileName) == false)
-                {
-                    AddScenario(of.FileName);
-                }
+                AddScenario(of.FileName);
             }
         }
        
-        private void ClearScenarioFiles_Click(object sender, EventArgs e)
-        {
-            foreach (string scenario in LastScenarioFileNames)
-            {
-                RemoveScenario(scenario);
-            }
-        }
+       
         
         
         private void RunSimulation_Click(object sender, EventArgs e)
@@ -360,18 +349,18 @@ namespace LandisUserInterface
            
             ((TreeNode)treeView1.SelectedNode).RunSimulation();
         }
-
+        private void ClearScenarios_Click(object sender, EventArgs e)
+        {
+            foreach (TreeNode node in treeView1.Nodes)
+            {
+                RemoveScenario(node);
+            }
+        }
         private void Remove_Click(object sender, EventArgs e)
         {
-            timer.Stop();
+            
+            RemoveScenario((TreeNode)treeView1.SelectedNode);
 
-            while (backgroundworker.IsBusy) ;
-
-            RemoveScenario(treeView1.SelectedNode.ToolTipText);
-
-            this.treeView1.Nodes.Remove(treeView1.SelectedNode);
-
-            timer.Start();
         }
 
         private void ShowFileLocation_Click(object sender, EventArgs e)
