@@ -80,10 +80,7 @@ namespace LandisUserInterface
         {
             foreach (string FileName in LastScenarioFileNames)
             {
-                if (System.IO.File.Exists(FileName))
-                {
-                    AddScenario(FileName);
-                }
+                AddScenario(FileName);
             }
             if (this.treeView1.Nodes["Scenario Files"].Nodes.Count > 0)
             {
@@ -112,40 +109,11 @@ namespace LandisUserInterface
         private void RemoveScenario(string FileName)
         {
             backgroundworker.CancelAsync();
-
-            RemoveDocks(treeView1.Nodes["Scenario Files"].Nodes[FileName]);
-
-
             List<string> lastscenariofilenames = new List<string>(LastScenarioFileNames);
-
-           
             lastscenariofilenames.Remove(FileName);
             LastScenarioFileNames = lastscenariofilenames.ToArray();
-
-            
-            
             this.treeView1.Nodes.RemoveByKey(FileName);
-
         }
-
-        void RemoveDocks(System.Windows.Forms.TreeNode node)
-        {
-            string FileName = node.Tag.ToString();
-            if (Docks.ContainsKey(FileName))
-            {
-                foreach (DockableFormInfo info in Docks[FileName])
-                {
-                    dockContainer1.Remove(info);
-                }
-            }
-
-            foreach (System.Windows.Forms.TreeNode sub_node in node.Nodes)
-            {
-                RemoveDocks(sub_node);
-            }
-        }
-
-
         void RunWorker(object sender, EventArgs e)
         {
             if (backgroundworker.IsBusy == false)
@@ -484,33 +452,29 @@ namespace LandisUserInterface
         }
 
          
-        void AddMapsInFolder(TreeNode node, ref FrmMap map)
+        void AddMapsInFolder(string path, ref FrmMap map)
         {
-            string path = node.Tag.ToString();
-
-            foreach (TreeNode sub_node in node.Nodes)
+            foreach (string file in System.IO.Directory.GetFiles(path).Where(o => System.IO.Path.GetExtension(o) == ".img" || System.IO.Path.GetExtension(o) == ".gis"))
             {
-                if (System.IO.Path.GetExtension(sub_node.Tag.ToString()) == ".img" || System.IO.Path.GetExtension(sub_node.Tag.ToString()) == ".gis")
+                if (map == null)
                 {
-                    if (map == null)
-                    {
-                        map = new FrmMap(DragDropOnMap);
+                    map = new FrmMap(DragDropOnMap);
 
-                        map.Location = this.dockContainer1.PointToClient(Cursor.Position);
+                    map.Location = this.dockContainer1.PointToClient(Cursor.Position);
 
-                        if (Docks.ContainsKey(sub_node.Tag.ToString()) == false)
-                        {
-                            Docks.Add(sub_node.Tag.ToString(), new List<DockableFormInfo>());
-                        }
-
-                        Docks[sub_node.Tag.ToString()].Add(dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
+                    if (Docks.ContainsKey(file) == false)
+                    { 
+                        Docks.Add(file, new List<DockableFormInfo>());
                     }
-                    map.LoadImageFile(sub_node);
-                }
-                AddMapsInFolder(sub_node, ref map);
-            }
 
-            
+                    Docks[file].Add(dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
+                }
+                map.LoadImageFile(file);
+            }
+            foreach (string subfolder in System.IO.Directory.GetDirectories(path))
+            {
+                AddMapsInFolder(subfolder, ref map);
+            }
         }
         private void dockContainer1_DragDrop(object sender, DragEventArgs e)
         {
@@ -522,7 +486,7 @@ namespace LandisUserInterface
             if (System.IO.Directory.Exists(path))
             {
                 FrmMap map = null;
-                AddMapsInFolder((TreeNode)treeView1.SelectedNode, ref map);
+                AddMapsInFolder(path, ref map);
             }
             if (System.IO.File.Exists(path) == false) return;
             
@@ -540,8 +504,10 @@ namespace LandisUserInterface
                 }
 
                 Docks[path].Add(dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
+ 
                  
-                map.LoadImageFile((TreeNode)treeView1.SelectedNode);
+
+                map.LoadImageFile(path);
                 
             }
             if (System.IO.Path.GetExtension(path) == ".txt" || System.IO.Path.GetExtension(path) == ".csv")
@@ -618,7 +584,8 @@ namespace LandisUserInterface
         {
             if (treeView1.SelectedNode != null)
             {
-                ((FrmMap)sender).LoadImageFile((TreeNode)treeView1.SelectedNode);
+                string path = treeView1.SelectedNode.ToolTipText;
+                ((FrmMap)sender).LoadImageFile(path);
             }
         }
         private void dockContainer1_DragEnter(object sender, DragEventArgs e)
@@ -632,30 +599,6 @@ namespace LandisUserInterface
             {
                 treeView1.SelectedNode = e.Node;
             }
-        }
-
-        private void treeView1_DragEnter(object sender, DragEventArgs e)
-        {
-            //e.Effect = e.AllowedEffect;
-        }
-
-        private void treeView1_DragDrop(object sender, DragEventArgs e)
-        {
-            /*
-            Point loc = ((TreeView)sender).PointToClient(new Point(e.X, e.Y));
-            System.Windows.Forms.TreeNode node = (System.Windows.Forms.TreeNode)e.Data.GetData(typeof(System.Windows.Forms.TreeNode));
-            System.Windows.Forms.TreeNode destNode = ((TreeView)sender).GetNodeAt(loc);
-
-            if (node.Parent == null)
-                node.TreeView.Nodes.Remove(node);
-            else
-                node.Parent.Nodes.Remove(node);
-
-            if (destNode.Parent == null)
-                destNode.TreeView.Nodes.Insert(destNode.Index + 1, node);
-            else
-                destNode.Parent.Nodes.Insert(destNode.Index + 1, node);
-             */
         }
 
         
