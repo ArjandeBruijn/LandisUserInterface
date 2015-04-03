@@ -484,29 +484,33 @@ namespace LandisUserInterface
         }
 
          
-        void AddMapsInFolder(string path, ref FrmMap map)
+        void AddMapsInFolder(TreeNode node, ref FrmMap map)
         {
-            foreach (string file in System.IO.Directory.GetFiles(path).Where(o => System.IO.Path.GetExtension(o) == ".img" || System.IO.Path.GetExtension(o) == ".gis"))
+            string path = node.Tag.ToString();
+
+            foreach (TreeNode sub_node in node.Nodes)
             {
-                if (map == null)
+                if (System.IO.Path.GetExtension(sub_node.Tag.ToString()) == ".img" || System.IO.Path.GetExtension(sub_node.Tag.ToString()) == ".gis")
                 {
-                    map = new FrmMap(DragDropOnMap);
+                    if (map == null)
+                    {
+                        map = new FrmMap(DragDropOnMap);
 
-                    map.Location = this.dockContainer1.PointToClient(Cursor.Position);
+                        map.Location = this.dockContainer1.PointToClient(Cursor.Position);
 
-                    if (Docks.ContainsKey(file) == false)
-                    { 
-                        Docks.Add(file, new List<DockableFormInfo>());
+                        if (Docks.ContainsKey(sub_node.Tag.ToString()) == false)
+                        {
+                            Docks.Add(sub_node.Tag.ToString(), new List<DockableFormInfo>());
+                        }
+
+                        Docks[sub_node.Tag.ToString()].Add(dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
                     }
-
-                    Docks[file].Add(dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
+                    map.LoadImageFile(sub_node);
                 }
-                map.LoadImageFile(file);
+                AddMapsInFolder(sub_node, ref map);
             }
-            foreach (string subfolder in System.IO.Directory.GetDirectories(path))
-            {
-                AddMapsInFolder(subfolder, ref map);
-            }
+
+            
         }
         private void dockContainer1_DragDrop(object sender, DragEventArgs e)
         {
@@ -518,7 +522,7 @@ namespace LandisUserInterface
             if (System.IO.Directory.Exists(path))
             {
                 FrmMap map = null;
-                AddMapsInFolder(path, ref map);
+                AddMapsInFolder((TreeNode)treeView1.SelectedNode, ref map);
             }
             if (System.IO.File.Exists(path) == false) return;
             
@@ -536,10 +540,8 @@ namespace LandisUserInterface
                 }
 
                 Docks[path].Add(dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
- 
                  
-
-                map.LoadImageFile(path);
+                map.LoadImageFile((TreeNode)treeView1.SelectedNode);
                 
             }
             if (System.IO.Path.GetExtension(path) == ".txt" || System.IO.Path.GetExtension(path) == ".csv")
@@ -616,8 +618,7 @@ namespace LandisUserInterface
         {
             if (treeView1.SelectedNode != null)
             {
-                string path = treeView1.SelectedNode.ToolTipText;
-                ((FrmMap)sender).LoadImageFile(path);
+                ((FrmMap)sender).LoadImageFile((TreeNode)treeView1.SelectedNode);
             }
         }
         private void dockContainer1_DragEnter(object sender, DragEventArgs e)

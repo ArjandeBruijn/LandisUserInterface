@@ -17,6 +17,7 @@ namespace LandisUserInterface
         private int MapMax = int.MinValue;
         IColorScheme Colorscheme;
         BackgroundWorker backgroundworker;
+        private List<TreeNode> ImageFilesToLoad = new List<TreeNode>();
 
         static int get_Year(System.Windows.Forms.TreeNode node)
         {
@@ -59,14 +60,12 @@ namespace LandisUserInterface
             toolStripStatusLabel1.Text = s1;
 
         }
-        private List<string> ImageFilesToLoad = new List<string>();
+        
 
-        public void LoadImageFile(string FileName)
+        public void LoadImageFile(TreeNode node)
         {
-            
-            ImageFilesToLoad.Add(FileName);
 
-
+            ImageFilesToLoad.Add(node);
 
         }
         private static IColorScheme GetColorScheme(int Min, int Max)
@@ -227,7 +226,7 @@ namespace LandisUserInterface
         {
             while (ImageFilesToLoad.Count() > 0)
             {
-                string FileName = ImageFilesToLoad[0];
+                string FileName = ImageFilesToLoad[0].Tag.ToString();
                 ImageFilesToLoad.RemoveAt(0);
                 if (PathIsNetworkPath(FileName))
                 {

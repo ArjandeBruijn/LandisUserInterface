@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace LandisUserInterface
 {
-    class TreeNode : System.Windows.Forms.TreeNode
+    public class TreeNode : System.Windows.Forms.TreeNode
     {
          
         public delegate TreeNode[] GetSubNodes(TreeNode me);
