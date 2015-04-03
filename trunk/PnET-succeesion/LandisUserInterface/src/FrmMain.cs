@@ -29,9 +29,7 @@ namespace LandisUserInterface
         {
             InitializeComponent();
 
-            //Properties.Settings.Default.LastScenarioFileNames = "";
-            //Properties.Settings.Default.Save();
-
+             
             this.WindowState = FormWindowState.Maximized;
 
             this.treeView1.AllowDrop = true;
@@ -41,7 +39,7 @@ namespace LandisUserInterface
 
             backgroundworker = new BackgroundWorker();
 
-            timer.Interval = 5000;
+            timer.Interval = 1000;
             timer.Tick += RunWorker;
             timer.Start();
              
@@ -52,22 +50,22 @@ namespace LandisUserInterface
              
             backgroundworker.DoWork += backgroundworker_DoWork;
             backgroundworker.RunWorkerCompleted += backgroundworker_RunWorkerCompleted;
-            //backgroundworker.WorkerSupportsCancellation = true;
             backgroundworker.RunWorkerAsync();
         }
 
         public void CancelBackgroundWorker()
         {
-            timer.Stop();
+            _resetEvent.WaitOne(); // will block until _resetEvent.Set() call made
 
-            if (backgroundworker.IsBusy)
-            {
-                _resetEvent.WaitOne(); // will block until _resetEvent.Set() call made
-            }
+            UpdateScenarioNode = null;
+            
+            timer.Stop();   // Do not fire untill ResumeBackgroundWorker
 
+            
         }
         public void ResumeBackgroundWorker()
         {
+            backgroundworker.RunWorkerAsync();
             timer.Start();
         }
 
@@ -116,13 +114,14 @@ namespace LandisUserInterface
         }
         private void ClearScenarios_Click(object sender, EventArgs e)
         {
+             
             CancelBackgroundWorker();
 
             
             treeView1.Nodes["Scenario Files"].Nodes.Clear();
             Global.ClearScenarios();
-            
 
+             
             ResumeBackgroundWorker();
         }
         void backgroundworker_DoWork(object sender, DoWorkEventArgs e)
@@ -137,13 +136,15 @@ namespace LandisUserInterface
         }
         void backgroundworker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+             
             // Replace scenario with updated version
             if (UpdatedScenarioNode != null)
             {
+                 
                 NodesCompare(this.treeView1.Nodes["Scenario Files"].Nodes[UpdateScenarioNode.Name], UpdatedScenarioNode);
 
-                UpdatedScenarioNode = null;
             }
+            UpdatedScenarioNode = null;
 
             // Set scenario node for updating
             if (treeView1.Nodes["Scenario Files"].Nodes.Count > c)
@@ -153,10 +154,12 @@ namespace LandisUserInterface
             }
             else c = 0;
 
+            
             _resetEvent.Set(); // signal that worker is done
         }
         void NodesCompare(System.Windows.Forms.TreeNode old_node, System.Windows.Forms.TreeNode new_node)
         {
+            
             foreach (System.Windows.Forms.TreeNode new_sub_node in new_node.Nodes)
             {
                 if (old_node.Nodes.ContainsKey(new_sub_node.Name))
@@ -231,54 +234,55 @@ namespace LandisUserInterface
 
             List<string> Content = new List<string>(System.IO.File.ReadAllLines(path));
 
-            for (int line = Content.Count()-1; line > 0; line--)
-            {
-                if(Content[line].Contains(">>"))
+                for (int line = Content.Count() - 1; line > 0; line--)
                 {
-                    Content[line] = Content[line].Remove(Content[line].IndexOf(">>"));
-                }
-                if (Content[line].Trim().Length == 0)
-                {
-                    Content.RemoveAt(line);
-                    continue;
-                }
-            }
-            
-            for (int l =0; l< Content.Count(); l++)
-            {
-                string[] line = Content[l].Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-
-                foreach(string term in line)
-                {
-                    if (term.Contains('.')==false)continue;
-
-                    //if (term.IndexOf('.') != term.Length - 4) continue;
-
-                    if (term.Contains(".img") || term.Contains(".gis")) continue;
-
-                    try
+                    if (Content[line].Contains(">>"))
                     {
-                        string FileName = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), term);
-                        if (System.IO.File.Exists(FileName) == true)
-                        {
-                            FileNamesInFile.Add(FileName);
-                            FileNamesInFile.AddRange(GetFileNamesInFile(FileName));
-                        }
+                        Content[line] = Content[line].Remove(Content[line].IndexOf(">>"));
                     }
-                    catch
+                    if (Content[line].Trim().Length == 0)
                     {
+                        Content.RemoveAt(line);
                         continue;
                     }
-                    
                 }
-            }
+
+                for (int l = 0; l < Content.Count(); l++)
+                {
+                    string[] line = Content[l].Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (string term in line)
+                    {
+                        if (term.Contains('.') == false) continue;
+
+                        //if (term.IndexOf('.') != term.Length - 4) continue;
+
+                        if (term.Contains(".img") || term.Contains(".gis")) continue;
+
+                        try
+                        {
+                            string FileName = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), term);
+                            if (System.IO.File.Exists(FileName) == true)
+                            {
+                                FileNamesInFile.Add(FileName);
+                                FileNamesInFile.AddRange(GetFileNamesInFile(FileName));
+                            }
+                        }
+                        catch
+                        {
+                            continue;
+                        }
+
+                    }
+                }
+            
 
             return FileNamesInFile.ToArray();
         }
        
         
         
-        private bool IsScenarioFile(string path)
+        private static bool IsScenarioFile(string path)
         {
             // LandisData  Scenario
             if (path.Length > 0 && System.IO.File.Exists(path))
@@ -349,6 +353,8 @@ namespace LandisUserInterface
             {
                 AddScenario(of.FileName);
             }
+
+            ResumeBackgroundWorker();
         }
 
 
@@ -409,6 +415,7 @@ namespace LandisUserInterface
          
         void AddMapsInFolder(TreeNode folder_node, ref FrmMap map)
         {
+             
             foreach (TreeNode sub_node in folder_node.Nodes)
             {
                 string file = sub_node.Tag.ToString();
@@ -432,11 +439,11 @@ namespace LandisUserInterface
                 }
                 AddMapsInFolder(sub_node, ref map);
             }
-          
+             
         }
         private void dockContainer1_DragDrop(object sender, DragEventArgs e)
         {
-            
+             
             if (treeView1.SelectedNode == null) return;
 
             string path = treeView1.SelectedNode.ToolTipText;
@@ -527,6 +534,7 @@ namespace LandisUserInterface
                }
                
             }
+             
         }
         void FrmGraph_DragDrop(object sender, DragEventArgs e)
         {
