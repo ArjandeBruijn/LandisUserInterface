@@ -41,10 +41,10 @@ namespace LandisUserInterface
 
         
 
-        static int get_Year(TreeNode node)
+        static int get_Year(string FileName)
         {
             int year = -1;
-            if (int.TryParse(System.Text.RegularExpressions.Regex.Match(node.Tag.ToString(), @"\d+").Value, out year))
+            if (int.TryParse(System.Text.RegularExpressions.Regex.Match(FileName, @"\d+").Value, out year))
             {
                 return year;
             }
@@ -131,7 +131,7 @@ namespace LandisUserInterface
 
             foreach (string file in System.IO.Directory.GetFiles(path))
             {
-                TreeNode node = new TreeNode(file, System.IO.Path.GetFileName(file), 0 ,"File", null);
+                TreeNode node = new TreeNode(file, System.IO.Path.GetFileName(file),get_Year(System.IO.Path.GetFileName(file)) ,"File", null);
 
                 TreeNodes.Add(node);
             }
@@ -146,9 +146,14 @@ namespace LandisUserInterface
             if (System.IO.File.Exists(parent.FullPath) == false)
             {
                 parent.ForeColor = System.Drawing.Color.Red;
+                parent.ToolTipText += "No access to this path";
                 return TreeNodes.ToArray();
             }
-            else parent.ForeColor = System.Drawing.Color.Black;
+            else
+            {
+                parent.ToolTipText = parent.ToolTipText.Replace("No access to this path","");
+                parent.ForeColor = System.Drawing.Color.Black;
+            }
 
             if (this.backgroundWorker1.CancellationPending) return TreeNodes.ToArray();
             
