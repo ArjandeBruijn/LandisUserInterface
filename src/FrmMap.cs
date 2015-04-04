@@ -59,12 +59,12 @@ namespace LandisUserInterface
             toolStripStatusLabel1.Text = s1;
 
         }
-        private List<string> ImageFilesToLoad = new List<string>();
+        private List<TreeNode> ImageFilesToLoad = new List<TreeNode>();
 
-        public void LoadImageFile(string FileName)
+        public void LoadImageFile(TreeNode node)
         {
-            
-            ImageFilesToLoad.Add(FileName);
+
+            ImageFilesToLoad.Add(node);
 
 
 
@@ -136,9 +136,9 @@ namespace LandisUserInterface
             return flag;
         }
         
-        private void SetLayerSelection(string FileName)
+        private void SetLayerSelection(TreeNode node)
         {
-            int LayerHandle = int.Parse(((string[])treeViewLayers.Nodes[FileName].Tag)[1]);
+            int LayerHandle = node.Layerhandle;
             
             axMap1.set_LayerVisible(LayerHandle, true);
 
@@ -154,7 +154,7 @@ namespace LandisUserInterface
             }
             foreach (System.Windows.Forms.TreeNode _node in treeViewLayers.Nodes)
             {
-                if (_node.Name == FileName) _node.Checked = true;
+                if (_node.Name == node.Name) _node.Checked = true;
                 else _node.Checked = false;
             }
         
@@ -162,9 +162,9 @@ namespace LandisUserInterface
        
         private void PlayAnimation(object sender, EventArgs e)
         {
-            foreach (System.Windows.Forms.TreeNode tree_node in this.treeViewLayers.Nodes)
+            foreach (TreeNode tree_node in this.treeViewLayers.Nodes)
             {
-                SetLayerSelection(tree_node.ToolTipText);
+                SetLayerSelection((TreeNode)tree_node);
                 
 
                 axMap1.Invalidate();
@@ -216,7 +216,7 @@ namespace LandisUserInterface
         {
             if (e.Action != TreeViewAction.Unknown)
             {
-                SetLayerSelection(e.Node.Name);
+                SetLayerSelection((TreeNode)e.Node);
             }
         }
         private static bool PathIsNetworkPath(string path)
@@ -227,11 +227,11 @@ namespace LandisUserInterface
         {
             while (ImageFilesToLoad.Count() > 0)
             {
-                string FileName = ImageFilesToLoad[0];
+                TreeNode node = ImageFilesToLoad[0];
                 ImageFilesToLoad.RemoveAt(0);
-                if (PathIsNetworkPath(FileName))
+                if (PathIsNetworkPath(node.FullPath))
                 {
-                    string NewFileName = System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetFileName(FileName));
+                    string NewFileName = System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetFileName(node.FullPath));
                     
                     while (System.IO.File.Exists(NewFileName))
                     {
@@ -249,11 +249,11 @@ namespace LandisUserInterface
                             }
                         }
                     }
-                    System.IO.File.Copy(FileName, NewFileName);
-                    FileName = NewFileName;
+                    System.IO.File.Copy(node.FullPath, NewFileName);
+                    node.FullPath = NewFileName;
                 }
-                
-                if (treeViewLayers.Nodes.ContainsKey(FileName) == true)
+
+                if (treeViewLayers.Nodes.ContainsKey(node.FullPath) == true)
                 {
                     continue;
                 }
@@ -264,8 +264,8 @@ namespace LandisUserInterface
 
                 statusStrip1.Refresh();
 
-                 
-                grid.Open(FileName, MapWinGIS.GridDataType.LongDataType, true, MapWinGIS.GridFileType.UseExtension, this);
+
+                grid.Open(node.FullPath, MapWinGIS.GridDataType.LongDataType, true, MapWinGIS.GridFileType.UseExtension, this);
 
 
                 MapMin = Math.Min(0, Math.Min(MapMin, int.Parse(grid.Minimum.ToString())));
@@ -277,7 +277,7 @@ namespace LandisUserInterface
 
                 GridColorscheme = GetGridScheme(MapMin - 1, MapMax - 1, BinWidth, Colorscheme);
 
-                toolStripStatusLabel1.Text = "Creating image " + System.IO.Path.GetFileName(FileName);
+                toolStripStatusLabel1.Text = "Creating image " + System.IO.Path.GetFileName(node.FullPath);
                 statusStrip1.Refresh();
 
                 MapWinGIS.Image map_image = new MapWinGIS.UtilsClass().GridToImage(grid, GridColorscheme, this);
@@ -289,33 +289,21 @@ namespace LandisUserInterface
                  
                 grid.Close();
 
-                int LayerHandle = axMap1.AddLayer(map_image, true);
+                
+                node.Layerhandle= axMap1.AddLayer(map_image, true);
 
-                System.Windows.Forms.TreeNode node = new System.Windows.Forms.TreeNode(System.IO.Path.GetFileName(FileName));
-                node.Name = FileName;
-                node.ToolTipText = FileName;
-                node.Tag = new string[] { new OutputFileMap(System.IO.Path.GetFileName(FileName)).Year.ToString(), LayerHandle.ToString() };
-
-                treeViewLayers.Nodes.Add(node);
-
-                /*
-                for (int index = 0; index < treeViewLayers.Nodes.Count; index++)
+                try
                 {
-                    if (int.Parse(((string[])treeViewLayers.Nodes[index].Tag)[0].ToString()) > int.Parse(((string[])node.Tag)[0].ToString()))
-                    {
-                        treeViewLayers.Nodes.Insert(index, node);
-                        break;
-                    }
-
+                    treeViewLayers.Nodes.Add(node.Clone());
                 }
-                if (treeViewLayers.Nodes.ContainsKey(node.Name) == false)
+                catch (System.Exception em)
                 {
-                    
+                    double t = 0.0;
                 }
-                 */
-                axMap1.set_LayerName(LayerHandle, node.Name);
+                 
+                axMap1.set_LayerName(node.Layerhandle , node.Name);
 
-                axMap1.SetImageLayerColorScheme(LayerHandle, GridColorscheme);
+                axMap1.SetImageLayerColorScheme(node.Layerhandle, GridColorscheme);
 
                 axMap1.ZoomToMaxExtents();
 
@@ -351,7 +339,7 @@ namespace LandisUserInterface
                     this.TreeViewLegend.Nodes.Add(legend_node);
 
                 }
-                SetLayerSelection(FileName);
+                SetLayerSelection(node);
 
                 
 

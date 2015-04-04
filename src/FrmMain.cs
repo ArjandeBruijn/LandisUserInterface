@@ -82,15 +82,25 @@ namespace LandisUserInterface
             foreach (TreeNode tn in treeView1.Nodes) tn.Expand();
           
         }
-        private void RemoveScenario(string FileName)
+        private void RemoveScenario(TreeNode node)
         {
-            Global.RemoveScenario(FileName);
-            this.treeView1.Nodes.RemoveByKey(FileName);
+            Global.RemoveScenario(node.FullPath);
+            this.treeView1.Nodes["Scenario Files"].Nodes.Remove(node);
+
+            if (UpdatedScenarioNode != null)
+            {
+                if (node.FullPath == UpdatedScenarioNode.FullPath)
+                {
+                    UpdatedScenarioNode = null;
+                }
+            }
         }
        
       
         void NodesCompare(System.Windows.Forms.TreeNode old_node, System.Windows.Forms.TreeNode new_node)
         {
+            if (old_node.ForeColor != new_node.ForeColor) old_node.ForeColor = new_node.ForeColor;
+
             foreach (System.Windows.Forms.TreeNode new_sub_node in new_node.Nodes)
             {
                 if (old_node.Nodes.ContainsKey(new_sub_node.Name))
@@ -133,6 +143,13 @@ namespace LandisUserInterface
             /// Populate a treenode that is associated with a scenario file name with its subnodes
             List<TreeNode> TreeNodes = new List<TreeNode>();
 
+            if (System.IO.File.Exists(parent.FullPath) == false)
+            {
+                parent.ForeColor = System.Drawing.Color.Red;
+                return TreeNodes.ToArray();
+            }
+            else parent.ForeColor = System.Drawing.Color.Black;
+
             if (this.backgroundWorker1.CancellationPending) return TreeNodes.ToArray();
             
             string Directory = System.IO.Path.GetDirectoryName(parent.FullPath);
@@ -152,20 +169,20 @@ namespace LandisUserInterface
                 TreeNodes.Add(new TreeNode(LogFile, System.IO.Path.GetFileName(LogFile), 0, "File", null));
             }
 
-            foreach (string File in GetFileNamesInFile(parent.FullPath).Distinct())
-            {
-                TreeNodes.Add(new TreeNode(File, System.IO.Path.GetFileName(File),0 , "File", null));
-            }
+           
+            TreeNodes.AddRange(GetSubNodesFromTextFile(parent));
+            
 
 
             return TreeNodes.ToArray();
         }
        
-        string[] GetFileNamesInFile(string path)
+        TreeNode[] GetSubNodesFromTextFile(TreeNode parent)
         {
-            List<string> FileNamesInFile = new List<string>();
+           
+            List<TreeNode> FileNamesInFile = new List<TreeNode>();
 
-            List<string> Content = new List<string>(System.IO.File.ReadAllLines(path));
+            List<string> Content = new List<string>(System.IO.File.ReadAllLines(parent.FullPath));
 
             for (int line = Content.Count()-1; line > 0; line--)
             {
@@ -194,11 +211,12 @@ namespace LandisUserInterface
 
                     try
                     {
-                        string FileName = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), term);
+                        string FileName = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(parent.FullPath), term);
                         if (System.IO.File.Exists(FileName) == true)
                         {
-                            FileNamesInFile.Add(FileName);
-                            FileNamesInFile.AddRange(GetFileNamesInFile(FileName));
+                            TreeNode node = new TreeNode(FileName, System.IO.Path.GetFileName(FileName), 0, "File", null);
+                            FileNamesInFile.Add(node);
+                            FileNamesInFile.AddRange(GetSubNodesFromTextFile(node));
                         }
                     }
                     catch
@@ -337,15 +355,13 @@ namespace LandisUserInterface
 
         private void Remove_Click(object sender, EventArgs e)
         {
-            RemoveScenario(treeView1.SelectedNode.ToolTipText);
+            TreeNode Selection = ((TreeNode)treeView1.SelectedNode).Clone();
 
+            RemoveScenario((TreeNode)treeView1.SelectedNode);
 
-            if (treeView1.SelectedNode == UpdatedScenarioNode)
-            {
-                UpdatedScenarioNode = null;
-            }
+            this.treeView1.Nodes.Remove(Selection);
 
-            this.treeView1.Nodes.Remove(treeView1.SelectedNode);
+            
         }
 
         private void ShowFileLocation_Click(object sender, EventArgs e)
@@ -386,10 +402,12 @@ namespace LandisUserInterface
         }
 
          
-        void AddMapsInFolder(string path, ref FrmMap map)
+        void AddMapsInFolder(TreeNode node, ref FrmMap map)
         {
-            foreach (string file in System.IO.Directory.GetFiles(path).Where(o => System.IO.Path.GetExtension(o) == ".img" || System.IO.Path.GetExtension(o) == ".gis"))
+            // node is a folder node. Get the files with img or gis extensions
+            foreach (string file in System.IO.Directory.GetFiles(node.FullPath).Where(o => System.IO.Path.GetExtension(o) == ".img" || System.IO.Path.GetExtension(o) == ".gis"))
             {
+                // If the first time, create the map
                 if (map == null)
                 {
                     map = new FrmMap(DragDropOnMap);
@@ -402,12 +420,18 @@ namespace LandisUserInterface
                     }
 
                     Docks[file].Add(dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
-                }
-                map.LoadImageFile(file);
+                }//---------------------------
+
+                TreeNode sub_node = new TreeNode(file, System.IO.Path.GetFileName(file), 0, "File", null);
+                map.LoadImageFile(sub_node);
+                node.Nodes.Add(sub_node);
             }
-            foreach (string subfolder in System.IO.Directory.GetDirectories(path))
+            // Get the subfolders
+            foreach (string subfolder in System.IO.Directory.GetDirectories(node.FullPath))
             {
-                AddMapsInFolder(subfolder, ref map);
+                TreeNode sub_node = new TreeNode(subfolder, System.IO.Path.GetFileName(subfolder), 0, "Folder", null);
+
+                AddMapsInFolder(sub_node, ref map);
             }
         }
         private void dockContainer1_DragDrop(object sender, DragEventArgs e)
@@ -415,36 +439,34 @@ namespace LandisUserInterface
             
             if (treeView1.SelectedNode == null) return;
 
-            string path = treeView1.SelectedNode.ToolTipText;
+            TreeNode source_node = (TreeNode)treeView1.SelectedNode;
 
-            if (System.IO.Directory.Exists(path))
+            // If it is a directory path
+            if (System.IO.Directory.Exists(source_node.FullPath))
             {
+                // Get its content and try to display it
                 FrmMap map = null;
-                AddMapsInFolder(path, ref map);
+                AddMapsInFolder(source_node, ref map);
             }
-            if (System.IO.File.Exists(path) == false) return;
-            
-            if (System.IO.Path.GetExtension(path) == ".img" || System.IO.Path.GetExtension(path) == ".gis")
+            if (System.IO.File.Exists(source_node.FullPath) == false) return;
+
+            if (System.IO.Path.GetExtension(source_node.FullPath) == ".img" || System.IO.Path.GetExtension(source_node.FullPath) == ".gis")
             {
                 FrmMap map = new FrmMap(DragDropOnMap);
                 
                 map.Location = this.dockContainer1.PointToClient(Cursor.Position);
 
-                 
-
-                if (Docks.ContainsKey(path) == false)
-                { 
-                    Docks.Add(path, new List<DockableFormInfo>());
+                if (Docks.ContainsKey(source_node.FullPath) == false)
+                {
+                    Docks.Add(source_node.FullPath, new List<DockableFormInfo>());
                 }
 
-                Docks[path].Add(dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
- 
-                 
+                Docks[source_node.FullPath].Add(dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
 
-                map.LoadImageFile(path);
+                map.LoadImageFile(source_node);
                 
             }
-            if (System.IO.Path.GetExtension(path) == ".txt" || System.IO.Path.GetExtension(path) == ".csv")
+            if (System.IO.Path.GetExtension(source_node.FullPath) == ".txt" || System.IO.Path.GetExtension(source_node.FullPath) == ".csv")
             {
                 
 
@@ -456,31 +478,31 @@ namespace LandisUserInterface
 
                if (fsp.Selection == FrmSelectProgram.Options.NotePad)
                {
-                   FrmTXTDisplay txt = new FrmTXTDisplay(path);
+                   FrmTXTDisplay txt = new FrmTXTDisplay(source_node.FullPath);
 
                    txt.Location = this.dockContainer1.PointToClient(Cursor.Position);
 
-                   if (Docks.ContainsKey(path) == false)
-                   { 
-                       Docks.Add(path, new List<DockableFormInfo>());
+                   if (Docks.ContainsKey(source_node.FullPath) == false)
+                   {
+                       Docks.Add(source_node.FullPath, new List<DockableFormInfo>());
                    }
 
-                   Docks[path].Add(dockContainer1.Add(txt, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
+                   Docks[source_node.FullPath].Add(dockContainer1.Add(txt, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
 
                    
                }
                if (fsp.Selection == FrmSelectProgram.Options.Excel)
                {
-                   FrmGrid grid = new FrmGrid(path);
+                   FrmGrid grid = new FrmGrid(source_node.FullPath);
 
                    grid.Location = this.dockContainer1.PointToClient(Cursor.Position);
 
-                   if (Docks.ContainsKey(path) == false)
-                   { 
-                       Docks.Add(path, new List<DockableFormInfo>());
+                   if (Docks.ContainsKey(source_node.FullPath) == false)
+                   {
+                       Docks.Add(source_node.FullPath, new List<DockableFormInfo>());
                    }
 
-                   Docks[path].Add(dockContainer1.Add(grid, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
+                   Docks[source_node.FullPath].Add(dockContainer1.Add(grid, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
 
                    
                }
@@ -490,16 +512,16 @@ namespace LandisUserInterface
 
                    graph.DragDrop += new System.Windows.Forms.DragEventHandler(FrmGraph_DragDrop);
 
-                   graph.LoadFile(path);
+                   graph.LoadFile(source_node.FullPath);
 
                    graph.Location = this.dockContainer1.PointToClient(Cursor.Position);
 
-                   if (Docks.ContainsKey(path) == false)
-                   { 
-                       Docks.Add(path, new List<DockableFormInfo>());
+                   if (Docks.ContainsKey(source_node.FullPath) == false)
+                   {
+                       Docks.Add(source_node.FullPath, new List<DockableFormInfo>());
                    }
 
-                   Docks[path].Add(dockContainer1.Add(graph, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
+                   Docks[source_node.FullPath].Add(dockContainer1.Add(graph, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
                    
                     
                }
@@ -518,8 +540,7 @@ namespace LandisUserInterface
         {
             if (treeView1.SelectedNode != null)
             {
-                string path = treeView1.SelectedNode.ToolTipText;
-                ((FrmMap)sender).LoadImageFile(path);
+                ((FrmMap)sender).LoadImageFile((TreeNode)treeView1.SelectedNode);
             }
         }
         private void dockContainer1_DragEnter(object sender, DragEventArgs e)
@@ -573,7 +594,7 @@ namespace LandisUserInterface
 
             this.toolStripStatusLabel1.Text = "Background worker completing work";
 
-            if (UpdatedScenarioNode != null)
+            if (UpdatedScenarioNode != null && this.treeView1.Nodes["Scenario Files"].Nodes.ContainsKey(UpdatedScenarioNode.Name))
             {
                 NodesCompare(this.treeView1.Nodes["Scenario Files"].Nodes[UpdatedScenarioNode.Name], UpdatedScenarioNode);
 
