@@ -14,19 +14,12 @@ namespace LandisUserInterface
         MapWinGIS.GridColorScheme GridColorscheme;
 
         private int MapMin = int.MaxValue;
-        private int MapMax = int.MinValue;
-        IColorScheme Colorscheme;
-        BackgroundWorker backgroundworker;
 
-        static int get_Year(System.Windows.Forms.TreeNode node)
-        {
-            int year = -1;
-            if (int.TryParse(System.Text.RegularExpressions.Regex.Match(((string[])node.Tag)[0].ToString(), @"\d+").Value, out year))
-            {
-                return year;
-            }
-            return year;
-        }
+        private int MapMax = int.MinValue;
+
+        IColorScheme Colorscheme;
+
+        BackgroundWorker backgroundworker;
 
         public FrmMap(DragEventHandler DragDrop)
         {
@@ -45,6 +38,7 @@ namespace LandisUserInterface
             this.treeViewLayers.TreeViewNodeSorter = new NodeSorter();
              
         }
+
         void SleepWorker(object sender, DoWorkEventArgs e)
         {
             System.Threading.Thread.Sleep(1000);
@@ -54,21 +48,26 @@ namespace LandisUserInterface
         {
             toolStripProgressBar1.Value = p;
         }
+
         public void Error(string s1, string s2)
         {
             toolStripStatusLabel1.Text = s1;
 
         }
+
         private List<TreeNode> ImageFilesToLoad = new List<TreeNode>();
 
         public void LoadImageFile(TreeNode node)
         {
-
-            ImageFilesToLoad.Add(node);
+            if (System.IO.Path.GetExtension(node.FullPath) == ".img" || System.IO.Path.GetExtension(node.FullPath) == ".gis")
+            {
+                ImageFilesToLoad.Add(node);
+            }
 
 
 
         }
+
         private static IColorScheme GetColorScheme(int Min, int Max)
         {
             int BinWidth = Max - Min;
@@ -86,12 +85,14 @@ namespace LandisUserInterface
                 return new ColorSchemeClassified(new byte[] { 0, 255 }, new byte[] { 0, 255 }, new byte[] { 255, 255 }, 10);
             }
         }
+
         private int GetBinWidth(int MapMin, int MapMax, byte colorcount)
         {
             int Range = MapMax - MapMin;
             if (Range > Colorscheme.ColorCount) return (int)(Range / colorcount);
             else return 1;
         }
+
         private MapWinGIS.GridColorScheme GetGridScheme(int MapMin, int MapMax, int BinWidth, IColorScheme color_scheme)
         {
             MapWinGIS.GridColorScheme gridScheme = new MapWinGIS.GridColorScheme();
@@ -205,8 +206,6 @@ namespace LandisUserInterface
             }
         }
 
-        
-
         private void FrmMap_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = e.AllowedEffect;
@@ -219,10 +218,12 @@ namespace LandisUserInterface
                 SetLayerSelection((TreeNode)e.Node);
             }
         }
+
         private static bool PathIsNetworkPath(string path)
         {
             return new System.IO.DriveInfo(path).DriveType == System.IO.DriveType.Network;
         }
+
         private void LoadGridFiles(object sender, RunWorkerCompletedEventArgs e)
         {
             while (ImageFilesToLoad.Count() > 0)
@@ -351,11 +352,11 @@ namespace LandisUserInterface
             backgroundworker.RunWorkerAsync();
         }
 
-         
         private void TreeViewLegend_AfterSelect(object sender, TreeViewEventArgs e)
         {
 
         }
+
         string[] LegendLabels
         {
             get
@@ -368,6 +369,7 @@ namespace LandisUserInterface
                 return Labels.ToArray();
             }
         }
+
         void UpdateLabels(string[] NewLabels)
         {
             for (int label = 0; label < this.TreeViewLegend.Nodes.Count; label++)
@@ -375,6 +377,7 @@ namespace LandisUserInterface
                 TreeViewLegend.Nodes[label].Text = NewLabels[label];
             }
         }
+
         private void TreeViewLegend_MouseDoubleClick(object sender, MouseEventArgs e)
         {
 
@@ -384,5 +387,30 @@ namespace LandisUserInterface
 
             UpdateLabels(f.NewLabels);
         }
+
+        void RemoveLayer(object sender, EventArgs e)
+        {
+            axMap1.RemoveLayer(((TreeNode)this.treeViewLayers.SelectedNode).Layerhandle);
+
+            this.treeViewLayers.Nodes.Remove(this.treeViewLayers.SelectedNode);
+        }
+
+        private void treeViewLayers_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                new ContextMenuStrip(new ToolStripItem[] { new ToolStripMenuItem(RemoveLayer, "Remove layer") }).Show(this.treeViewLayers, e.Location);
+            }
+        }
+
+        private void treeViewLayers_MouseHover(object sender, TreeNodeMouseHoverEventArgs e)
+        {
+            if (e.Node != null)
+            {
+               treeViewLayers.SelectedNode = e.Node;
+            }
+            
+        }
+          
     }
 }

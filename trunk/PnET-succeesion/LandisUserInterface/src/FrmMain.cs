@@ -12,14 +12,12 @@ namespace LandisUserInterface
 {
     public partial class FrmMain : Form
     {
-         
-        //TreeNode UpdatedScenarioNode = null;
-        //System.Windows.Forms.TreeNode UpdateScenarioNode = null;
-        
-
         Dictionary<string, List<DockableFormInfo>> Docks = new Dictionary<string, List<DockableFormInfo>>();
-         
-        
+
+        TreeNode UpdatedScenarioNode = null;
+
+        static int c = 0;
+
         public FrmMain()
         {
             InitializeComponent();
@@ -39,8 +37,6 @@ namespace LandisUserInterface
             backgroundWorker1.RunWorkerAsync();
         }
 
-        
-
         static int get_Year(string FileName)
         {
             int year = -1;
@@ -55,6 +51,7 @@ namespace LandisUserInterface
         {
             toolStripStatusLabel1.Text = e.UserState.ToString();
         }
+
         private void FrmMain_Load(object sender, EventArgs e)
         {
             foreach (string FileName in Global.ScenarioFileNames)
@@ -67,6 +64,7 @@ namespace LandisUserInterface
             //    toolStripStatusLabel1.Text = "Loading " + UpdateScenarioNode.Name;
             //}
         }
+
         private void AddScenario(string FileName)
         {
             if (IsScenarioFile(FileName) == false) return;
@@ -84,6 +82,7 @@ namespace LandisUserInterface
             foreach (TreeNode tn in treeView1.Nodes) tn.Expand();
           
         }
+
         private void RemoveScenario(TreeNode node)
         {
             Global.RemoveScenario(node.FullPath);
@@ -97,7 +96,6 @@ namespace LandisUserInterface
                 }
             }
         }
-       
       
         void NodesCompare(System.Windows.Forms.TreeNode old_node, System.Windows.Forms.TreeNode new_node)
         {
@@ -140,6 +138,7 @@ namespace LandisUserInterface
 
             return TreeNodes.ToArray();
         }
+
         TreeNode[] GetScenarioSubNodes(TreeNode parent)
         {
             /// Populate a treenode that is associated with a scenario file name with its subnodes
@@ -236,7 +235,6 @@ namespace LandisUserInterface
 
             return FileNamesInFile.ToArray();
         }
-       
          
         private bool IsScenarioFile(string path)
         {
@@ -253,14 +251,7 @@ namespace LandisUserInterface
             }
             return false;
         }
-        System.Windows.Forms.ContextMenuStrip GetContextMenuStrip(System.Windows.Forms.ToolStripItem[] ToolStripItems)
-        {
-                System.Windows.Forms.ContextMenuStrip c = new System.Windows.Forms.ContextMenuStrip();
-                c.Items.AddRange(ToolStripItems);
-                c.Size = new System.Drawing.Size(166, 48);
-                return c;
-             
-        }
+
         private void treeView1_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -269,31 +260,23 @@ namespace LandisUserInterface
 
                 if (treeView1.SelectedNode == treeView1.Nodes["Scenario Files"])
                 {
-                    GetContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.AddScnFl_Click), "Add Scenario"), GetToolStripMenuItem(new EventHandler(this.ClearScenarioFiles_Click), "Clear Scenarios") }).Show(this.treeView1, e.Location);
+                    new ContextMenuStrip(new ToolStripItem[] { new ToolStripMenuItem(new EventHandler(this.AddScnFl_Click), "Add Scenario"), new ToolStripMenuItem(new EventHandler(this.ClearScenarioFiles_Click), "Clear Scenarios") }).Show(this.treeView1, e.Location);
                 }
                 else if (IsScenarioFile(((TreeNode)treeView1.SelectedNode).FullPath)) 
                 {
-                    GetContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.Remove_Click), "Remove Scenario"), GetToolStripMenuItem(new EventHandler(this.ShowFileLocation_Click), "Show File Location"), GetToolStripMenuItem(new EventHandler(this.RunSimulation_Click), "Run Simulation") }).Show(this.treeView1, e.Location);
+                    new ContextMenuStrip(new ToolStripItem[] { new ToolStripMenuItem(new EventHandler(this.Remove_Click), "Remove Scenario"), new ToolStripMenuItem(new EventHandler(this.ShowFileLocation_Click), "Show File Location"), new ToolStripMenuItem(new EventHandler(this.RunSimulation_Click), "Run Simulation") }).Show(this.treeView1, e.Location);
                 }
                 else if (System.IO.File.Exists(((TreeNode)treeView1.SelectedNode).FullPath))
                 {
-                    GetContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.ShowFileLocation_Click), "Show File Location") }).Show(this.treeView1, e.Location);
+                    new ContextMenuStrip(new ToolStripItem[] { new ToolStripMenuItem(new EventHandler(this.ShowFileLocation_Click), "Show File Location") }).Show(this.treeView1, e.Location);
                 }
                 else if (System.IO.Directory.Exists(((TreeNode)treeView1.SelectedNode).FullPath))
                 {
-                    GetContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.ShowFolderLocation_Click), "Show Folder Location") }).Show(this.treeView1, e.Location);                    
+                    new ContextMenuStrip(new ToolStripItem[] { new ToolStripMenuItem(new EventHandler(this.ShowFolderLocation_Click), "Show Folder Location") }).Show(this.treeView1, e.Location);                    
                 }
             }
         }
         
-        System.Windows.Forms.ToolStripMenuItem GetToolStripMenuItem(EventHandler eventhandler, string Text)
-        {
-            System.Windows.Forms.ToolStripMenuItem t = new System.Windows.Forms.ToolStripMenuItem();
-            t.Size = new System.Drawing.Size(205, 22);
-            t.Text = Text;
-            t.Click += new System.EventHandler(eventhandler);
-            return t;
-        }
         
         private void AddScnFl_Click(object sender, EventArgs e)
         {
@@ -353,6 +336,7 @@ namespace LandisUserInterface
             }
 
         }
+
         private void RunSimulation_Click(object sender, EventArgs e)
         {
             string path = treeView1.SelectedNode.ToolTipText;
@@ -395,7 +379,6 @@ namespace LandisUserInterface
                 System.Diagnostics.Process.Start(System.IO.Path.GetDirectoryName(path));
             }
         }
-
         
         private void treeView1_ItemDrag(object sender, ItemDragEventArgs e)
         {
@@ -407,7 +390,6 @@ namespace LandisUserInterface
 
             
         }
-
          
         void AddMapsInFolder(TreeNode node, ref FrmMap map)
         {
@@ -441,6 +423,7 @@ namespace LandisUserInterface
                 AddMapsInFolder(sub_node, ref map);
             }
         }
+
         private void dockContainer1_DragDrop(object sender, DragEventArgs e)
         {
             
@@ -535,6 +518,7 @@ namespace LandisUserInterface
                
             }
         }
+
         void FrmGraph_DragDrop(object sender, DragEventArgs e)
         {
             if (treeView1.SelectedNode != null)
@@ -543,6 +527,7 @@ namespace LandisUserInterface
                 ((FrmGraph)sender).LoadFile(path);
             }
         }
+
         void DragDropOnMap(object sender, DragEventArgs e)
         {
             if (treeView1.SelectedNode != null)
@@ -550,6 +535,7 @@ namespace LandisUserInterface
                 ((FrmMap)sender).LoadImageFile((TreeNode)treeView1.SelectedNode);
             }
         }
+
         private void dockContainer1_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = e.AllowedEffect;
@@ -562,10 +548,6 @@ namespace LandisUserInterface
                 treeView1.SelectedNode = e.Node;
             }
         }
-         
-        TreeNode UpdatedScenarioNode = null;
-
-        static int c = 0;
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -599,7 +581,7 @@ namespace LandisUserInterface
         {
             if (e.Cancelled) return;
 
-            this.toolStripStatusLabel1.Text = "Background worker completing work";
+            //this.toolStripStatusLabel1.Text = "Background worker completing work";
 
             if (UpdatedScenarioNode != null && this.treeView1.Nodes["Scenario Files"].Nodes.ContainsKey(UpdatedScenarioNode.Name))
             {

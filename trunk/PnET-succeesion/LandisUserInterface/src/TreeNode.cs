@@ -19,6 +19,7 @@ namespace LandisUserInterface
         new public TreeNode Clone()
         {
             TreeNode node = new TreeNode(FullPath, Text, RankNumber, ImageKey, get_sub_nodes);
+            node.Layerhandle = Layerhandle;
             return node;
         }
 
