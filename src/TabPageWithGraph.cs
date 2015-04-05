@@ -85,16 +85,12 @@ namespace LandisUserInterface
         }
         public void UpdateLegend(string[] Labels)
         {
-            foreach (CurveItem curve in Graph1.GraphPane.CurveList)
+           
+            for (int label = 0; label < Labels.Length; label++)
             {
-                for (int label = 0; label < Labels.Length; label++)
-                {
-                    curve.Label.Text = Labels[label];
-                    this.Graph1.Refresh();
-                }
+                Graph1.GraphPane.CurveList[label].Label.Text = Labels[label];
+                this.Graph1.Refresh();
             }
-
-            
         }
         public void AddCurve(ZedGraph.LineItem curve)
         {

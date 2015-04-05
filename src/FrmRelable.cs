@@ -49,7 +49,7 @@ namespace LandisUserInterface
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
-            string[] content = this.richTextBox1.Text.Split(new char[] { ' ', '\t', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] content = this.richTextBox1.Text.Split(new char[] {'\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             for (int term = 0; term < content.Length; term++)
             {
