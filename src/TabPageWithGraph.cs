@@ -268,14 +268,7 @@ namespace LandisUserInterface
             */
              
         }
-        System.Windows.Forms.ToolStripMenuItem GetToolStripMenuItem(EventHandler eventhandler, string Text)
-        {
-            System.Windows.Forms.ToolStripMenuItem t = new System.Windows.Forms.ToolStripMenuItem();
-            t.Size = new System.Drawing.Size(205, 22);
-            t.Text = Text;
-            t.Click += new System.EventHandler(eventhandler);
-            return t;
-        }
+        
         void OnExportAsCsvFileClick(object sender, EventArgs e)
         {
             SaveFileDialog s = new SaveFileDialog();
@@ -341,21 +334,10 @@ namespace LandisUserInterface
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
-                ContextMenuStrip s = new System.Windows.Forms.ContextMenuStrip();
-
-                ToolStripMenuItem t = GetToolStripMenuItem(OnExportAsCsvFileClick, "Export as text file");
-
-                s.Items.Add(t);
-
-                s.Show(this.Graph1, e.Location);
+                new ContextMenuStrip(new ToolStripItem[]{new ToolStripMenuItem(OnExportAsCsvFileClick, "Export as text file")} ).Show(this.Graph1, e.Location);
             }
-           
         }
 
-         
-
-       
-      
     }
      
 }

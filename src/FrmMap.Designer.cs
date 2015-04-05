@@ -143,6 +143,8 @@
             this.treeViewLayers.Size = new System.Drawing.Size(166, 380);
             this.treeViewLayers.TabIndex = 38;
             this.treeViewLayers.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewLayers_AfterCheck);
+            this.treeViewLayers.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeViewLayers_MouseDown);
+            this.treeViewLayers.NodeMouseHover += new System.Windows.Forms.TreeNodeMouseHoverEventHandler(this.treeViewLayers_MouseHover);
             // 
             // TreeViewLegend
             // 
