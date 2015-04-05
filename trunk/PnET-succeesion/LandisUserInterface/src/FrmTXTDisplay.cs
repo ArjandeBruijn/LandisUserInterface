@@ -15,25 +15,22 @@ namespace LandisUserInterface
         List<string> TextToAppend = new List<string>();
 
         string FileName;
-         
-        string LastTextBoxTextOnFile = null;
+        
         private DateTime FileCreationTime;
 
-        
+        bool ClearRichtTextBox = true;
+
+        bool TextChanged = false;
 
         public FrmTXTDisplay(string FileName)
         {
             InitializeComponent();
             this.FileName = this.Text = FileName;
-            timer1.Interval = 500;
-            timer1.Start();
-
             
             try
             {
                 string[] Content = System.IO.File.ReadAllLines(FileName);
                 TextToAppend.AddRange(Content);
-
                 FileCreationTime = System.IO.File.GetLastWriteTime(FileName);
             }
             catch(System.Exception e)
@@ -41,20 +38,24 @@ namespace LandisUserInterface
                 TextToAppend.AddRange(new string[]{e.Message}); 
             }
 
-            
+            backgroundWorker1.RunWorkerAsync();
         }
-        
-        private void timer1_Tick(object sender, EventArgs e)
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            
-            if (this.backgroundWorker1.IsBusy == false)
+            System.Threading.Thread.Sleep(500);
+
+            if (IsEditedInExternalEditor)
             {
-                backgroundWorker1.RunWorkerAsync();
+                ClearRichtTextBox = true;
+                TextToAppend.AddRange(System.IO.File.ReadAllLines(FileName));
             }
         }
-        
+       
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (ClearRichtTextBox) this.richTextBox1.Text = "";
+            ClearRichtTextBox = false;
+
             int count = 0;
             float InitialLength = (float)TextToAppend.Count();
             while (TextToAppend.Count() > 0)
@@ -67,29 +68,17 @@ namespace LandisUserInterface
                 count++;
                 TextToAppend.RemoveAt(0);
 
-                // Distinguish used changes
-                LastTextBoxTextOnFile = richTextBox1.Text;
+                
             }
-
-            try
-            {
-                System.IO.File.OpenRead(FileName);
-            }
-            catch
-            {
-                return;
-            }
-            if (System.IO.File.Exists(FileName) == false)
-            {
-                return;
-            }
+            FileCreationTime = System.IO.File.GetLastWriteTime(FileName);
 
             this.toolStripProgressBar1.Value = 0;
 
 
             // If text changed in the text editor
-            if (richTextBox1.Text != LastTextBoxTextOnFile)
+            if (TextChanged)
             {
+                TextChanged = false;
                 try
                 {
                     System.IO.File.Delete(FileName);
@@ -102,8 +91,6 @@ namespace LandisUserInterface
                     }
                     sw.Close();
 
-                    LastTextBoxTextOnFile = richTextBox1.Text;
-
                     FileCreationTime = System.IO.File.GetLastWriteTime(FileName);
                 }
                 catch (System.Exception error)
@@ -112,26 +99,25 @@ namespace LandisUserInterface
                 }
             }
 
-            // If files was changed in external editor
-            if (FileCreationTime != System.IO.File.GetLastWriteTime(FileName))
-            {
-                 
-               richTextBox1.Text ="";
-               TextToAppend.AddRange(System.IO.File.ReadAllLines(FileName));
-            }
-           
+             
+            backgroundWorker1.RunWorkerAsync();
         }
-        
 
-     
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        bool IsEditedInExternalEditor
         {
-           
-
- 
-
-
+            get
+            {
+                return FileCreationTime.Equals(System.IO.File.GetLastWriteTime(FileName)) == false;
+            }
         }
+
+        
+        private void richTextBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            TextChanged = true;
+        }
+     
+        
 
          
     }
