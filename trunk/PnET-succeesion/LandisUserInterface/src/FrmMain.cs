@@ -69,6 +69,8 @@ namespace LandisUserInterface
         }
         private void AddScenario(string FileName)
         {
+            if (IsScenarioFile(FileName) == false) return;
+
             if (this.treeView1.Nodes["Scenario Files"].Nodes.ContainsKey(FileName)) return;
 
             // Add a node and a filename
@@ -269,15 +271,15 @@ namespace LandisUserInterface
                 {
                     GetContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.AddScnFl_Click), "Add Scenario"), GetToolStripMenuItem(new EventHandler(this.ClearScenarioFiles_Click), "Clear Scenarios") }).Show(this.treeView1, e.Location);
                 }
-                else if (IsScenarioFile(treeView1.SelectedNode.ToolTipText))
+                else if (IsScenarioFile(((TreeNode)treeView1.SelectedNode).FullPath)) 
                 {
                     GetContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.Remove_Click), "Remove Scenario"), GetToolStripMenuItem(new EventHandler(this.ShowFileLocation_Click), "Show File Location"), GetToolStripMenuItem(new EventHandler(this.RunSimulation_Click), "Run Simulation") }).Show(this.treeView1, e.Location);
                 }
-                else if (System.IO.File.Exists(treeView1.SelectedNode.ToolTipText))
+                else if (System.IO.File.Exists(((TreeNode)treeView1.SelectedNode).FullPath))
                 {
                     GetContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.ShowFileLocation_Click), "Show File Location") }).Show(this.treeView1, e.Location);
                 }
-                else if (System.IO.Directory.Exists(treeView1.SelectedNode.ToolTipText))
+                else if (System.IO.Directory.Exists(((TreeNode)treeView1.SelectedNode).FullPath))
                 {
                     GetContextMenuStrip(new ToolStripItem[] { GetToolStripMenuItem(new EventHandler(this.ShowFolderLocation_Click), "Show Folder Location") }).Show(this.treeView1, e.Location);                    
                 }
