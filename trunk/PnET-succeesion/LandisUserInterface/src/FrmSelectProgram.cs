@@ -13,6 +13,8 @@ namespace LandisUserInterface
     {
         Options selection;
 
+        private System.Drawing.Point DesiredStartLocation;
+
         public Options Selection
         {
             get
@@ -28,9 +30,7 @@ namespace LandisUserInterface
             Zgraph,
             NotePad
         }
-        private System.Drawing.Point DesiredStartLocation;
-       
-
+         
         public FrmSelectProgram(System.Drawing.Point p)
         {
             // here store the value for x & y into instance variables
@@ -38,7 +38,7 @@ namespace LandisUserInterface
 
             InitializeComponent();
 
-            
+            this.KeyPreview = true;
         }
         private void FrmSelectProgram_Load(object sender, EventArgs e)
         {
