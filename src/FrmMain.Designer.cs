@@ -117,6 +117,7 @@
             this.dockContainer1.TabIndex = 3;
             this.dockContainer1.DragDrop += new System.Windows.Forms.DragEventHandler(this.dockContainer1_DragDrop);
             this.dockContainer1.DragEnter += new System.Windows.Forms.DragEventHandler(this.dockContainer1_DragEnter);
+            this.dockContainer1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dockContainer1_KeyDown);
             // 
             // backgroundWorker1
             // 

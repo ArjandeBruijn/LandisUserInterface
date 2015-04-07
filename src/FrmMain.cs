@@ -604,6 +604,14 @@ namespace LandisUserInterface
             this.toolStripStatusLabel1.Text = e.UserState.ToString();
         }
 
+        private void dockContainer1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Escape)
+            {
+                 
+            }
+        }
+
         
          
         
