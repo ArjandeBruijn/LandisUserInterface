@@ -62,6 +62,14 @@ namespace LandisUserInterface
             this.Close();
         }
 
+        private void FrmSelectProgram_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Escape)
+            {
+                Close();
+            }
+        }
+
         
     }
 }

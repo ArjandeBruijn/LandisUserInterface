@@ -75,6 +75,7 @@
             this.Name = "FrmSelectProgram";
             this.Text = "FrmSelectProgram";
             this.Load += new System.EventHandler(this.FrmSelectProgram_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmSelectProgram_KeyDown);
             this.ResumeLayout(false);
 
         }
