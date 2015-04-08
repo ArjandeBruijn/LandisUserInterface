@@ -405,7 +405,7 @@ namespace LandisUserInterface
                     {
                         TreeViewLegend.ImageList.Images.Add(legend_node.ImageKey, NodeRect(this.TreeViewLegend.Font, Color.UIntToColor(colorbreak.HighColor)));
                     }
-                    legend_node.Tag = legend_node.SelectedImageKey = legend_node.ImageKey = legend_node.ImageKey;
+                    
 
                     this.TreeViewLegend.Nodes.Add(legend_node);
 

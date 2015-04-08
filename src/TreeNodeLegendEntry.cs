@@ -10,16 +10,14 @@ namespace LandisUserInterface
         public double Min{get; private set;}
         public double Max {get; private set;}
         
-
-
         public TreeNodeLegendEntry(double Min, double Max)
         {
             this.Min = Min;
             this.Max = Max;
 
-            this.Text = Min.ToString() + "-" + Max.ToString();
+            this.Text = (Max - Min > 1) ? Min.ToString() + "-" + Max.ToString() : Max.ToString();
 
-            this.ImageKey = Min.ToString() + "-" + Max.ToString();
+            this.Tag = this.SelectedImageKey = this.ImageKey = Min.ToString() + "-" + Max.ToString();
         }
     }
 }
