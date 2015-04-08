@@ -115,6 +115,18 @@ namespace LandisUserInterface
                 {
                     old_node.Nodes.Add(new_sub_node);
                 }
+               
+            }
+
+            foreach (System.Windows.Forms.TreeNode old_sub_node in old_node.Nodes)
+            {
+                if (new_node.Nodes.ContainsKey(old_sub_node.Name)==false)
+                {
+                    old_sub_node.Remove();
+                    //old_sub_node.Nodes.RemoveByKey(old_sub_node.Name);
+                }
+
+
             }
         }
 
@@ -218,7 +230,7 @@ namespace LandisUserInterface
 
                     //if (term.IndexOf('.') != term.Length - 4) continue;
 
-                    if (term.Contains(".img") || term.Contains(".gis")) continue;
+                    //if (term.Contains(".img") || term.Contains(".gis")) continue;
 
                     try
                     {
