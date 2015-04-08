@@ -14,10 +14,12 @@ namespace LandisUserInterface
     {
         Dictionary<string, List<DockableFormInfo>> Docks = new Dictionary<string, List<DockableFormInfo>>();
 
-        TreeNode UpdatedScenarioNode = null;
+        TreeNodeFile UpdatedScenarioNode = null;
 
-        List<TreeNode> ScenariosToRemove = new List<TreeNode>();
-         
+        List<TreeNodeFile> ScenariosToRemove = new List<TreeNodeFile>();
+
+      
+
         static int c = 0;
 
         public FrmMain()
@@ -32,11 +34,11 @@ namespace LandisUserInterface
             this.treeView1.TreeViewNodeSorter = new NodeSorter();
 
 
-            TreeNode HeaderScenarioFiles = new TreeNode("Scenario Files", "Scenario Files", 0, "RightArrow", null, () => backgroundWorker1.CancellationPending);
+            TreeNodeFile HeaderScenarioFiles = new TreeNodeFile("Scenario Files", "Scenario Files", 0, "RightArrow", null, () => backgroundWorker1.CancellationPending);
             this.treeView1.Nodes.Add(HeaderScenarioFiles);
             HeaderScenarioFiles.ExpandAll();
 
-            backgroundWorker1.RunWorkerAsync();
+            timer1.Start();
         }
       
         static int get_Year(string FileName)
@@ -77,15 +79,15 @@ namespace LandisUserInterface
             Global.AddScenario(FileName);
 
             // Get a placeholder without subnodes
-            UpdatedScenarioNode = new TreeNode(FileName, System.IO.Path.GetFileName(FileName), 0, "File", null, () => backgroundWorker1.CancellationPending);
+            UpdatedScenarioNode = new TreeNodeFile(FileName, System.IO.Path.GetFileName(FileName), 0, "File", null, () => backgroundWorker1.CancellationPending);
 
 
             this.treeView1.Nodes["Scenario Files"].Nodes.Add(UpdatedScenarioNode);
-            foreach (TreeNode tn in treeView1.Nodes) tn.Expand();
+            foreach (TreeNodeFile tn in treeView1.Nodes) tn.Expand();
           
         }
 
-        private void RemoveScenario(TreeNode node)
+        private void RemoveScenario(TreeNodeFile node)
         {
             Global.RemoveScenario(node.FullPath);
             this.treeView1.Nodes["Scenario Files"].Nodes.Remove(node);
@@ -116,10 +118,10 @@ namespace LandisUserInterface
             }
         }
 
-        TreeNode[] GetFolderContent(TreeNode parent)
+        TreeNodeFile[] GetFolderContent(TreeNodeFile parent)
         {
             /// Populate a treenode that is associated with a folder name with its subnodes
-            List<TreeNode> TreeNodes = new List<TreeNode>();
+            List<TreeNodeFile> TreeNodes = new List<TreeNodeFile>();
 
             if (this.backgroundWorker1.CancellationPending)return TreeNodes.ToArray();
 
@@ -128,12 +130,12 @@ namespace LandisUserInterface
             foreach (string folder in System.IO.Directory.GetDirectories(path))
             {
                 string lastsubdir = folder.Split(System.IO.Path.DirectorySeparatorChar).Last();
-                TreeNodes.Add(new TreeNode(folder, lastsubdir, 0, "Folder", GetFolderContent, () => backgroundWorker1.CancellationPending));
+                TreeNodes.Add(new TreeNodeFile(folder, lastsubdir, 0, "Folder", GetFolderContent, () => backgroundWorker1.CancellationPending));
             }
 
             foreach (string file in System.IO.Directory.GetFiles(path))
             {
-                TreeNode node = new TreeNode(file, System.IO.Path.GetFileName(file), get_Year(System.IO.Path.GetFileName(file)), "File", null, () => backgroundWorker1.CancellationPending);
+                TreeNodeFile node = new TreeNodeFile(file, System.IO.Path.GetFileName(file), get_Year(System.IO.Path.GetFileName(file)), "File", null, () => backgroundWorker1.CancellationPending);
 
                 TreeNodes.Add(node);
             }
@@ -141,10 +143,10 @@ namespace LandisUserInterface
             return TreeNodes.ToArray();
         }
 
-        TreeNode[] GetScenarioSubNodes(TreeNode parent)
+        TreeNodeFile[] GetScenarioSubNodes(TreeNodeFile parent)
         {
             /// Populate a treenode that is associated with a scenario file name with its subnodes
-            List<TreeNode> TreeNodes = new List<TreeNode>();
+            List<TreeNodeFile> TreeNodes = new List<TreeNodeFile>();
 
             if (System.IO.File.Exists(parent.FullPath) == false)
             {
@@ -167,14 +169,14 @@ namespace LandisUserInterface
             if(System.IO.Directory.Exists(OutputDirectory))
             {
                 string folder = OutputDirectory.Split(System.IO.Path.DirectorySeparatorChar).Last();
-                TreeNodes.Add(new TreeNode(OutputDirectory, folder, 0, "Folder", GetFolderContent, () => backgroundWorker1.CancellationPending));
+                TreeNodes.Add(new TreeNodeFile(OutputDirectory, folder, 0, "Folder", GetFolderContent, () => backgroundWorker1.CancellationPending));
             }
 
             string LogFile = System.IO.Path.Combine(Directory, "Landis-log.txt");
 
             if (System.IO.File.Exists(LogFile))
             {
-                TreeNodes.Add(new TreeNode(LogFile, System.IO.Path.GetFileName(LogFile), 0, "File", null, () => backgroundWorker1.CancellationPending));
+                TreeNodes.Add(new TreeNodeFile(LogFile, System.IO.Path.GetFileName(LogFile), 0, "File", null, () => backgroundWorker1.CancellationPending));
             }
 
            
@@ -185,10 +187,10 @@ namespace LandisUserInterface
             return TreeNodes.ToArray();
         }
        
-        TreeNode[] GetSubNodesFromTextFile(TreeNode parent)
+        TreeNodeFile[] GetSubNodesFromTextFile(TreeNodeFile parent)
         {
            
-            List<TreeNode> FileNamesInFile = new List<TreeNode>();
+            List<TreeNodeFile> FileNamesInFile = new List<TreeNodeFile>();
  
             List<string> Content = new List<string>(System.IO.File.ReadAllLines(parent.FullPath));
 
@@ -223,7 +225,7 @@ namespace LandisUserInterface
                         string FileName = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(parent.FullPath), term);
                         if (System.IO.File.Exists(FileName) == true)
                         {
-                            TreeNode node = new TreeNode(FileName, System.IO.Path.GetFileName(FileName), 0, "File", null, () => backgroundWorker1.CancellationPending);
+                            TreeNodeFile node = new TreeNodeFile(FileName, System.IO.Path.GetFileName(FileName), 0, "File", null, () => backgroundWorker1.CancellationPending);
                             FileNamesInFile.Add(node);
                             FileNamesInFile.AddRange(GetSubNodesFromTextFile(node));
                         }
@@ -265,15 +267,15 @@ namespace LandisUserInterface
                 {
                     new ContextMenuStrip(new ToolStripItem[] { new ToolStripMenuItem(new EventHandler(this.AddScnFl_Click), "Add Scenario"), new ToolStripMenuItem(new EventHandler(this.ClearScenarioFiles_Click), "Clear Scenarios") }).Show(this.treeView1, e.Location);
                 }
-                else if (IsScenarioFile(((TreeNode)treeView1.SelectedNode).FullPath)) 
+                else if (IsScenarioFile(((TreeNodeFile)treeView1.SelectedNode).FullPath)) 
                 {
                     new ContextMenuStrip(new ToolStripItem[] { new ToolStripMenuItem(new EventHandler(this.Remove_Click), "Remove Scenario"), new ToolStripMenuItem(new EventHandler(this.ShowFileLocation_Click), "Show File Location"), new ToolStripMenuItem(new EventHandler(this.RunSimulation_Click), "Run Simulation") }).Show(this.treeView1, e.Location);
                 }
-                else if (System.IO.File.Exists(((TreeNode)treeView1.SelectedNode).FullPath))
+                else if (System.IO.File.Exists(((TreeNodeFile)treeView1.SelectedNode).FullPath))
                 {
                     new ContextMenuStrip(new ToolStripItem[] { new ToolStripMenuItem(new EventHandler(this.ShowFileLocation_Click), "Show File Location") }).Show(this.treeView1, e.Location);
                 }
-                else if (System.IO.Directory.Exists(((TreeNode)treeView1.SelectedNode).FullPath))
+                else if (System.IO.Directory.Exists(((TreeNodeFile)treeView1.SelectedNode).FullPath))
                 {
                     new ContextMenuStrip(new ToolStripItem[] { new ToolStripMenuItem(new EventHandler(this.ShowFolderLocation_Click), "Show Folder Location") }).Show(this.treeView1, e.Location);                    
                 }
@@ -296,14 +298,16 @@ namespace LandisUserInterface
                     AddScenario(file);
                 }
             }
+
+             
         }
        
         private void ClearScenarioFiles_Click(object sender, EventArgs e)
         {
-            foreach (TreeNode node in treeView1.Nodes["Scenario Files"].Nodes)
-            {
-                ScenariosToRemove.Add(node);
-            }
+            Global.ClearScenarios();
+
+            this.treeView1.Nodes["Scenario Files"].Nodes.Clear();
+             
         }
         
         public void RunSimulation(string path)
@@ -350,7 +354,7 @@ namespace LandisUserInterface
         
         private void Remove_Click(object sender, EventArgs e)
         {
-            ScenariosToRemove.Add((TreeNode)treeView1.SelectedNode);
+            ScenariosToRemove.Add((TreeNodeFile)treeView1.SelectedNode);
             backgroundWorker1.CancelAsync();
         }
 
@@ -390,7 +394,7 @@ namespace LandisUserInterface
             
         }
          
-        void AddMapsInFolder(TreeNode node, ref FrmMap map)
+        void AddMapsInFolder(TreeNodeFile node, ref FrmMap map)
         {
             // node is a folder node. Get the files with img or gis extensions
             foreach (string file in System.IO.Directory.GetFiles(node.FullPath).Where(o => System.IO.Path.GetExtension(o) == ".img" || System.IO.Path.GetExtension(o) == ".gis"))
@@ -410,14 +414,14 @@ namespace LandisUserInterface
                     Docks[file].Add(dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
                 }//---------------------------
 
-                TreeNode sub_node = new TreeNode(file, System.IO.Path.GetFileName(file), 0, "File", null, () => backgroundWorker1.CancellationPending);
+                TreeNodeFile sub_node = new TreeNodeFile(file, System.IO.Path.GetFileName(file), 0, "File", null, () => backgroundWorker1.CancellationPending);
                 map.LoadImageFile(sub_node);
                 node.Nodes.Add(sub_node);
             }
             // Get the subfolders
             foreach (string subfolder in System.IO.Directory.GetDirectories(node.FullPath))
             {
-                TreeNode sub_node = new TreeNode(subfolder, System.IO.Path.GetFileName(subfolder), 0, "Folder", null, () => backgroundWorker1.CancellationPending);
+                TreeNodeFile sub_node = new TreeNodeFile(subfolder, System.IO.Path.GetFileName(subfolder), 0, "Folder", null, () => backgroundWorker1.CancellationPending);
 
                 AddMapsInFolder(sub_node, ref map);
             }
@@ -428,7 +432,7 @@ namespace LandisUserInterface
             
             if (treeView1.SelectedNode == null) return;
 
-            TreeNode source_node = (TreeNode)treeView1.SelectedNode;
+            TreeNodeFile source_node = (TreeNodeFile)treeView1.SelectedNode;
 
             // If it is a directory path
             if (System.IO.Directory.Exists(source_node.FullPath))
@@ -531,7 +535,7 @@ namespace LandisUserInterface
         {
             if (treeView1.SelectedNode != null)
             {
-                ((FrmMap)sender).LoadImageFile((TreeNode)treeView1.SelectedNode);
+                ((FrmMap)sender).LoadImageFile((TreeNodeFile)treeView1.SelectedNode);
             }
         }
 
@@ -563,11 +567,11 @@ namespace LandisUserInterface
 
                 if (treeView1.Nodes["Scenario Files"].Nodes.Count > 0)
                 {
-                    TreeNode node = (TreeNode)treeView1.Nodes["Scenario Files"].Nodes[c];
+                    TreeNodeFile node = (TreeNodeFile)treeView1.Nodes["Scenario Files"].Nodes[c];
 
                     this.backgroundWorker1.ReportProgress(0, "Loading " + node.Name);
 
-                    UpdatedScenarioNode = new TreeNode(node.Name, System.IO.Path.GetFileName(node.Name), 0, "File", GetScenarioSubNodes, () => backgroundWorker1.CancellationPending);
+                    UpdatedScenarioNode = new TreeNodeFile(node.Name, System.IO.Path.GetFileName(node.Name), 0, "File", GetScenarioSubNodes, () => backgroundWorker1.CancellationPending);
                 }
 
                 c++;
@@ -580,7 +584,7 @@ namespace LandisUserInterface
         {
             if (ScenariosToRemove.Count() > 0)
             {
-                foreach (TreeNode node in ScenariosToRemove)
+                foreach (TreeNodeFile node in ScenariosToRemove)
                 {
                     RemoveScenario(node);
                 }
@@ -602,6 +606,14 @@ namespace LandisUserInterface
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             this.toolStripStatusLabel1.Text = e.UserState.ToString();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (backgroundWorker1.IsBusy == false)
+            {
+                backgroundWorker1.RunWorkerAsync();
+            }
         }
 
         

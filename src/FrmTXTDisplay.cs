@@ -46,8 +46,15 @@ namespace LandisUserInterface
 
             if (IsEditedInExternalEditor)
             {
-                ClearRichtTextBox = true;
-                TextToAppend.AddRange(System.IO.File.ReadAllLines(FileName));
+                try
+                {
+                    TextToAppend.AddRange(System.IO.File.ReadAllLines(FileName));
+                    ClearRichtTextBox = true;
+                }
+                catch
+                { 
+                
+                }
             }
         }
        
