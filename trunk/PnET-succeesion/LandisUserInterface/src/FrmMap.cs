@@ -11,6 +11,9 @@ namespace LandisUserInterface
 {
     public partial class FrmMap : Form, MapWinGIS.ICallback 
     {
+        
+        TreeNodeFile ActiveLayer;
+
         MapWinGIS.GridColorScheme GridColorscheme;
 
         private int MapMin = int.MaxValue;
@@ -26,6 +29,7 @@ namespace LandisUserInterface
             
             InitializeComponent();
 
+            axMap1.SendMouseDown = true;
 
             backgroundworker = new BackgroundWorker();
             backgroundworker.RunWorkerCompleted += LoadGridFiles;
@@ -36,9 +40,78 @@ namespace LandisUserInterface
             this.DragDrop += DragDrop;
             TreeViewLegend.ImageList = new ImageList();
             this.treeViewLayers.TreeViewNodeSorter = new NodeSorter();
-             
-        }
 
+            axMap1.ScalebarVisible = false;
+
+           
+        }
+        int Get_PX_max(MapWinGIS.Grid myGrid)
+        {
+            int col = 0;
+
+            object o = myGrid.get_Value(col, 0);
+
+            while ((int)Math.Round(double.Parse(myGrid.get_Value(col, 0).ToString()), 0) >= 0)
+            {
+                col++;
+            }
+            return col;
+        }
+        private MapWinGIS.Grid ActiveGrid
+        {
+            get
+            {
+                string FileName = ActiveLayer.FullPath;
+
+                MapWinGIS.Grid grid = new MapWinGIS.Grid();
+
+                grid.Open(FileName, MapWinGIS.GridDataType.LongDataType, true, MapWinGIS.GridFileType.UseExtension, this);
+
+                return grid;
+            }
+        }
+       
+        private void axMap1_MouseDownEvent(object sender, AxMapWinGIS._DMapEvents_MouseDownEvent e)
+        {
+            if (axMap1.CursorMode != MapWinGIS.tkCursorMode.cmSelection) return;
+
+            double PX = 0;
+            double PY = 0;
+
+            axMap1.PixelToProj(e.x, e.y, ref PX, ref PY);
+            
+            MapWinGIS.Grid myGrid = ActiveGrid;
+
+            int PX_max = Get_PX_max(myGrid);
+
+            int c, r;
+            myGrid.ProjToCell(PX, -PY, out c, out r);
+            double LandisValue = (double)myGrid.get_Value(c, r);
+            string landis_label = (LandisValue < 0) ? "n/a" : LandisValue.ToString();
+
+            string ManualLabel = String.Empty;
+            foreach (TreeNodeLegendEntry node in TreeViewLegend.Nodes)
+            {
+                if (LandisValue > node.Min && LandisValue <= node.Max)
+                {
+                    ManualLabel = node.Text;
+                }
+            }
+
+            myGrid.ProjToCell(PX, PY, out c, out r);
+            double ProjectedValue = (double)myGrid.get_Value(c, r);
+            string projected = (ProjectedValue < 0) ? "n/a" : ProjectedValue.ToString();
+
+            toolStripStatusLabel2.Text = landis_label.ToString();
+
+            if (ManualLabel != String.Empty && ManualLabel != landis_label)
+            {
+                toolStripStatusLabel2.Text += "|" + ManualLabel;
+            }
+            
+
+        }
+        
         void SleepWorker(object sender, DoWorkEventArgs e)
         {
             System.Threading.Thread.Sleep(1000);
@@ -55,9 +128,9 @@ namespace LandisUserInterface
 
         }
 
-        private List<TreeNode> ImageFilesToLoad = new List<TreeNode>();
+        private List<TreeNodeFile> ImageFilesToLoad = new List<TreeNodeFile>();
 
-        public void LoadImageFile(TreeNode node)
+        public void LoadImageFile(TreeNodeFile node)
         {
             if (System.IO.Path.GetExtension(node.FullPath) == ".img" || System.IO.Path.GetExtension(node.FullPath) == ".gis")
             {
@@ -137,17 +210,17 @@ namespace LandisUserInterface
             return flag;
         }
         
-        private void SetLayerSelection(TreeNode node)
+        private void SetLayerSelection(TreeNodeFile node)
         {
-            int LayerHandle = node.Layerhandle;
-            
-            axMap1.set_LayerVisible(LayerHandle, true);
+            ActiveLayer = node;
+
+            axMap1.set_LayerVisible(ActiveLayer.Layerhandle, true);
 
             for (int layer = 0; layer < axMap1.NumLayers; layer++)
             {
                 int handle = axMap1.get_LayerHandle(layer);
 
-                if (handle != LayerHandle)
+                if (handle != ActiveLayer.Layerhandle)
                 {
                     axMap1.set_LayerVisible(handle, false);
                 }
@@ -163,11 +236,11 @@ namespace LandisUserInterface
        
         private void PlayAnimation(object sender, EventArgs e)
         {
-            foreach (TreeNode tree_node in this.treeViewLayers.Nodes)
+            foreach (TreeNodeFile tree_node in this.treeViewLayers.Nodes)
             {
-                SetLayerSelection((TreeNode)tree_node);
-                
+                SetLayerSelection((TreeNodeFile)tree_node);
 
+                
                 axMap1.Invalidate();
                 axMap1.Refresh();
 
@@ -180,6 +253,7 @@ namespace LandisUserInterface
         
         private void toolBar1_ButtonClick(object sender, ToolBarButtonClickEventArgs e)
         {
+            
             string tag = (string)e.Button.Tag;
             switch (tag)
             {
@@ -215,7 +289,7 @@ namespace LandisUserInterface
         {
             if (e.Action != TreeViewAction.Unknown)
             {
-                SetLayerSelection((TreeNode)e.Node);
+                SetLayerSelection((TreeNodeFile)e.Node);
             }
         }
 
@@ -228,7 +302,7 @@ namespace LandisUserInterface
         {
             while (ImageFilesToLoad.Count() > 0)
             {
-                TreeNode node = ImageFilesToLoad[0];
+                TreeNodeFile node = ImageFilesToLoad[0];
                 ImageFilesToLoad.RemoveAt(0);
                 if (PathIsNetworkPath(node.FullPath))
                 {
@@ -268,6 +342,7 @@ namespace LandisUserInterface
 
                 grid.Open(node.FullPath, MapWinGIS.GridDataType.LongDataType, true, MapWinGIS.GridFileType.UseExtension, this);
 
+                
 
                 MapMin = Math.Min(0, Math.Min(MapMin, int.Parse(grid.Minimum.ToString())));
                 MapMax = Math.Max(MapMax, int.Parse(grid.Maximum.ToString()));
@@ -324,18 +399,13 @@ namespace LandisUserInterface
                         Label = colorbreak.LowValue.ToString() + "-" + colorbreak.HighValue.ToString();
                     }
 
-                    System.Windows.Forms.TreeNode legend_node = new System.Windows.Forms.TreeNode();
+                    TreeNodeLegendEntry legend_node = new TreeNodeLegendEntry(colorbreak.LowValue, colorbreak.HighValue);
 
-                    legend_node.Text = colorbreak.LowValue.ToString() + "-" + colorbreak.HighValue.ToString();
-
-                    legend_node.ToolTipText = "";
-
-                    string ImageKey = colorbreak.LowValue.ToString() + "-" + colorbreak.HighValue.ToString();
-                    if (TreeViewLegend.ImageList.Images.ContainsKey(ImageKey) == false)
+                    if (TreeViewLegend.ImageList.Images.ContainsKey(legend_node.ImageKey) == false)
                     {
-                        TreeViewLegend.ImageList.Images.Add(ImageKey, NodeRect(this.TreeViewLegend.Font, Color.UIntToColor(colorbreak.HighColor)));
+                        TreeViewLegend.ImageList.Images.Add(legend_node.ImageKey, NodeRect(this.TreeViewLegend.Font, Color.UIntToColor(colorbreak.HighColor)));
                     }
-                    legend_node.Tag = legend_node.SelectedImageKey = legend_node.ImageKey = ImageKey;
+                    legend_node.Tag = legend_node.SelectedImageKey = legend_node.ImageKey = legend_node.ImageKey;
 
                     this.TreeViewLegend.Nodes.Add(legend_node);
 
@@ -362,7 +432,7 @@ namespace LandisUserInterface
             get
             {
                 List<string> Labels = new List<string>();
-                foreach (TreeNode node in TreeViewLegend.Nodes)
+                foreach (System.Windows.Forms.TreeNode node in TreeViewLegend.Nodes)
                 {
                     Labels.Add(node.Text);
                 }
@@ -390,7 +460,7 @@ namespace LandisUserInterface
 
         void RemoveLayer(object sender, EventArgs e)
         {
-            axMap1.RemoveLayer(((TreeNode)this.treeViewLayers.SelectedNode).Layerhandle);
+            axMap1.RemoveLayer(((TreeNodeFile)this.treeViewLayers.SelectedNode).Layerhandle);
 
             this.treeViewLayers.Nodes.Remove(this.treeViewLayers.SelectedNode);
         }
@@ -411,6 +481,9 @@ namespace LandisUserInterface
             }
             
         }
+
+      
+      
           
     }
 }

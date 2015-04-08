@@ -93,6 +93,7 @@
       <DependentUpon>FrmTXTDisplay.cs</DependentUpon>
     </Compile>
     <Compile Include="Global.cs" />
+    <Compile Include="TreeNodeLegendEntry.cs" />
     <Compile Include="NodeSorter.cs" />
     <Compile Include="TabPageWithGraph.cs">
       <SubType>Component</SubType>
@@ -120,7 +121,7 @@
     <Compile Include="ToolStripMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TreeNode.cs" />
+    <Compile Include="TreeNodeFile.cs" />
     <EmbeddedResource Include="FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </EmbeddedResource>

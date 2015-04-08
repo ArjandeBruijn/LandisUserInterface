@@ -17,11 +17,7 @@ namespace LandisUserInterface
             }
 
         }
-        public static void ClearScenarioFileNames()
-        {
-            Properties.Settings.Default.LastScenarioFileNames = "";
-            Properties.Settings.Default.Save();
-        }
+      
         public static void AddScenario(string FileName)
         {
             if (Properties.Settings.Default.LastScenarioFileNames.Contains(FileName) == false)

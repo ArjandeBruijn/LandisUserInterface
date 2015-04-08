@@ -7,24 +7,24 @@ using System.Windows.Forms;
 
 namespace LandisUserInterface
 {
-    public class TreeNode : System.Windows.Forms.TreeNode
+    public class TreeNodeFile : System.Windows.Forms.TreeNode
     {
          
-        public delegate TreeNode[] GetSubNodes(TreeNode me);
+        public delegate TreeNodeFile[] GetSubNodes(TreeNodeFile me);
 
         new public string FullPath;
         GetSubNodes get_sub_nodes;
         Func<bool> IsCancelled;
         public int RankNumber { get; private set; }
         public int Layerhandle;
-        new public TreeNode Clone()
+        new public TreeNodeFile Clone()
         {
-            TreeNode node = new TreeNode(FullPath, Text, RankNumber, ImageKey, get_sub_nodes, IsCancelled);
+            TreeNodeFile node = new TreeNodeFile(FullPath, Text, RankNumber, ImageKey, get_sub_nodes, IsCancelled);
             node.Layerhandle = Layerhandle;
             return node;
         }
 
-        public TreeNode(string FullPath, string Text, int RankNumber, string ImageKey, GetSubNodes get_sub_nodes, Func<bool> IsCancelled)
+        public TreeNodeFile(string FullPath, string Text, int RankNumber, string ImageKey, GetSubNodes get_sub_nodes, Func<bool> IsCancelled)
             
         {
             this.IsCancelled = IsCancelled;
@@ -39,7 +39,7 @@ namespace LandisUserInterface
 
             if (get_sub_nodes != null)
             {
-                foreach (TreeNode node in get_sub_nodes(this))
+                foreach (TreeNodeFile node in get_sub_nodes(this))
                 {
                     Nodes.Add(node);
                 }

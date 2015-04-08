@@ -10,8 +10,8 @@ namespace LandisUserInterface
        
         public int Compare(object x, object y)
         {
-            TreeNode tx = (TreeNode)x;
-            TreeNode ty = (TreeNode)y;
+            TreeNodeFile tx = (TreeNodeFile)x;
+            TreeNodeFile ty = (TreeNodeFile)y;
 
             if (tx.RankNumber < ty.RankNumber)
             {
