@@ -20,9 +20,11 @@ namespace LandisUserInterface
 
         private int MapMax = int.MinValue;
 
-        IColorScheme Colorscheme;
+        IColorScheme color_scheme;
 
         BackgroundWorker backgroundworker;
+
+        int BinWidth;
 
         public FrmMap(DragEventHandler DragDrop)
         {
@@ -140,12 +142,20 @@ namespace LandisUserInterface
 
 
         }
-
-        private static IColorScheme GetColorScheme(int Min, int Max)
+        int ValueRange
         {
-            int BinWidth = Max - Min;
+            get
+            {
+                return MapMax - MapMin;
+            }
+        }
+        private IColorScheme GetColorScheme()
+        {
+            BinWidth =1;
 
-            if (Max - Min == 3)
+            if (ValueRange > new ColorScheme().ColorCount) BinWidth = (int)(ValueRange / new ColorScheme().ColorCount);
+
+            if (ValueRange == 3)
             {
                 return new ColorScheme(new System.Drawing.Color[] { System.Drawing.Color.White, System.Drawing.Color.Black, System.Drawing.Color.Red, System.Drawing.Color.Green });
             }
@@ -159,12 +169,7 @@ namespace LandisUserInterface
             }
         }
 
-        private int GetBinWidth(int MapMin, int MapMax, byte colorcount)
-        {
-            int Range = MapMax - MapMin;
-            if (Range > Colorscheme.ColorCount) return (int)(Range / colorcount);
-            else return 1;
-        }
+         
 
         private MapWinGIS.GridColorScheme GetGridScheme(int MapMin, int MapMax, int BinWidth, IColorScheme color_scheme)
         {
@@ -347,11 +352,9 @@ namespace LandisUserInterface
                 MapMin = Math.Min(0, Math.Min(MapMin, int.Parse(grid.Minimum.ToString())));
                 MapMax = Math.Max(MapMax, int.Parse(grid.Maximum.ToString()));
 
-                Colorscheme = GetColorScheme(MapMin, MapMax);
+                color_scheme = GetColorScheme();
 
-                int BinWidth = GetBinWidth(MapMin, MapMax, (byte)Colorscheme.ColorCount);
-
-                GridColorscheme = GetGridScheme(MapMin - 1, MapMax - 1, BinWidth, Colorscheme);
+                GridColorscheme = GetGridScheme(MapMin - 1, MapMax - 1, BinWidth, color_scheme);
 
                 toolStripStatusLabel1.Text = "Creating image " + System.IO.Path.GetFileName(node.FullPath);
                 statusStrip1.Refresh();

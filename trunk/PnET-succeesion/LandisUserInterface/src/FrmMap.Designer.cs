@@ -107,7 +107,7 @@
             this.tbAnimation.ImageKey = "stopwatch2.ico";
             this.tbAnimation.Name = "tbAnimation";
             this.tbAnimation.Tag = "Animation";
-            this.tbAnimation.ToolTipText = "Animate map folder";
+            this.tbAnimation.ToolTipText = "Animate";
             // 
             // imageList2
             // 
