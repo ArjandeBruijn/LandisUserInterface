@@ -38,6 +38,7 @@ namespace LandisUserInterface
             this.treeView1.Nodes.Add(HeaderScenarioFiles);
             HeaderScenarioFiles.ExpandAll();
 
+            backgroundWorker2.RunWorkerAsync();
             timer1.Start();
         }
       
@@ -426,7 +427,7 @@ namespace LandisUserInterface
                     Docks[file].Add(dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
                 }//---------------------------
 
-                TreeNodeFile sub_node = new TreeNodeFile(file, System.IO.Path.GetFileName(file), 0, "File", null, () => backgroundWorker1.CancellationPending);
+                TreeNodeFile sub_node = new TreeNodeFile(file, System.IO.Path.GetFileName(file), get_Year(file), "File", null, () => backgroundWorker1.CancellationPending);
                 map.LoadImageFile(sub_node);
                 node.Nodes.Add(sub_node);
             }
@@ -591,7 +592,7 @@ namespace LandisUserInterface
 
             System.Threading.Thread.Sleep(500);
         }
-
+       
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (ScenariosToRemove.Count() > 0)
@@ -626,6 +627,37 @@ namespace LandisUserInterface
             {
                 backgroundWorker1.RunWorkerAsync();
             }
+        }
+
+        private void backgroundWorker2_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            for (int d = 0; d < Docks.Count; d++)
+            {
+                List<DockableFormInfo> values = Docks.Values.ToArray()[d];
+
+                for (int fi = values.Count - 1; fi >= 0; fi--)
+                {
+                    if (dockContainer1.Contains(values[fi].DockableForm) == false)
+                    {
+                        if (values[fi].DockableForm.IsDisposed == false)
+                        {
+                            if (values[fi].DockableForm.GetType() == typeof(FrmTXTDisplay))
+                            {
+                                ((FrmTXTDisplay)values[fi].DockableForm).ClosePending = true;
+                            }
+                            
+                            values.RemoveAt(fi);
+                        }
+                        
+                    }
+                }
+            }
+            backgroundWorker2.RunWorkerAsync();
+        }
+
+        private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
+        {
+            System.Threading.Thread.Sleep(500);
         }
 
         

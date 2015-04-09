@@ -16,11 +16,14 @@ namespace LandisUserInterface
 
         string FileName;
         
+
         private DateTime FileCreationTime;
 
         bool ClearRichtTextBox = true;
 
         bool TextChanged = false;
+
+        public bool ClosePending = false;
 
         public FrmTXTDisplay(string FileName)
         {
@@ -106,8 +109,9 @@ namespace LandisUserInterface
                 }
             }
 
-             
-            backgroundWorker1.RunWorkerAsync();
+
+            if (ClosePending) this.Close();
+            else backgroundWorker1.RunWorkerAsync();
         }
 
         bool IsEditedInExternalEditor
