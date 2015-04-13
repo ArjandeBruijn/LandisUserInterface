@@ -37,7 +37,7 @@
             this.tbPan = new System.Windows.Forms.ToolBarButton();
             this.tbInfo = new System.Windows.Forms.ToolBarButton();
             this.tbAnimation = new System.Windows.Forms.ToolBarButton();
-            this.imageList2 = new System.Windows.Forms.ImageList(this.components);
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.treeViewLayers = new System.Windows.Forms.TreeView();
             this.TreeViewLegend = new System.Windows.Forms.TreeView();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -60,7 +60,7 @@
             this.tbInfo,
             this.tbAnimation});
             this.toolBar1.DropDownArrows = true;
-            this.toolBar1.ImageList = this.imageList2;
+            this.toolBar1.ImageList = this.imageList1;
             this.toolBar1.Location = new System.Drawing.Point(0, 0);
             this.toolBar1.Name = "toolBar1";
             this.toolBar1.ShowToolTips = true;
@@ -70,67 +70,56 @@
             // 
             // tbZoomIn
             // 
-            this.tbZoomIn.ImageIndex = 4;
+            this.tbZoomIn.ImageKey = "icon_zoom_in.png";
             this.tbZoomIn.Name = "tbZoomIn";
             this.tbZoomIn.Tag = "ZoomIn";
             this.tbZoomIn.ToolTipText = "Zoom In";
             // 
             // tbZoomOut
             // 
-            this.tbZoomOut.ImageIndex = 5;
+            this.tbZoomOut.ImageKey = "icon_zoom_out.png";
             this.tbZoomOut.Name = "tbZoomOut";
             this.tbZoomOut.Tag = "ZoomOut";
             this.tbZoomOut.ToolTipText = "Zoom Out";
             // 
             // tbFullExtents
             // 
-            this.tbFullExtents.ImageIndex = 3;
+            this.tbFullExtents.ImageKey = "icon_zoom_max_extents.png";
             this.tbFullExtents.Name = "tbFullExtents";
             this.tbFullExtents.Tag = "FullExtents";
             this.tbFullExtents.ToolTipText = "Zoom to full extents";
             // 
             // tbPan
             // 
-            this.tbPan.ImageIndex = 6;
+            this.tbPan.ImageKey = "icon_pan.png";
             this.tbPan.Name = "tbPan";
             this.tbPan.Tag = "Pan";
             this.tbPan.ToolTipText = "Pan";
             // 
             // tbInfo
             // 
-            this.tbInfo.ImageIndex = 17;
+            this.tbInfo.ImageKey = "icon_identify.png";
             this.tbInfo.Name = "tbInfo";
             this.tbInfo.Tag = "Info";
+            this.tbInfo.ToolTipText = "Identify pixel value";
             // 
             // tbAnimation
             // 
-            this.tbAnimation.ImageKey = "stopwatch2.ico";
+            this.tbAnimation.ImageKey = "StopWatch.png";
             this.tbAnimation.Name = "tbAnimation";
             this.tbAnimation.Tag = "Animation";
             this.tbAnimation.ToolTipText = "Animate";
             // 
-            // imageList2
+            // imageList1
             // 
-            this.imageList2.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList2.ImageStream")));
-            this.imageList2.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList2.Images.SetKeyName(0, "");
-            this.imageList2.Images.SetKeyName(1, "");
-            this.imageList2.Images.SetKeyName(2, "");
-            this.imageList2.Images.SetKeyName(3, "");
-            this.imageList2.Images.SetKeyName(4, "");
-            this.imageList2.Images.SetKeyName(5, "");
-            this.imageList2.Images.SetKeyName(6, "");
-            this.imageList2.Images.SetKeyName(7, "");
-            this.imageList2.Images.SetKeyName(8, "");
-            this.imageList2.Images.SetKeyName(9, "");
-            this.imageList2.Images.SetKeyName(10, "");
-            this.imageList2.Images.SetKeyName(11, "bw-running.ico");
-            this.imageList2.Images.SetKeyName(12, "text-plain.ico");
-            this.imageList2.Images.SetKeyName(13, "browse.ico");
-            this.imageList2.Images.SetKeyName(14, "stopwatch2.ico");
-            this.imageList2.Images.SetKeyName(15, "Rerun.png");
-            this.imageList2.Images.SetKeyName(16, "refresh.ico");
-            this.imageList2.Images.SetKeyName(17, "info.ico");
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "icon_identify.png");
+            this.imageList1.Images.SetKeyName(1, "icon_pan.png");
+            this.imageList1.Images.SetKeyName(2, "icon_zoom_in.png");
+            this.imageList1.Images.SetKeyName(3, "icon_zoom_max_extents.png");
+            this.imageList1.Images.SetKeyName(4, "icon_zoom_out.png");
+            this.imageList1.Images.SetKeyName(5, "StopWatch.png");
             // 
             // treeViewLayers
             // 
@@ -199,7 +188,6 @@
             this.axMap1.Size = new System.Drawing.Size(312, 380);
             this.axMap1.TabIndex = 41;
             this.axMap1.MouseDownEvent += new AxMapWinGIS._DMapEvents_MouseDownEventHandler(this.axMap1_MouseDownEvent);
-            
             // 
             // FrmMap
             // 
@@ -233,7 +221,6 @@
         private System.Windows.Forms.ToolBarButton tbPan;
         private System.Windows.Forms.ToolBarButton tbInfo;
         private System.Windows.Forms.ToolBarButton tbAnimation;
-        private System.Windows.Forms.ImageList imageList2;
         private System.Windows.Forms.TreeView treeViewLayers;
         private System.Windows.Forms.TreeView TreeViewLegend;
         private System.Windows.Forms.StatusStrip statusStrip1;
@@ -241,5 +228,6 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private AxMapWinGIS.AxMap axMap1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+        private System.Windows.Forms.ImageList imageList1;
     }
 }

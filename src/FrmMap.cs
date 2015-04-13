@@ -243,15 +243,13 @@ namespace LandisUserInterface
         {
             foreach (TreeNodeFile tree_node in this.treeViewLayers.Nodes)
             {
+                LogFile.WriteLine("SetLayerSelection");
                 SetLayerSelection((TreeNodeFile)tree_node);
 
-                
-                axMap1.Invalidate();
-                axMap1.Refresh();
+                LogFile.WriteLine("Refresh");
+                this.Refresh();
 
-                treeViewLayers.Invalidate();
-                treeViewLayers.Refresh();
-
+                LogFile.WriteLine("Sleep");
                 System.Threading.Thread.Sleep(2000);
             }
         }
