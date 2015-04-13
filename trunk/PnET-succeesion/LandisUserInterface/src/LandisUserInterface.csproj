@@ -93,6 +93,7 @@
       <DependentUpon>FrmTXTDisplay.cs</DependentUpon>
     </Compile>
     <Compile Include="Global.cs" />
+    <Compile Include="LogFile.cs" />
     <Compile Include="TreeNodeLegendEntry.cs" />
     <Compile Include="NodeSorter.cs" />
     <Compile Include="TabPageWithGraph.cs">
