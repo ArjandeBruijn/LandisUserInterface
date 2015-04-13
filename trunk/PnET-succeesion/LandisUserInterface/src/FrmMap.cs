@@ -24,6 +24,10 @@ namespace LandisUserInterface
 
         BackgroundWorker backgroundworker;
 
+        
+
+        private List<TreeNodeFile> ImageFilesToLoad = new List<TreeNodeFile>();
+
         int BinWidth;
 
         public FrmMap(DragEventHandler DragDrop)
@@ -130,7 +134,7 @@ namespace LandisUserInterface
 
         }
 
-        private List<TreeNodeFile> ImageFilesToLoad = new List<TreeNodeFile>();
+        
 
         public void LoadImageFile(TreeNodeFile node)
         {
@@ -219,7 +223,16 @@ namespace LandisUserInterface
         {
             ActiveLayer = node;
 
+            treeViewLayers.SelectedNode = node;
+
+            foreach (System.Windows.Forms.TreeNode _node in treeViewLayers.Nodes)
+            {
+                if (_node.Name == node.Name) _node.Checked = true;
+                else _node.Checked = false;
+            }
+
             axMap1.set_LayerVisible(ActiveLayer.Layerhandle, true);
+
 
             for (int layer = 0; layer < axMap1.NumLayers; layer++)
             {
@@ -231,18 +244,21 @@ namespace LandisUserInterface
                 }
 
             }
-            foreach (System.Windows.Forms.TreeNode _node in treeViewLayers.Nodes)
-            {
-                if (_node.Name == node.Name) _node.Checked = true;
-                else _node.Checked = false;
-            }
+            
         
         }
-       
-        private void PlayAnimation(object sender, EventArgs e)
+        
+        private void PlayAnimation()
         {
+            SetLayerSelection((TreeNodeFile)this.treeViewLayers.Nodes[0]);
+
+            animation_timer.Start();
+
+            /*
             foreach (TreeNodeFile tree_node in this.treeViewLayers.Nodes)
             {
+                 
+
                 LogFile.WriteLine("SetLayerSelection");
                 SetLayerSelection((TreeNodeFile)tree_node);
 
@@ -252,8 +268,14 @@ namespace LandisUserInterface
                 LogFile.WriteLine("Sleep");
                 System.Threading.Thread.Sleep(2000);
             }
+             */
         }
-        
+        private void SelectNextLayer(object sender, EventArgs e)
+        {
+            if (treeViewLayers.SelectedNode.Index == treeViewLayers.Nodes.Count - 1) animation_timer.Stop();
+
+            else SetLayerSelection((TreeNodeFile)this.treeViewLayers.Nodes[treeViewLayers.SelectedNode.Index+1]);
+        }
         private void toolBar1_ButtonClick(object sender, ToolBarButtonClickEventArgs e)
         {
             
@@ -273,7 +295,9 @@ namespace LandisUserInterface
                     axMap1.ZoomToMaxExtents();
                     break;
                 case "Animation":
-                    PlayAnimation(this, new EventArgs());
+
+                    PlayAnimation();
+                     
                     break;
                 case "Info":
                     axMap1.CursorMode = MapWinGIS.tkCursorMode.cmSelection;
@@ -483,6 +507,10 @@ namespace LandisUserInterface
             
         }
 
+        
+
+       
+        
       
       
           

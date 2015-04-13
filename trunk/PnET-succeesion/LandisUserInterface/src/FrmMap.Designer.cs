@@ -45,6 +45,7 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.axMap1 = new AxMapWinGIS.AxMap();
+            this.animation_timer = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axMap1)).BeginInit();
             this.SuspendLayout();
@@ -189,6 +190,11 @@
             this.axMap1.TabIndex = 41;
             this.axMap1.MouseDownEvent += new AxMapWinGIS._DMapEvents_MouseDownEventHandler(this.axMap1_MouseDownEvent);
             // 
+            // animation_timer
+            // 
+            this.animation_timer.Interval = 2000;
+            this.animation_timer.Tick += new System.EventHandler(this.SelectNextLayer);
+            // 
             // FrmMap
             // 
             this.AllowDrop = true;
@@ -229,5 +235,6 @@
         private AxMapWinGIS.AxMap axMap1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.Timer animation_timer;
     }
 }
