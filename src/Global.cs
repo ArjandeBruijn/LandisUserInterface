@@ -33,7 +33,7 @@ namespace LandisUserInterface
             {
                 throw new System.Exception("LastScenarioFileNames " + Properties.Settings.Default.LastScenarioFileNames + " does not contain filename " + FileName);
             }
-            Properties.Settings.Default.LastScenarioFileNames.Replace(FileName + ";", "");
+            Properties.Settings.Default.LastScenarioFileNames = Properties.Settings.Default.LastScenarioFileNames.Replace(FileName + ";", "");
             Properties.Settings.Default.Save();
         }
         public static void ClearScenarios()
