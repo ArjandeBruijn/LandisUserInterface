@@ -59,7 +59,7 @@ namespace LandisUserInterface
 
         private void FrmMain_Load(object sender, EventArgs e)
         {
-            LogFile.Reset();
+           
             foreach (string FileName in Global.ScenarioFileNames)
             {
                 AddScenario(FileName);
