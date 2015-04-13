@@ -165,7 +165,11 @@ namespace LandisUserInterface
             }
             else if (BinWidth == 1)
             {
-                return new ColorScheme();
+                System.Drawing.Color[] colors = ColorScheme.DefaultColorValues;
+
+                if (MapMin == 0) colors[0] = System.Drawing.Color.White;
+
+                return new ColorScheme(colors);
             }
             else
             {
