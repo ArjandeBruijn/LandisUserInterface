@@ -13,11 +13,11 @@ namespace LandisUserInterface
     {
         int label_counter = 0;
          
-        public FrmGraph()
+        public FrmGraph(string Text)
         {
             InitializeComponent();
-        
-            
+
+            this.Text = Text;
         }
          
         public void LoadFile(string FileName)
