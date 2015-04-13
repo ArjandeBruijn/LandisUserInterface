@@ -85,7 +85,8 @@ namespace LandisUserInterface
         }
         public void UpdateLegend(string[] Labels)
         {
-           
+            if (Labels.Count() > Graph1.GraphPane.CurveList.Count) return;
+
             for (int label = 0; label < Labels.Length; label++)
             {
                 Graph1.GraphPane.CurveList[label].Label.Text = Labels[label];
@@ -273,8 +274,8 @@ namespace LandisUserInterface
             {
                 char delimiter = ' ';
 
-                if( System.IO.Path.GetFileNameWithoutExtension(s.FileName)==".txt")delimiter = '\t';
-                else if (System.IO.Path.GetFileNameWithoutExtension(s.FileName) == ".csv") delimiter = ',';
+                if( System.IO.Path.GetExtension(s.FileName)==".txt")delimiter = '\t';
+                else if (System.IO.Path.GetExtension(s.FileName) == ".csv") delimiter = ',';
 
                 List<string> Content = new List<string>();
 
@@ -307,7 +308,7 @@ namespace LandisUserInterface
                         {
                             if (curve.Points[i].X == x)
                             {
-                                line += curve.Points[i].Y + delimiter;
+                                line += curve.Points[i].Y.ToString() + delimiter;
                                 FlagFound=true;
                                 break;
                             }

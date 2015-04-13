@@ -410,7 +410,7 @@ namespace LandisUserInterface
         void AddMapsInFolder(TreeNodeFile node, ref FrmMap map)
         {
             // node is a folder node. Get the files with img or gis extensions
-            foreach (string file in System.IO.Directory.GetFiles(node.FullPath).Where(o => System.IO.Path.GetExtension(o) == ".img" || System.IO.Path.GetExtension(o) == ".gis"))
+            foreach (string path in System.IO.Directory.GetFiles(node.FullPath).Where(o => System.IO.Path.GetExtension(o) == ".img" || System.IO.Path.GetExtension(o) == ".gis"))
             {
                 // If the first time, create the map
                 if (map == null)
@@ -419,15 +419,15 @@ namespace LandisUserInterface
 
                     map.Location = this.dockContainer1.PointToClient(Cursor.Position);
 
-                    if (Docks.ContainsKey(file) == false)
-                    { 
-                        Docks.Add(file, new List<DockableFormInfo>());
+                    if (Docks.ContainsKey(path) == false)
+                    {
+                        Docks.Add(path, new List<DockableFormInfo>());
                     }
 
-                    Docks[file].Add(dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
+                    Docks[path].Add(dockContainer1.Add(map, Crom.Controls.Docking.zAllowedDock.All, Guid.NewGuid()));
                 }//---------------------------
 
-                TreeNodeFile sub_node = new TreeNodeFile(file, System.IO.Path.GetFileName(file), get_Year(file), "File", null, () => backgroundWorker1.CancellationPending);
+                TreeNodeFile sub_node = new TreeNodeFile(path, System.IO.Path.GetFileName(path), get_Year(System.IO.Path.GetFileName(path)), "File", null, () => backgroundWorker1.CancellationPending);
                 map.LoadImageFile(sub_node);
                 node.Nodes.Add(sub_node);
             }
@@ -514,7 +514,7 @@ namespace LandisUserInterface
                }
                if (fsp.Selection == FrmSelectProgram.Options.Zgraph)
                {
-                   FrmGraph graph = new FrmGraph();
+                   FrmGraph graph = new FrmGraph(source_node.FullPath);
 
                    graph.DragDrop += new System.Windows.Forms.DragEventHandler(FrmGraph_DragDrop);
 
