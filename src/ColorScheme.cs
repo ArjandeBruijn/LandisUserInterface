@@ -17,7 +17,7 @@ namespace LandisUserInterface
                 return ColorValues.Count();
             }
         }
-        string[] ColourStrings = new string[] 
+        public static string[] ColorStrings = new string[] 
         { 
             "FF0000", "00FF00", "0000FF", "FFFF00", "FF00FF", "00FFFF", "000000", 
             "800000", "008000", "000080", "808000", "800080", "008080", "808080", 
@@ -28,13 +28,13 @@ namespace LandisUserInterface
             "A00000", "00A000", "0000A0", "A0A000", "A000A0", "00A0A0", "A0A0A0", 
             "E00000", "00E000", "0000E0", "E0E000", "E000E0", "00E0E0", "E0E0E0", 
         };
-        public System.Drawing.Color[] DefaultColorValues
+        public static System.Drawing.Color[] DefaultColorValues
         { 
             get
             {
                 List<System.Drawing.Color> Colors = new List<System.Drawing.Color>();
 
-                foreach (string s in ColourStrings)
+                foreach (string s in ColorStrings)
                 {
                     Colors.Add(System.Drawing.ColorTranslator.FromHtml("#" + s));
                 }
