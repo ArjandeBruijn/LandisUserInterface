@@ -63,6 +63,7 @@
             this.statusStrip1.Size = new System.Drawing.Size(284, 22);
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
+            
             // 
             // toolStripStatusLabel1
             // 

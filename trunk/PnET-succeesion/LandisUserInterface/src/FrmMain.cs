@@ -18,9 +18,21 @@ namespace LandisUserInterface
 
         List<TreeNodeFile> ScenariosToRemove = new List<TreeNodeFile>();
 
-      
-
         static int c = 0;
+
+        private void FrmMain_Load(object sender, EventArgs e)
+        {
+           
+            foreach (string FileName in Global.ScenarioFileNames)
+            {
+                AddScenario(FileName);
+            }
+            //if (this.treeView1.Nodes["Scenario Files"].Nodes.Count > 0)
+            //{
+            //    UpdateScenarioNode = this.treeView1.Nodes["Scenario Files"].Nodes[0];
+            //    toolStripStatusLabel1.Text = "Loading " + UpdateScenarioNode.Name;
+            //}
+        }
 
         public FrmMain()
         {
@@ -41,7 +53,7 @@ namespace LandisUserInterface
             backgroundWorker2.RunWorkerAsync();
             timer1.Start();
         }
-      
+
         static int get_Year(string FileName)
         {
             int year = -1;
@@ -55,20 +67,6 @@ namespace LandisUserInterface
         private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             toolStripStatusLabel1.Text = e.UserState.ToString();
-        }
-
-        private void FrmMain_Load(object sender, EventArgs e)
-        {
-           
-            foreach (string FileName in Global.ScenarioFileNames)
-            {
-                AddScenario(FileName);
-            }
-            //if (this.treeView1.Nodes["Scenario Files"].Nodes.Count > 0)
-            //{
-            //    UpdateScenarioNode = this.treeView1.Nodes["Scenario Files"].Nodes[0];
-            //    toolStripStatusLabel1.Text = "Loading " + UpdateScenarioNode.Name;
-            //}
         }
 
         private void AddScenario(string FileName)
@@ -99,6 +97,7 @@ namespace LandisUserInterface
                 if (node.FullPath == UpdatedScenarioNode.FullPath)
                 {
                     UpdatedScenarioNode = null;
+                    this.toolStripStatusLabel1.Text = String.Empty;
                 }
             }
         }
@@ -321,7 +320,8 @@ namespace LandisUserInterface
             Global.ClearScenarios();
 
             this.treeView1.Nodes["Scenario Files"].Nodes.Clear();
-             
+
+            this.toolStripStatusLabel1.Text = String.Empty;
         }
         
         public void RunSimulation(string path)
@@ -661,6 +661,7 @@ namespace LandisUserInterface
             System.Threading.Thread.Sleep(500);
         }
 
+         
         
          
         
