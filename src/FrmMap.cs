@@ -157,7 +157,7 @@ namespace LandisUserInterface
         {
             BinWidth =1;
 
-            if (ValueRange > new ColorScheme().ColorCount) BinWidth = (int)(ValueRange / new ColorScheme().ColorCount);
+            if (ValueRange > new ColorScheme().ColorCount) BinWidth = (int)(1+ (ValueRange / new ColorScheme().ColorCount));
 
             if (ValueRange == 3)
             {
