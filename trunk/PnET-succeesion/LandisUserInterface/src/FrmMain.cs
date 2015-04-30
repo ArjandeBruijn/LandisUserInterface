@@ -233,10 +233,13 @@ namespace LandisUserInterface
 
                     //if (term.Contains(".img") || term.Contains(".gis")) continue;
 
+                    double d;
+                    if (double.TryParse(term, out d) == true) continue;
+
                     try
                     {
                         string FileName = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(parent.FullPath), term);
-                        if (System.IO.File.Exists(FileName) == true)
+                        if (System.IO.File.Exists(FileName) == true && FileNamesInFile.Where(o => FileName == o.FullPath).Count() ==0)
                         {
                             TreeNodeFile node = new TreeNodeFile(FileName, System.IO.Path.GetFileName(FileName), 0, "File", null, () => backgroundWorker1.CancellationPending);
                             FileNamesInFile.Add(node);

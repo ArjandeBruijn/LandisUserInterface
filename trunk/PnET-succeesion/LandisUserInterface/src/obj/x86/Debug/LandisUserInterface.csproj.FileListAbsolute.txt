@@ -35,3 +35,4 @@ C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\sr
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.csproj.GenerateResource.Cache
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.exe
 C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.pdb
+C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.csprojResolveAssemblyReference.cache
