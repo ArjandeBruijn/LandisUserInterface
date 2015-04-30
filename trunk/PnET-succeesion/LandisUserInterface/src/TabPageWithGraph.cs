@@ -133,10 +133,21 @@ namespace LandisUserInterface
             myPane.XAxis.Scale.MinorStep = myPane.XAxis.Scale.MajorStep;
 
             double range2 = (Ymax - Ymin);
-            if (curve.Points.Count > 0) myPane.YAxis.Scale.Max = Math.Max(myPane.YAxis.Scale.Max, Max_Axis(range2, Ymax));
-            if (curve.Points.Count > 0) myPane.YAxis.Scale.Min = Math.Min(myPane.YAxis.Scale.Min, Min_Axis(range2, Ymin));
+
+            if (range2 == 0)
+            {
+                myPane.YAxis.Scale.Max = Ymax + 1;
+                myPane.YAxis.Scale.Min = Ymax - 1;
+                range2 = 2;
+            }
+            else
+            {
+                if (curve.Points.Count > 0) myPane.YAxis.Scale.Max = Math.Max(myPane.YAxis.Scale.Max, Max_Axis(range2, Ymax));
+                if (curve.Points.Count > 0) myPane.YAxis.Scale.Min = Math.Min(myPane.YAxis.Scale.Min, Min_Axis(range2, Ymin));
+            }
             myPane.YAxis.Scale.MajorStep = range2 / 10;
             myPane.YAxis.Scale.MinorStep = myPane.YAxis.Scale.MajorStep;
+           
 
             Graph1.AxisChange();
             Graph1.Refresh();
