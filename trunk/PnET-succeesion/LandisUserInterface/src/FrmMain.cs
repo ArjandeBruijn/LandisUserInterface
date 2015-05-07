@@ -635,26 +635,33 @@ namespace LandisUserInterface
 
         private void backgroundWorker2_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            for (int d = 0; d < Docks.Count; d++)
+            try
             {
-                List<DockableFormInfo> values = Docks.Values.ToArray()[d];
-
-                for (int fi = values.Count - 1; fi >= 0; fi--)
+                for (int d = 0; d < Docks.Count; d++)
                 {
-                    if (dockContainer1.Contains(values[fi].DockableForm) == false)
+                    List<DockableFormInfo> values = Docks.Values.ToArray()[d];
+
+                    for (int fi = values.Count - 1; fi >= 0; fi--)
                     {
-                        if (values[fi].DockableForm.IsDisposed == false)
+                        if (dockContainer1.Contains(values[fi].DockableForm) == false)
                         {
-                            if (values[fi].DockableForm.GetType() == typeof(FrmTXTDisplay))
+                            if (values[fi].DockableForm.IsDisposed == false)
                             {
-                                ((FrmTXTDisplay)values[fi].DockableForm).ClosePending = true;
+                                if (values[fi].DockableForm.GetType() == typeof(FrmTXTDisplay))
+                                {
+                                    ((FrmTXTDisplay)values[fi].DockableForm).ClosePending = true;
+                                }
+
+                                values.RemoveAt(fi);
                             }
-                            
-                            values.RemoveAt(fi);
+
                         }
-                        
                     }
                 }
+            }
+            catch(ObjectDisposedException)
+            {
+             
             }
             backgroundWorker2.RunWorkerAsync();
         }
