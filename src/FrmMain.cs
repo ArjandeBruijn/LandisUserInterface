@@ -138,19 +138,30 @@ namespace LandisUserInterface
 
             if (this.backgroundWorker1.CancellationPending)return TreeNodes.ToArray();
 
-            string path = parent.Tag.ToString();
-
-            foreach (string folder in System.IO.Directory.GetDirectories(path))
+            try
             {
-                string lastsubdir = folder.Split(System.IO.Path.DirectorySeparatorChar).Last();
-                TreeNodes.Add(new TreeNodeFile(folder, lastsubdir, 0, "Folder", GetFolderContent, () => backgroundWorker1.CancellationPending));
+                string path = parent.Tag.ToString();
+
+                foreach (string folder in System.IO.Directory.GetDirectories(path))
+                {
+                    string lastsubdir = folder.Split(System.IO.Path.DirectorySeparatorChar).Last();
+                    TreeNodes.Add(new TreeNodeFile(folder, lastsubdir, 0, "Folder", GetFolderContent, () => backgroundWorker1.CancellationPending));
+                }
+
+                foreach (string file in System.IO.Directory.GetFiles(path))
+                {
+                    TreeNodeFile node = new TreeNodeFile(file, System.IO.Path.GetFileName(file), get_Year(System.IO.Path.GetFileName(file)), "File", null, () => backgroundWorker1.CancellationPending);
+
+                    TreeNodes.Add(node);
+                }
             }
-
-            foreach (string file in System.IO.Directory.GetFiles(path))
+            catch(System.Exception ex)
             {
-                TreeNodeFile node = new TreeNodeFile(file, System.IO.Path.GetFileName(file), get_Year(System.IO.Path.GetFileName(file)), "File", null, () => backgroundWorker1.CancellationPending);
-
-                TreeNodes.Add(node);
+                if (ex is System.IO.DirectoryNotFoundException || ex is System.IO.FileNotFoundException)
+                {
+                    return TreeNodes.ToArray();
+                }
+                else throw ex;
             }
 
             return TreeNodes.ToArray();
