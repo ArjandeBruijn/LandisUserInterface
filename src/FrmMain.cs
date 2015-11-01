@@ -350,7 +350,7 @@ namespace LandisUserInterface
             {
                 System.Diagnostics.Process simulation = new System.Diagnostics.Process();
 
-                simulation.StartInfo.FileName = @"C:\Program Files\LANDIS-II\v6\bin\Landis.Console-6.0.exe";
+                simulation.StartInfo.FileName = Global.LandisConsoleExe; 
 
                 if (System.IO.File.Exists(simulation.StartInfo.FileName) == false)
                 {
