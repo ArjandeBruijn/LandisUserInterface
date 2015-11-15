@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LandisUserInterface", "Land
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PnET-Succession", "..\..\PnET-Succession\src\PnET-Succession.csproj", "{17896667-BAB5-4F18-9DDF-8761E06C55E0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LANDIS-II Debug Console", "..\..\Debug_Console_rc3\LANDIS-II Debug Console.csproj", "{742214C0-CBC9-4E06-8205-297A3EAE61B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,16 @@ Global
 		{17896667-BAB5-4F18-9DDF-8761E06C55E0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{17896667-BAB5-4F18-9DDF-8761E06C55E0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{17896667-BAB5-4F18-9DDF-8761E06C55E0}.Release|x86.ActiveCfg = Release|Any CPU
+		{742214C0-CBC9-4E06-8205-297A3EAE61B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{742214C0-CBC9-4E06-8205-297A3EAE61B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{742214C0-CBC9-4E06-8205-297A3EAE61B8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{742214C0-CBC9-4E06-8205-297A3EAE61B8}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{742214C0-CBC9-4E06-8205-297A3EAE61B8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{742214C0-CBC9-4E06-8205-297A3EAE61B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{742214C0-CBC9-4E06-8205-297A3EAE61B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{742214C0-CBC9-4E06-8205-297A3EAE61B8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{742214C0-CBC9-4E06-8205-297A3EAE61B8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{742214C0-CBC9-4E06-8205-297A3EAE61B8}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

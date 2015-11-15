@@ -37,7 +37,7 @@ namespace LandisUserInterface.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("@\"C:\\Program Files\\LANDIS-II\\v6\\bin\\Landis.Console-6.0.exe\"")]
+        [global::System.Configuration.DefaultSettingValueAttribute("@\"C:\\Program Files\\LANDIS-II\\v6\\bin\\Landis.Console-6.1.exe\"")]
         public string LandisConsoleExe {
             get {
                 return ((string)(this["LandisConsoleExe"]));

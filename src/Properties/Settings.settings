@@ -6,7 +6,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="LandisConsoleExe" Type="System.String" Scope="User">
-      <Value Profile="(Default)">@"C:\Program Files\LANDIS-II\v6\bin\Landis.Console-6.0.exe"</Value>
+      <Value Profile="(Default)">@"C:\Program Files\LANDIS-II\v6\bin\Landis.Console-6.1.exe"</Value>
     </Setting>
     <Setting Name="LocalRootPaths" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\</Value>
