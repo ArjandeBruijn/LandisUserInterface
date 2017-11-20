@@ -58,12 +58,11 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 240);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 446);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(284, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(569, 22);
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
-            
             // 
             // toolStripStatusLabel1
             // 
@@ -83,8 +82,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.dockContainer1);
-            this.splitContainer1.Size = new System.Drawing.Size(284, 240);
-            this.splitContainer1.SplitterDistance = 94;
+            this.splitContainer1.Size = new System.Drawing.Size(569, 446);
+            this.splitContainer1.SplitterDistance = 188;
             this.splitContainer1.TabIndex = 1;
             // 
             // treeView1
@@ -95,7 +94,7 @@
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
             this.treeView1.SelectedImageIndex = 0;
-            this.treeView1.Size = new System.Drawing.Size(94, 240);
+            this.treeView1.Size = new System.Drawing.Size(188, 446);
             this.treeView1.TabIndex = 4;
             this.treeView1.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeView1_ItemDrag);
             this.treeView1.NodeMouseHover += new System.Windows.Forms.TreeNodeMouseHoverEventHandler(this.treeView1_NodeMouseHover);
@@ -116,7 +115,7 @@
             this.dockContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dockContainer1.Location = new System.Drawing.Point(0, 0);
             this.dockContainer1.Name = "dockContainer1";
-            this.dockContainer1.Size = new System.Drawing.Size(186, 240);
+            this.dockContainer1.Size = new System.Drawing.Size(377, 446);
             this.dockContainer1.TabIndex = 3;
             this.dockContainer1.DragDrop += new System.Windows.Forms.DragEventHandler(this.dockContainer1_DragDrop);
             this.dockContainer1.DragEnter += new System.Windows.Forms.DragEventHandler(this.dockContainer1_DragEnter);
@@ -144,7 +143,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.ClientSize = new System.Drawing.Size(569, 468);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
@@ -175,10 +174,6 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Timer timer1;
         private System.ComponentModel.BackgroundWorker backgroundWorker2;
-
-        
-          
-
     }
 }
 

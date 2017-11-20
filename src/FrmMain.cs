@@ -292,7 +292,18 @@ namespace LandisUserInterface
 
                 if (treeView1.SelectedNode == treeView1.Nodes["Scenario Files"])
                 {
-                    new ContextMenuStrip(new ToolStripItem[] { new ToolStripMenuItem(new EventHandler(this.AddScnFl_Click), "Add Scenario"), new ToolStripMenuItem(new EventHandler(this.ClearScenarioFiles_Click), "Clear Scenarios") }).Show(this.treeView1, e.Location);
+                    new ContextMenuStrip(new ToolStripItem[] 
+                    {
+                        new ToolStripMenuItem(
+                            new EventHandler(AddScnFl_Click), "Add Scenario"),
+                        new ToolStripMenuItem(
+                            new EventHandler(ClearScenarioFiles_Click), "Clear Scenarios"),
+                        new ToolStripMenuItem(
+                            new EventHandler(ChangeLandisExecutableLocation_Click), "Change Landis Executable Location")
+                    })
+                    .Show(this.treeView1, e.Location);
+
+
                 }
                 else if (IsScenarioFile(((TreeNodeFile)treeView1.SelectedNode).FullPath)) 
                 {
@@ -337,7 +348,10 @@ namespace LandisUserInterface
 
             this.toolStripStatusLabel1.Text = String.Empty;
         }
-        
+        private void ChangeLandisExecutableLocation_Click(object sender, EventArgs e)
+        {
+            GetLandisExecutableLocation(true);
+        }
         public void RunSimulation(string path)
         {
             if (System.IO.File.Exists(path) == false) throw new System.Exception("File " + path + " does not exist");
@@ -348,29 +362,61 @@ namespace LandisUserInterface
 
             if (System.IO.File.Exists(path))
             {
+                var sb = new StringBuilder();
+
                 System.Diagnostics.Process simulation = new System.Diagnostics.Process();
 
-                simulation.StartInfo.FileName = Global.LandisConsoleExe; 
+                simulation.StartInfo.UseShellExecute = false;
 
-                if (System.IO.File.Exists(simulation.StartInfo.FileName) == false)
-                {
-                    OpenFileDialog dlg = new OpenFileDialog();
-                    dlg.Title = "Select your landis console executable";
-                    if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        Global.LandisConsoleExe = dlg.FileName;
-                        RunSimulation(path);
-                    }
-                    else return;
-                }
+                // redirect the output
+                simulation.StartInfo.RedirectStandardOutput = true;
+
+                simulation.StartInfo.RedirectStandardError = true;
+
+                // hookup the eventhandlers to capture the data that is received
+                simulation.OutputDataReceived += (sender, args) => sb.AppendLine(args.Data);
+                simulation.ErrorDataReceived += (sender, args) => sb.AppendLine(args.Data);
+
+                simulation.StartInfo.FileName = Global.LandisConsoleExe;
+
+                GetLandisExecutableLocation(false);
 
                 simulation.StartInfo.Arguments = "\"" + path + "\"";
 
                 simulation.Start();
 
-                 
+                simulation.BeginOutputReadLine();
+
+                simulation.BeginErrorReadLine();
+
+                // until we are done
+                simulation.WaitForExit();
+
+                MessageBox.Show(sb.ToString());
             }
 
+        }
+
+        private static void GetLandisExecutableLocation(bool change)
+        {
+            string fileName = change? "": Global.LandisConsoleExe;
+
+            while (System.IO.File.Exists(fileName) == false)
+            {
+                OpenFileDialog dlg = new OpenFileDialog();
+                dlg.Title = "Select your landis console executable";
+
+                DialogResult result = dlg.ShowDialog();
+
+                if (result == System.Windows.Forms.DialogResult.OK)
+                {
+                    Global.LandisConsoleExe = fileName = dlg.FileName;
+                }
+                else if (result == System.Windows.Forms.DialogResult.Cancel)
+                {
+                    return;
+                }
+            }
         }
 
         private void RunSimulation_Click(object sender, EventArgs e)
@@ -682,9 +728,9 @@ namespace LandisUserInterface
             System.Threading.Thread.Sleep(500);
         }
 
-         
-        
-         
-        
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            double t = 0.0;
+        }
     }
 }
