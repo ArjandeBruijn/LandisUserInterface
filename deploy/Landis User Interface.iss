@@ -17,15 +17,15 @@ SolidCompression=yes
 [Files]
 Source: "MapWinGIS-only-v4.9.3.4-Win32.exe"; DestDir: "{app}"; AfterInstall: RunOtherInstaller()
 
-Source: "C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\Icons\Landis.ico"; DestDir: "{app}" 
-Source: "C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\Antlr3.Runtime.dll"; DestDir: "{app}"
-Source: "C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\AxInterop.MapWinGIS.dll"; DestDir: "{app}"
-Source: "C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\Crom.Controls.dll"; DestDir: "{app}"
-Source: "C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\Interop.MapWinGIS.dll"; DestDir: "{app}"
-Source: "C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\LandisUserInterface.exe";  DestDir: "{app}"; Flags: replacesameversion
-Source: "C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\unvell.ReoGrid.dll"; DestDir: "{app}"
-Source: "C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\unvell.ReoScript.dll"; DestDir: "{app}"
-Source: "C:\Users\adebruij\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\ZedGraph.dll"; DestDir: "{app}"
+Source: "C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\Icons\Landis.ico"; DestDir: "{app}" 
+Source: "C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\Antlr3.Runtime.dll"; DestDir: "{app}"
+Source: "C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\AxInterop.MapWinGIS.dll"; DestDir: "{app}"
+Source: "C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\Crom.Controls.dll"; DestDir: "{app}"
+Source: "C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\Interop.MapWinGIS.dll"; DestDir: "{app}"
+Source: "C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\LandisUserInterface.exe";  DestDir: "{app}"; Flags: replacesameversion
+Source: "C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\unvell.ReoGrid.dll"; DestDir: "{app}"
+Source: "C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\unvell.ReoScript.dll"; DestDir: "{app}"
+Source: "C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\ZedGraph.dll"; DestDir: "{app}"
 
 Source: "LANDIS-II User Interface User Guide.docx"; DestDir: "{app}"; Flags: isreadme
 

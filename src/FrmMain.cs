@@ -376,10 +376,10 @@ namespace LandisUserInterface
                 // hookup the eventhandlers to capture the data that is received
                 simulation.OutputDataReceived += (sender, args) => sb.AppendLine(args.Data);
                 simulation.ErrorDataReceived += (sender, args) => sb.AppendLine(args.Data);
+                 
+                GetLandisExecutableLocation(false);
 
                 simulation.StartInfo.FileName = Global.LandisConsoleExe;
-
-                GetLandisExecutableLocation(false);
 
                 simulation.StartInfo.Arguments = "\"" + path + "\"";
 
