@@ -362,20 +362,7 @@ namespace LandisUserInterface
 
             if (System.IO.File.Exists(path))
             {
-                var sb = new StringBuilder();
-
                 System.Diagnostics.Process simulation = new System.Diagnostics.Process();
-
-                simulation.StartInfo.UseShellExecute = false;
-
-                // redirect the output
-                simulation.StartInfo.RedirectStandardOutput = true;
-
-                simulation.StartInfo.RedirectStandardError = true;
-
-                // hookup the eventhandlers to capture the data that is received
-                simulation.OutputDataReceived += (sender, args) => sb.AppendLine(args.Data);
-                simulation.ErrorDataReceived += (sender, args) => sb.AppendLine(args.Data);
                  
                 GetLandisExecutableLocation(false);
 
@@ -384,21 +371,18 @@ namespace LandisUserInterface
                 simulation.StartInfo.Arguments = "\"" + path + "\"";
 
                 simulation.Start();
-
-                simulation.BeginOutputReadLine();
-
-                simulation.BeginErrorReadLine();
-
+                 
                 // until we are done
                 simulation.WaitForExit();
 
-                MessageBox.Show(sb.ToString());
+                 
             }
 
         }
 
         private static void GetLandisExecutableLocation(bool change)
         {
+            
             string fileName = change? "": Global.LandisConsoleExe;
 
             while (System.IO.File.Exists(fileName) == false)
