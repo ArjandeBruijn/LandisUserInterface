@@ -144,7 +144,6 @@ C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\s
 C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\Antlr3.Runtime.dll
 C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\Interop.MapWinGIS.dll
 C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\bin\Debug\AxInterop.MapWinGIS.dll
-C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.csprojResolveAssemblyReference.cache
 C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\Interop.MapWinGIS.dll
 C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\AxInterop.MapWinGIS.dll
 C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.csproj.ResolveComReference.cache

@@ -382,12 +382,14 @@ namespace LandisUserInterface
 
         private static void GetLandisExecutableLocation(bool change)
         {
-            
             string fileName = change? "": Global.LandisConsoleExe;
 
             while (System.IO.File.Exists(fileName) == false)
             {
+                MessageBox.Show($"landis console executable ={Global.LandisConsoleExe}");
+
                 OpenFileDialog dlg = new OpenFileDialog();
+
                 dlg.Title = "Select your landis console executable";
 
                 DialogResult result = dlg.ShowDialog();
