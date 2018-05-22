@@ -159,3 +159,4 @@ C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\s
 C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.csproj.GenerateResource.Cache
 C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.exe
 C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.pdb
+C:\Users\adebruijn\Desktop\PnET-Succession\PnET-succeesion\LandisUserInterface\src\obj\x86\Debug\LandisUserInterface.csprojResolveAssemblyReference.cache

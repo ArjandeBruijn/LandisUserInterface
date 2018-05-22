@@ -5,11 +5,11 @@
     <Setting Name="LastScenarioFileNames" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="LandisConsoleExe" Type="System.String" Scope="User">
-      <Value Profile="(Default)">@"C:\Program Files\LANDIS-II\v6\bin\Landis.Console-6.1.exe"</Value>
-    </Setting>
     <Setting Name="LocalRootPaths" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\</Value>
+    </Setting>
+    <Setting Name="LandisConsoleExe" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Program Files\LANDIS-II\v6\bin\Landis.Console-6.2.exe</Value>
     </Setting>
   </Settings>
 </SettingsFile>

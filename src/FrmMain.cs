@@ -386,8 +386,6 @@ namespace LandisUserInterface
 
             while (System.IO.File.Exists(fileName) == false)
             {
-                MessageBox.Show($"landis console executable ={Global.LandisConsoleExe}");
-
                 OpenFileDialog dlg = new OpenFileDialog();
 
                 dlg.Title = "Select your landis console executable";

@@ -41,11 +41,12 @@ namespace LandisUserInterface
             Properties.Settings.Default.LastScenarioFileNames = "";
             Properties.Settings.Default.Save();
         }
-
+        
         public static string LandisConsoleExe
         {
             get
             {
+                
                 return Properties.Settings.Default.LandisConsoleExe;
             }
             set
